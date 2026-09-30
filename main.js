@@ -51,6 +51,20 @@ function loadFont() {
   return localStorage.getItem('flag-quiz-font') || 'inter'
 }
 
+// ===== Corner padding management =====
+const DEFAULT_CORNER_PADDING = 4
+
+function applyCornerPadding(px) {
+  document.documentElement.style.setProperty('--corner-padding', `${px}px`)
+  localStorage.setItem('flag-quiz-corner-padding', String(px))
+}
+
+function loadCornerPadding() {
+  const stored = localStorage.getItem('flag-quiz-corner-padding')
+  const parsed = stored === null ? NaN : parseInt(stored, 10)
+  return Number.isFinite(parsed) ? parsed : DEFAULT_CORNER_PADDING
+}
+
 // ===== Shuffle utility =====
 function shuffle(arr) {
   const copy = [...arr]
@@ -95,6 +109,10 @@ function renderSettingsModal() {
             ${THEMES.map(t => `<option value="${t.id}" ${t.id === loadTheme() ? 'selected' : ''}>${t.label}</option>`).join('')}
           </select>
         </div>
+        <div class="setting-row">
+          <label class="setting-label" for="paddingInput">Corner padding <span id="paddingValue">${loadCornerPadding()}px</span></label>
+          <input class="range" type="range" id="paddingInput" min="0" max="32" step="1" value="${loadCornerPadding()}" />
+        </div>
       </div>
     </div>
   `
@@ -107,6 +125,11 @@ function openSettings() {
   modal.addEventListener('click', (e) => { if (e.target === modal) closeSettings() })
   document.getElementById('themeSelect').addEventListener('change', (e) => applyTheme(e.target.value))
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
+  document.getElementById('paddingInput').addEventListener('input', (e) => {
+    const px = parseInt(e.target.value, 10)
+    applyCornerPadding(px)
+    document.getElementById('paddingValue').textContent = `${px}px`
+  })
 }
 
 function closeSettings() {
@@ -231,6 +254,7 @@ function startQuiz() {
 async function init() {
   applyTheme(loadTheme())
   applyFont(loadFont())
+  applyCornerPadding(loadCornerPadding())
   try {
     const res = await fetch('./data.json')
     countries = await res.json()

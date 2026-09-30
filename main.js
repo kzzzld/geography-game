@@ -9,6 +9,7 @@ const THEMES = [
   { id: 'frappe', label: 'Catppuccin Frappé' },
   { id: 'latte', label: 'Catppuccin Latte' },
   { id: 'macchiato', label: 'Catppuccin Macchiato' },
+  { id: 'blackmetal', label: 'Black Metal' },
 ]
 
 const FONTS = [

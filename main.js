@@ -118,8 +118,11 @@ function renderSettingsModal() {
   `
 }
 
+let lastFocusedBeforeModal = null
+
 function openSettings() {
   const modal = document.getElementById('settingsModal')
+  lastFocusedBeforeModal = document.activeElement
   modal.classList.add('open')
   document.getElementById('settingsClose').addEventListener('click', closeSettings)
   modal.addEventListener('click', (e) => { if (e.target === modal) closeSettings() })
@@ -130,11 +133,92 @@ function openSettings() {
     applyCornerPadding(px)
     document.getElementById('paddingValue').textContent = `${px}px`
   })
+  document.getElementById('settingsClose').focus()
 }
 
 function closeSettings() {
   document.getElementById('settingsModal').classList.remove('open')
+  if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === 'function') {
+    lastFocusedBeforeModal.focus()
+  }
+  lastFocusedBeforeModal = null
 }
+
+function isSettingsOpen() {
+  return document.getElementById('settingsModal')?.classList.contains('open') ?? false
+}
+
+function getModalFocusable(modal) {
+  return Array.from(modal.querySelectorAll('button, select, input, [tabindex]:not([tabindex="-1"])'))
+    .filter(el => !el.disabled && el.offsetParent !== null)
+}
+
+// ===== Global keyboard controls =====
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('settingsModal')
+
+  if (isSettingsOpen()) {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      closeSettings()
+      return
+    }
+    if (e.key === 'Tab') {
+      const focusable = getModalFocusable(modal)
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+    return
+  }
+
+  const activeTag = document.activeElement?.tagName
+  if (activeTag === 'INPUT' || activeTag === 'SELECT' || activeTag === 'TEXTAREA') return
+
+  if (e.key === 's' || e.key === 'S') {
+    e.preventDefault()
+    openSettings()
+    return
+  }
+
+  if (!answered && /^[1-5]$/.test(e.key)) {
+    const idx = parseInt(e.key, 10) - 1
+    const btns = document.querySelectorAll('.answer-btn')
+    if (btns[idx]) {
+      e.preventDefault()
+      handleAnswer(btns[idx])
+    }
+    return
+  }
+
+  if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && document.activeElement?.classList.contains('answer-btn')) {
+    e.preventDefault()
+    const btns = Array.from(document.querySelectorAll('.answer-btn'))
+    const idx = btns.indexOf(document.activeElement)
+    const next = e.key === 'ArrowDown' ? btns[(idx + 1) % btns.length] : btns[(idx - 1 + btns.length) % btns.length]
+    next.focus()
+    return
+  }
+
+  if (e.key === 'Enter' && activeTag !== 'BUTTON') {
+    const nextBtn = document.querySelector('#nextBtn')
+    const restartBtn = document.querySelector('#restartBtn')
+    if (nextBtn && nextBtn.style.display !== 'none') {
+      e.preventDefault()
+      handleNext()
+    } else if (restartBtn) {
+      e.preventDefault()
+      startQuiz()
+    }
+  }
+})
 
 // ===== Render header =====
 function renderHeader() {
@@ -184,6 +268,7 @@ function renderQuestion() {
   })
   document.querySelector('#nextBtn').addEventListener('click', handleNext)
   document.querySelector('#settingsBtn').addEventListener('click', openSettings)
+  document.querySelector('.answer-btn')?.focus()
 }
 
 // ===== Handle answer selection =====
@@ -215,6 +300,7 @@ function handleAnswer(btn) {
 
   document.querySelector('#nextBtn').style.display = 'inline-block'
   document.querySelector('#nextBtn').textContent = currentIndex + 1 < quizQuestions.length ? 'Next' : 'See Results'
+  document.querySelector('#nextBtn').focus()
 }
 
 // ===== Handle next =====

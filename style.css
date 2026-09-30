@@ -129,6 +129,13 @@
 /* ===== Base ===== */
 * { box-sizing: border-box; }
 
+button:focus-visible,
+.select:focus-visible,
+.range:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 :root {
   --corner-padding: 4px;
 }

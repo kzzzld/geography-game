@@ -52,7 +52,7 @@ function loadFont() {
 }
 
 // ===== Corner padding management =====
-const DEFAULT_CORNER_PADDING = 4
+const DEFAULT_CORNER_PADDING = 20
 
 function applyCornerPadding(px) {
   document.documentElement.style.setProperty('--corner-padding', `${px}px`)

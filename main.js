@@ -48,7 +48,7 @@ function applyFont(fontId) {
 }
 
 function loadFont() {
-  return localStorage.getItem('flag-quiz-font') || 'inter'
+  return localStorage.getItem('flag-quiz-font') || 'iosevka'
 }
 
 // ===== Corner padding management =====

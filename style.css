@@ -143,7 +143,7 @@ button:focus-visible,
 body {
   margin: 0;
   padding: var(--corner-padding);
-  font-family: var(--font-family, 'Inter'), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-family, 'Iosevka'), ui-monospace, monospace;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -493,7 +493,7 @@ body {
   background: var(--bg-elev);
   border: 1px solid var(--border);
   border-radius: 8px;
-  font-family: var(--font-family, 'Inter'), monospace;
+  font-family: var(--font-family, 'Iosevka'), monospace;
   font-size: 14px;
   color: var(--text);
   z-index: 200;

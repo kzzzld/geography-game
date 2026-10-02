@@ -479,3 +479,45 @@ body {
   .flag-wrap { height: 160px; }
   .flag-img { max-height: 140px; max-width: 240px; }
 }
+
+/* ===== Vim-style command line ===== */
+#cmdline {
+  position: fixed;
+  left: var(--corner-padding);
+  right: var(--corner-padding);
+  bottom: var(--corner-padding);
+  display: none;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-family, 'Inter'), monospace;
+  font-size: 14px;
+  color: var(--text);
+  z-index: 200;
+}
+
+#cmdline.visible { display: flex; }
+
+.cmdline-prompt { color: var(--primary); font-weight: 700; }
+
+.cmdline-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font: inherit;
+  caret-color: var(--primary);
+}
+
+#cmdline:not(.editing) .cmdline-prompt,
+#cmdline:not(.editing) .cmdline-input { display: none; }
+
+#cmdline.editing .cmdline-message:not(:empty) { margin-left: auto; }
+
+.cmdline-message { color: var(--success); }
+.cmdline-message.error { color: var(--error); }

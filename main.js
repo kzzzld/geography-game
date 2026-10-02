@@ -153,6 +153,143 @@ function getModalFocusable(modal) {
     .filter(el => !el.disabled && el.offsetParent !== null)
 }
 
+// ===== Vim-style command line =====
+const normalizeName = (s) =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '')
+
+const cmdline = document.createElement('div')
+cmdline.id = 'cmdline'
+cmdline.innerHTML = `
+  <span class="cmdline-prompt" aria-hidden="true">:</span>
+  <input class="cmdline-input" id="cmdlineInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Command line" />
+  <span class="cmdline-message" id="cmdlineMessage" role="status" aria-live="polite"></span>
+`
+document.body.appendChild(cmdline)
+
+const cmdInput = cmdline.querySelector('#cmdlineInput')
+const cmdMessage = cmdline.querySelector('#cmdlineMessage')
+const cmdHistory = []
+let cmdHistoryPos = -1
+let cmdPreviousFocus = null
+let cmdMessageTimer = null
+
+function showCmdMessage(text, isError = false) {
+  clearTimeout(cmdMessageTimer)
+  cmdMessage.textContent = text
+  cmdMessage.classList.toggle('error', isError)
+  cmdline.classList.add('visible', 'has-message')
+  cmdMessageTimer = setTimeout(() => {
+    cmdMessage.textContent = ''
+    cmdline.classList.remove('visible', 'has-message')
+  }, 3000)
+}
+
+function openCommandLine() {
+  clearTimeout(cmdMessageTimer)
+  cmdMessage.textContent = ''
+  cmdline.classList.remove('has-message')
+  cmdPreviousFocus = document.activeElement
+  cmdline.classList.add('visible', 'editing')
+  cmdInput.value = ''
+  cmdHistoryPos = -1
+  cmdInput.focus()
+}
+
+function closeCommandLine() {
+  cmdline.classList.remove('editing')
+  if (!cmdline.classList.contains('has-message')) cmdline.classList.remove('visible')
+  cmdInput.value = ''
+  cmdInput.blur()
+  if (cmdPreviousFocus && document.contains(cmdPreviousFocus) && !cmdPreviousFocus.disabled) {
+    cmdPreviousFocus.focus()
+  }
+  cmdPreviousFocus = null
+}
+
+function findByName(list, query) {
+  const q = normalizeName(query)
+  if (!q) return null
+  return list.find(item => normalizeName(item.id) === q || normalizeName(item.label) === q) || null
+}
+
+function resetApp() {
+  localStorage.removeItem('flag-quiz-theme')
+  localStorage.removeItem('flag-quiz-font')
+  localStorage.removeItem('flag-quiz-corner-padding')
+  applyTheme(loadTheme())
+  applyFont(loadFont())
+  applyCornerPadding(loadCornerPadding())
+  startQuiz()
+}
+
+function runCommand(raw) {
+  const [name = '', ...args] = raw.trim().split(/\s+/)
+  const arg = args.join(' ')
+
+  switch (name.toLowerCase()) {
+    case 'answer':
+    case 'a': {
+      const buttons = Array.from(document.querySelectorAll('.answer-btn'))
+      if (buttons.length === 0) return showCmdMessage('No active question', true)
+      if (answered) return showCmdMessage('Question already answered', true)
+      const index = LETTERS.indexOf(arg.toUpperCase())
+      if (arg.length !== 1 || index === -1 || !buttons[index]) {
+        return showCmdMessage(`Invalid option: use ${LETTERS.slice(0, buttons.length).join(', ').toLowerCase()}`, true)
+      }
+      handleAnswer(buttons[index])
+      return
+    }
+    case 'reset':
+      resetApp()
+      return showCmdMessage('App reset')
+    case 'font': {
+      const font = findByName(FONTS, arg)
+      if (!font) return showCmdMessage('Invalid font', true)
+      applyFont(font.id)
+      return showCmdMessage(`Font: ${font.label}`)
+    }
+    case 'theme': {
+      const theme = findByName(THEMES, arg)
+      if (!theme) return showCmdMessage('Invalid theme', true)
+      applyTheme(theme.id)
+      return showCmdMessage(`Theme: ${theme.label}`)
+    }
+    case '':
+      return
+    default:
+      return showCmdMessage(`Unknown command: ${name}`, true)
+  }
+}
+
+cmdInput.addEventListener('keydown', (e) => {
+  if (e.isComposing || e.keyCode === 229) return
+  e.stopPropagation()
+
+  if (e.key === 'Escape') {
+    e.preventDefault()
+    closeCommandLine()
+  } else if (e.key === 'Backspace' && cmdInput.value === '') {
+    e.preventDefault()
+    closeCommandLine()
+  } else if (e.key === 'Enter') {
+    e.preventDefault()
+    const value = cmdInput.value
+    if (value.trim()) cmdHistory.push(value)
+    closeCommandLine()
+    runCommand(value)
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    e.preventDefault()
+    if (cmdHistory.length === 0) return
+    if (e.key === 'ArrowUp') {
+      cmdHistoryPos = cmdHistoryPos === -1 ? cmdHistory.length - 1 : Math.max(0, cmdHistoryPos - 1)
+    } else {
+      cmdHistoryPos = cmdHistoryPos === -1 ? -1 : cmdHistoryPos + 1
+      if (cmdHistoryPos >= cmdHistory.length) cmdHistoryPos = -1
+    }
+    cmdInput.value = cmdHistoryPos === -1 ? '' : cmdHistory[cmdHistoryPos]
+  }
+})
+
 // ===== Global keyboard controls =====
 document.addEventListener('keydown', (e) => {
   const modal = document.getElementById('settingsModal')
@@ -181,6 +318,12 @@ document.addEventListener('keydown', (e) => {
 
   const activeTag = document.activeElement?.tagName
   if (activeTag === 'INPUT' || activeTag === 'SELECT' || activeTag === 'TEXTAREA') return
+
+  if (e.key === ':') {
+    e.preventDefault()
+    openCommandLine()
+    return
+  }
 
   if (e.key === 's' || e.key === 'S') {
     e.preventDefault()

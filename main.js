@@ -196,6 +196,7 @@ function openCommandLine() {
 }
 
 function closeCommandLine() {
+  clearCompletion()
   cmdline.classList.remove('editing')
   if (!cmdline.classList.contains('has-message')) cmdline.classList.remove('visible')
   cmdInput.value = ''
@@ -261,11 +262,92 @@ function runCommand(raw) {
   }
 }
 
+// ===== Tab completion =====
+const COMMAND_NAMES = ['answer', 'font', 'reset', 'theme']
+let completion = null
+
+function getCompletionItems(text) {
+  const spaceIndex = text.search(/\s/)
+  if (spaceIndex === -1) {
+    const q = text.toLowerCase()
+    return {
+      base: '',
+      items: COMMAND_NAMES.filter(c => c.startsWith(q)).map(c => ({ value: c, label: c, insert: c + (c === 'reset' ? '' : ' ') })),
+    }
+  }
+
+  const name = text.slice(0, spaceIndex).toLowerCase()
+  const base = text.slice(0, spaceIndex) + ' '
+  const typed = normalizeName(text.slice(spaceIndex).trim())
+  let options = []
+
+  if (name === 'font' || name === 'theme') {
+    const list = name === 'font' ? FONTS : THEMES
+    options = list
+      .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
+      .map(o => ({ value: o.id, label: o.label, insert: o.id }))
+  } else if (name === 'answer' || name === 'a') {
+    const count = document.querySelectorAll('.answer-btn').length
+    options = LETTERS.slice(0, count)
+      .map(l => l.toLowerCase())
+      .filter(l => l.startsWith(typed))
+      .map(l => ({ value: l, label: l, insert: l }))
+  }
+  return { base, items: options }
+}
+
+function renderCompletionMenu() {
+  let menu = cmdline.querySelector('#cmdlineMenu')
+  if (!completion || completion.items.length < 2) {
+    menu?.remove()
+    return
+  }
+  if (!menu) {
+    menu = document.createElement('ul')
+    menu.id = 'cmdlineMenu'
+    menu.className = 'cmdline-menu'
+    menu.setAttribute('role', 'listbox')
+    cmdline.appendChild(menu)
+  }
+  menu.innerHTML = completion.items.map((item, i) => `
+    <li class="cmdline-menu-item${i === completion.index ? ' selected' : ''}" role="option" aria-selected="${i === completion.index}">
+      <span>${item.value}</span>${item.label !== item.value ? `<span class="cmdline-menu-hint">${item.label}</span>` : ''}
+    </li>
+  `).join('')
+  menu.querySelector('.selected')?.scrollIntoView({ block: 'nearest' })
+}
+
+function clearCompletion() {
+  completion = null
+  renderCompletionMenu()
+}
+
+function handleTab(backwards) {
+  if (!completion) {
+    const { base, items } = getCompletionItems(cmdInput.value)
+    if (items.length === 0) return
+    completion = { base, items, index: backwards ? items.length - 1 : 0 }
+  } else {
+    const n = completion.items.length
+    completion.index = (completion.index + (backwards ? -1 : 1) + n) % n
+  }
+  cmdInput.value = completion.base + completion.items[completion.index].insert
+  if (completion.items.length === 1) {
+    completion = null
+  }
+  renderCompletionMenu()
+}
+
+cmdInput.addEventListener('input', clearCompletion)
+
 cmdInput.addEventListener('keydown', (e) => {
   if (e.isComposing || e.keyCode === 229) return
   e.stopPropagation()
 
-  if (e.key === 'Escape') {
+  if (e.key === 'Tab') {
+    e.preventDefault()
+    handleTab(e.shiftKey)
+  } else if (e.key === 'Escape') {
     e.preventDefault()
     closeCommandLine()
   } else if (e.key === 'Backspace' && cmdInput.value === '') {

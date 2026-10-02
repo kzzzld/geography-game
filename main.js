@@ -356,7 +356,11 @@ cmdInput.addEventListener('keydown', (e) => {
   } else if (e.key === 'Enter') {
     e.preventDefault()
     const value = cmdInput.value
-    if (value.trim()) cmdHistory.push(value)
+    if (!value.trim()) {
+      closeCommandLine()
+      return
+    }
+    cmdHistory.push(value)
     closeCommandLine()
     runCommand(value)
   } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {

@@ -342,12 +342,6 @@ function renderSettingsModal() {
           </select>
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="modeSelect">${t('settings.quizMode')} <span class="setting-note">${t('settings.nextQuiz')}</span></label>
-          <select class="select" id="modeSelect">
-            ${QUIZ_MODES.map(m => `<option value="${m.id}" ${m.id === loadQuizMode() ? 'selected' : ''}>${modeLabel(m)}</option>`).join('')}
-          </select>
-        </div>
-        <div class="setting-row">
           <label class="setting-label" for="questionsInput">${t('settings.questions')} <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
           <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
         </div>
@@ -377,7 +371,6 @@ function openSettings() {
   document.getElementById('themeSelect').addEventListener('change', (e) => applyTheme(e.target.value))
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
   document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
-  document.getElementById('modeSelect').addEventListener('change', (e) => applyQuizMode(e.target.value))
   document.getElementById('languageSelect').addEventListener('change', (e) => {
     applyLanguage(e.target.value)
     closeSettings()

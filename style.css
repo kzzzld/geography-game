@@ -228,6 +228,31 @@ body {
 .settings-btn:active { transform: scale(0.95); }
 .settings-btn svg { width: 20px; height: 20px; }
 
+/* ===== Timer toggle ===== */
+.timer-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 40px;
+  padding: 0 0.75rem;
+  background: var(--bg-elev);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.timer-btn:hover { color: var(--text); border-color: var(--primary); }
+.timer-btn svg { width: 18px; height: 18px; }
+.timer-btn.active {
+  background: var(--primary);
+  color: var(--bg);
+  border-color: var(--primary);
+}
+
 /* ===== Modal ===== */
 .modal-overlay {
   position: fixed;

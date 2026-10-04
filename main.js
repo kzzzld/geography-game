@@ -306,7 +306,10 @@ function openSettings() {
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
   document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
   document.getElementById('modeSelect').addEventListener('change', (e) => applyQuizMode(e.target.value))
-  document.getElementById('timerSelect').addEventListener('change', (e) => applyTimerEnabled(e.target.value === 'on'))
+  document.getElementById('timerSelect').addEventListener('change', (e) => {
+    applyTimerEnabled(e.target.value === 'on')
+    syncTimerToggle()
+  })
   document.getElementById('timerSecondsInput').addEventListener('input', (e) => {
     const seconds = applyTimerSeconds(e.target.value)
     document.getElementById('timerSecondsValue').textContent = `${seconds}`
@@ -504,11 +507,11 @@ function runCommand(raw) {
     case 'time': {
       const value = arg.trim().toLowerCase()
       if (['off', 'false', 'no', '0'].includes(value)) {
-        applyTimerEnabled(false)
+        setTimerEnabled(false)
         return showCmdMessage('Timed mode: Off')
       }
       if (['on', 'true', 'yes'].includes(value)) {
-        applyTimerEnabled(true)
+        setTimerEnabled(true)
         return showCmdMessage(`Timed mode: On (${timerSeconds}s)`)
       }
       const seconds = parseInt(value, 10)
@@ -517,7 +520,7 @@ function runCommand(raw) {
         return showCmdMessage(`Number must be between ${MIN_TIMER_SECONDS} and ${MAX_TIMER_SECONDS}`, true)
       }
       applyTimerSeconds(seconds)
-      applyTimerEnabled(true)
+      setTimerEnabled(true)
       return showCmdMessage(`Seconds per question: ${seconds}`)
     }
     case '':
@@ -740,6 +743,13 @@ function renderHeader() {
             <button class="mode-btn${m.id === quizMode ? ' active' : ''}" data-mode="${m.id}" role="tab" aria-selected="${m.id === quizMode}" title="${m.label}">${m.short}</button>
           `).join('')}
         </div>
+        <button class="timer-btn${timerEnabled ? ' active' : ''}" id="timerToggle" aria-pressed="${timerEnabled}" title="Timed mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
+          </svg>
+          <span>Timed</span>
+        </button>
         <button class="settings-btn" id="settingsBtn" aria-label="Settings">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -754,6 +764,7 @@ function renderHeader() {
 
 function bindHeaderControls() {
   document.querySelector('#settingsBtn')?.addEventListener('click', openSettings)
+  document.querySelector('#timerToggle')?.addEventListener('click', toggleTimer)
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => switchMode(btn.dataset.mode))
   })
@@ -763,6 +774,29 @@ function switchMode(modeId) {
   if (modeId === quizMode) return
   applyQuizMode(modeId)
   startQuiz()
+}
+
+function toggleTimer() {
+  setTimerEnabled(!timerEnabled)
+}
+
+function setTimerEnabled(enabled) {
+  applyTimerEnabled(enabled)
+  syncTimerToggle()
+  if (enabled) {
+    updateScoreBar()
+    if (!answered && !isSettingsOpen()) startTimer()
+  } else {
+    stopTimer()
+    updateScoreBar()
+  }
+}
+
+function syncTimerToggle() {
+  const btn = document.querySelector('#timerToggle')
+  if (!btn) return
+  btn.classList.toggle('active', timerEnabled)
+  btn.setAttribute('aria-pressed', String(timerEnabled))
 }
 
 // ===== Timer =====

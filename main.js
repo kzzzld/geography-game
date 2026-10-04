@@ -370,8 +370,8 @@ function renderSettingsModal() {
           <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="paddingInput">${t('settings.corner')} <span id="paddingValue">${loadCornerPadding()}px</span></label>
-          <input class="range" type="range" id="paddingInput" min="${MIN_CORNER_PADDING}" max="${MAX_CORNER_PADDING}" step="1" value="${loadCornerPadding()}" />
+          <label class="setting-label" for="paddingInput">${t('settings.corner')}</label>
+          <input class="number-input" type="number" id="paddingInput" min="${MIN_CORNER_PADDING}" max="${MAX_CORNER_PADDING}" step="1" value="${loadCornerPadding()}" />
         </div>
         <div class="setting-row">
           <label class="setting-label" for="radiusInput">${t('settings.radius')}</label>
@@ -409,9 +409,10 @@ function openSettings() {
     document.getElementById('optionsValue').textContent = `${count}`
   })
   document.getElementById('paddingInput').addEventListener('input', (e) => {
-    const px = parseInt(e.target.value, 10)
-    applyCornerPadding(px)
-    document.getElementById('paddingValue').textContent = `${px}px`
+    applyCornerPadding(e.target.value)
+  })
+  document.getElementById('paddingInput').addEventListener('change', (e) => {
+    e.target.value = loadCornerPadding()
   })
   document.getElementById('radiusInput').addEventListener('input', (e) => {
     applyCornerRadius(e.target.value)

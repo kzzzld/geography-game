@@ -213,9 +213,20 @@ function applyLanguage(langId) {
   return found
 }
 
+function detectLanguage() {
+  const preferred = navigator.languages?.length ? navigator.languages : [navigator.language]
+  for (const tag of preferred.filter(Boolean)) {
+    const base = tag.toLowerCase().split('-')[0]
+    const match = LANGUAGES.find(l => l.id.toLowerCase() === base)
+    if (match) return match.id
+  }
+  return DEFAULT_LANGUAGE
+}
+
 function loadLanguage() {
   const stored = localStorage.getItem('flag-quiz-language')
-  return LANGUAGES.some(l => l.id === stored) ? stored : DEFAULT_LANGUAGE
+  if (LANGUAGES.some(l => l.id === stored)) return stored
+  return detectLanguage()
 }
 
 // ===== Timer management =====

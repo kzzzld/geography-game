@@ -24,8 +24,7 @@ const CMDLINE_POSITIONS = [
   { id: 'bottom', label: 'Bottom' },
 ]
 
-const LETTERS = ['A', 'B', 'C', 'D', 'E']
-const OPTIONS_COUNT = 5
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
 let countries = []
 let quizQuestions = []
@@ -96,6 +95,32 @@ function loadQuestionsPerQuiz() {
   return clampQuestionsPerQuiz(stored)
 }
 
+// ===== Answer options count management =====
+const DEFAULT_OPTIONS_COUNT = 5
+const MIN_OPTIONS_COUNT = 2
+const MAX_OPTIONS_COUNT = LETTERS.length
+
+let optionsCount = DEFAULT_OPTIONS_COUNT
+
+function clampOptionsCount(value) {
+  const parsed = parseInt(value, 10)
+  if (!Number.isFinite(parsed)) return DEFAULT_OPTIONS_COUNT
+  return Math.min(MAX_OPTIONS_COUNT, Math.max(MIN_OPTIONS_COUNT, parsed))
+}
+
+function applyOptionsCount(value) {
+  const count = clampOptionsCount(value)
+  optionsCount = count
+  localStorage.setItem('flag-quiz-options-count', String(count))
+  return count
+}
+
+function loadOptionsCount() {
+  const stored = localStorage.getItem('flag-quiz-options-count')
+  if (stored === null) return DEFAULT_OPTIONS_COUNT
+  return clampOptionsCount(stored)
+}
+
 // ===== Command line position management =====
 const DEFAULT_CMDLINE_POSITION = 'center'
 
@@ -125,7 +150,7 @@ function buildQuiz() {
   const shuffled = shuffle(countries)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
   return selected.map(country => {
-    const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, OPTIONS_COUNT - 1)
+    const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
     const options = shuffle([country, ...wrongs])
     return { country, options }
   })
@@ -161,8 +186,12 @@ function renderSettingsModal() {
           </select>
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="questionsInput">Questions per quiz <span id="questionsValue">${loadQuestionsPerQuiz()}</span></label>
+          <label class="setting-label" for="questionsInput">Questions per quiz <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">Refresh Needed</span></label>
           <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="optionsInput">Answer options <span class="setting-value" id="optionsValue">${loadOptionsCount()}</span> <span class="setting-note">Refresh Needed</span></label>
+          <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
         </div>
         <div class="setting-row">
           <label class="setting-label" for="paddingInput">Corner padding <span id="paddingValue">${loadCornerPadding()}px</span></label>
@@ -187,6 +216,10 @@ function openSettings() {
   document.getElementById('questionsInput').addEventListener('input', (e) => {
     const count = applyQuestionsPerQuiz(e.target.value)
     document.getElementById('questionsValue').textContent = `${count}`
+  })
+  document.getElementById('optionsInput').addEventListener('input', (e) => {
+    const count = applyOptionsCount(e.target.value)
+    document.getElementById('optionsValue').textContent = `${count}`
   })
   document.getElementById('paddingInput').addEventListener('input', (e) => {
     const px = parseInt(e.target.value, 10)
@@ -279,11 +312,13 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-corner-padding')
   localStorage.removeItem('flag-quiz-cmdline-position')
   localStorage.removeItem('flag-quiz-questions-per-quiz')
+  localStorage.removeItem('flag-quiz-options-count')
   applyTheme(loadTheme())
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
+  applyOptionsCount(loadOptionsCount())
   startQuiz()
 }
 
@@ -341,6 +376,15 @@ function runCommand(raw) {
       applyCornerPadding(px)
       return showCmdMessage(`Corner padding: ${px}px`)
     }
+    case 'options': {
+      const count = parseInt(arg, 10)
+      if (!Number.isFinite(count)) return showCmdMessage('Invalid number', true)
+      if (count < MIN_OPTIONS_COUNT || count > MAX_OPTIONS_COUNT) {
+        return showCmdMessage(`Number must be between ${MIN_OPTIONS_COUNT} and ${MAX_OPTIONS_COUNT}`, true)
+      }
+      applyOptionsCount(count)
+      return showCmdMessage(`Answer options: ${count}`)
+    }
     case '':
       return
     default:
@@ -349,7 +393,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'corner', 'font', 'questions', 'reset', 'theme']
+const COMMAND_NAMES = ['answer', 'cmdline', 'corner', 'font', 'options', 'questions', 'reset', 'theme']
 let completion = null
 
 function getCompletionItems(text) {
@@ -507,12 +551,12 @@ document.addEventListener('keydown', (e) => {
     return
   }
 
-  if (!answered && /^[1-5]$/.test(e.key)) {
-    const idx = parseInt(e.key, 10) - 1
+  const digit = /^[1-9]$/.test(e.key) ? parseInt(e.key, 10) : (e.key === '0' ? 10 : 0)
+  if (!answered && digit > 0) {
     const btns = document.querySelectorAll('.answer-btn')
-    if (btns[idx]) {
+    if (btns[digit - 1]) {
       e.preventDefault()
-      handleAnswer(btns[idx])
+      handleAnswer(btns[digit - 1])
     }
     return
   }
@@ -662,6 +706,7 @@ async function init() {
   applyCornerPadding(loadCornerPadding())
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
+  applyOptionsCount(loadOptionsCount())
   try {
     const res = await fetch('./data.json')
     countries = await res.json()

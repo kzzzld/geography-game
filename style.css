@@ -264,6 +264,15 @@ body {
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
 }
+.setting-label span.setting-value {
+  color: var(--text);
+}
+.setting-label span.setting-note {
+  color: var(--warning);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+}
 .select {
   width: 100%;
   background: var(--bg-elev);

@@ -87,6 +87,7 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
 let countries = []
 let quizQuestions = []
+let missedQuestions = []
 let currentIndex = 0
 let score = 0
 let points = 0
@@ -315,15 +316,17 @@ function shuffle(arr) {
 }
 
 // ===== Build quiz questions =====
+function buildQuestion(country, mode = quizMode) {
+  const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
+  const options = shuffle([country, ...wrongs])
+  const resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : mode
+  return { country, options, mode: resolvedMode }
+}
+
 function buildQuiz() {
   const shuffled = shuffle(countries)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
-  return selected.map(country => {
-    const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
-    const options = shuffle([country, ...wrongs])
-    const mode = quizMode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : quizMode
-    return { country, options, mode }
-  })
+  return selected.map(country => buildQuestion(country))
 }
 
 // ===== Settings modal =====
@@ -983,6 +986,7 @@ function handleTimeout() {
   answered = true
   lastSelected = null
   const q = quizQuestions[currentIndex]
+  missedQuestions.push(q)
   document.querySelectorAll('.answer-btn').forEach(b => {
     b.disabled = true
     if (b.dataset.country === q.country.country) b.classList.add('correct')
@@ -1079,6 +1083,8 @@ function handleAnswer(btn) {
   if (isCorrect) {
     score++
     if (timerEnabled) points += SCORE_BASE + Math.max(0, timeLeft) * SCORE_TIME_BONUS
+  } else {
+    missedQuestions.push(q)
   }
 
   document.querySelectorAll('.answer-btn').forEach(b => {
@@ -1122,9 +1128,14 @@ function renderResult() {
       <div class="final-score">${score} / ${total}</div>
       <p class="result-meta">${t('result.accuracy', { percent: accuracy })}</p>
       ${timerEnabled ? `<p class="result-meta">${t('result.points', { points, time: timeStr })}</p>` : ''}
-      <button class="restart-btn" id="restartBtn">${t('result.playAgain')}</button>
+      ${missedQuestions.length ? `<p class="result-meta result-missed">${t('result.missed', { count: missedQuestions.length })}</p>` : ''}
+      <div class="result-actions">
+        ${missedQuestions.length ? `<button class="restart-btn retry-btn" id="retryBtn">${t('result.retryMissed', { count: missedQuestions.length })}</button>` : ''}
+        <button class="restart-btn" id="restartBtn">${t('result.playAgain')}</button>
+      </div>
     </div>
   `
+  document.querySelector('#retryBtn')?.addEventListener('click', retryMissed)
   document.querySelector('#restartBtn').addEventListener('click', startQuiz)
   bindHeaderControls()
 }
@@ -1174,15 +1185,26 @@ function showWelcome() {
 }
 
 // ===== Start quiz =====
-function startQuiz() {
+function beginQuiz(questions) {
   stopTimer()
-  quizQuestions = buildQuiz()
+  quizQuestions = questions
+  missedQuestions = []
   currentIndex = 0
   score = 0
   points = 0
   lastSelected = null
   quizStartTime = Date.now()
   renderQuestion()
+}
+
+function startQuiz() {
+  beginQuiz(buildQuiz())
+}
+
+function retryMissed() {
+  const questions = missedQuestions.map(q => buildQuestion(q.country, q.mode))
+  if (questions.length === 0) return
+  beginQuiz(questions)
 }
 
 // ===== Init =====

@@ -28,6 +28,8 @@
     "result.accuracy": "{percent}% accuracy",
     "result.points": "{points} points · {time}",
     "result.playAgain": "Play Again",
+    "result.missed": "{count} missed",
+    "result.retryMissed": "Retry Missed ({count})",
     "settings.title": "Settings",
     "settings.close": "Close",
     "settings.category.general": "General",

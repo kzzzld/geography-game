@@ -28,6 +28,8 @@
     "result.accuracy": "%{percent} doğruluk",
     "result.points": "{points} puan · {time}",
     "result.playAgain": "Tekrar Oyna",
+    "result.missed": "{count} yanlış",
+    "result.retryMissed": "Yanlışları Tekrarla ({count})",
     "settings.title": "Ayarlar",
     "settings.close": "Kapat",
     "settings.category.general": "Genel",

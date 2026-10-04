@@ -9,6 +9,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 - 🔀 Four game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, and Mixed
 - 🌐 English and Turkish translations, including country and capital names
 - 🏆 Live score tracking with a results screen at the end
+- 🔁 Retry missed questions from the results screen with freshly shuffled options
 - 🎨 9 color themes (Tokyo Night, Nord, Dark, AMOLED, Catppuccin Mocha/Frappé/Latte/Macchiato, Black Metal)
 - 🔤 3 font choices (Inter, JetBrains Mono, Iosevka)
 - 💾 Theme and font preferences persisted in `localStorage`

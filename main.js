@@ -18,8 +18,13 @@ const FONTS = [
   { id: 'iosevka', label: 'Iosevka', family: "'Iosevka', monospace" },
 ]
 
+const CMDLINE_POSITIONS = [
+  { id: 'center', label: 'Center' },
+  { id: 'top', label: 'Top' },
+  { id: 'bottom', label: 'Bottom' },
+]
+
 const LETTERS = ['A', 'B', 'C', 'D', 'E']
-const QUESTIONS_PER_QUIZ = 10
 const OPTIONS_COUNT = 5
 
 let countries = []
@@ -65,6 +70,46 @@ function loadCornerPadding() {
   return Number.isFinite(parsed) ? parsed : DEFAULT_CORNER_PADDING
 }
 
+// ===== Questions per quiz management =====
+const DEFAULT_QUESTIONS_PER_QUIZ = 20
+const MIN_QUESTIONS_PER_QUIZ = 5
+const MAX_QUESTIONS_PER_QUIZ = 50
+
+let questionsPerQuiz = DEFAULT_QUESTIONS_PER_QUIZ
+
+function clampQuestionsPerQuiz(value) {
+  const parsed = parseInt(value, 10)
+  if (!Number.isFinite(parsed)) return DEFAULT_QUESTIONS_PER_QUIZ
+  return Math.min(MAX_QUESTIONS_PER_QUIZ, Math.max(MIN_QUESTIONS_PER_QUIZ, parsed))
+}
+
+function applyQuestionsPerQuiz(value) {
+  const count = clampQuestionsPerQuiz(value)
+  questionsPerQuiz = count
+  localStorage.setItem('flag-quiz-questions-per-quiz', String(count))
+  return count
+}
+
+function loadQuestionsPerQuiz() {
+  const stored = localStorage.getItem('flag-quiz-questions-per-quiz')
+  if (stored === null) return DEFAULT_QUESTIONS_PER_QUIZ
+  return clampQuestionsPerQuiz(stored)
+}
+
+// ===== Command line position management =====
+const DEFAULT_CMDLINE_POSITION = 'center'
+
+function applyCmdlinePosition(positionId) {
+  const position = CMDLINE_POSITIONS.find(p => p.id === positionId) || CMDLINE_POSITIONS[0]
+  cmdline.dataset.position = position.id
+  localStorage.setItem('flag-quiz-cmdline-position', position.id)
+}
+
+function loadCmdlinePosition() {
+  const stored = localStorage.getItem('flag-quiz-cmdline-position')
+  return CMDLINE_POSITIONS.some(p => p.id === stored) ? stored : DEFAULT_CMDLINE_POSITION
+}
+
 // ===== Shuffle utility =====
 function shuffle(arr) {
   const copy = [...arr]
@@ -78,7 +123,7 @@ function shuffle(arr) {
 // ===== Build quiz questions =====
 function buildQuiz() {
   const shuffled = shuffle(countries)
-  const selected = shuffled.slice(0, Math.min(QUESTIONS_PER_QUIZ, shuffled.length))
+  const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
   return selected.map(country => {
     const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, OPTIONS_COUNT - 1)
     const options = shuffle([country, ...wrongs])
@@ -110,6 +155,16 @@ function renderSettingsModal() {
           </select>
         </div>
         <div class="setting-row">
+          <label class="setting-label" for="cmdlineSelect">Command line position</label>
+          <select class="select" id="cmdlineSelect">
+            ${CMDLINE_POSITIONS.map(p => `<option value="${p.id}" ${p.id === loadCmdlinePosition() ? 'selected' : ''}>${p.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="questionsInput">Questions per quiz <span id="questionsValue">${loadQuestionsPerQuiz()}</span></label>
+          <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
+        </div>
+        <div class="setting-row">
           <label class="setting-label" for="paddingInput">Corner padding <span id="paddingValue">${loadCornerPadding()}px</span></label>
           <input class="range" type="range" id="paddingInput" min="0" max="32" step="1" value="${loadCornerPadding()}" />
         </div>
@@ -128,6 +183,11 @@ function openSettings() {
   modal.addEventListener('click', (e) => { if (e.target === modal) closeSettings() })
   document.getElementById('themeSelect').addEventListener('change', (e) => applyTheme(e.target.value))
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
+  document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
+  document.getElementById('questionsInput').addEventListener('input', (e) => {
+    const count = applyQuestionsPerQuiz(e.target.value)
+    document.getElementById('questionsValue').textContent = `${count}`
+  })
   document.getElementById('paddingInput').addEventListener('input', (e) => {
     const px = parseInt(e.target.value, 10)
     applyCornerPadding(px)
@@ -217,9 +277,13 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-theme')
   localStorage.removeItem('flag-quiz-font')
   localStorage.removeItem('flag-quiz-corner-padding')
+  localStorage.removeItem('flag-quiz-cmdline-position')
+  localStorage.removeItem('flag-quiz-questions-per-quiz')
   applyTheme(loadTheme())
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
+  applyCmdlinePosition(loadCmdlinePosition())
+  applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   startQuiz()
 }
 
@@ -570,6 +634,8 @@ async function init() {
   applyTheme(loadTheme())
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
+  applyCmdlinePosition(loadCmdlinePosition())
+  applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   try {
     const res = await fetch('./data.json')
     countries = await res.json()

@@ -406,12 +406,12 @@ function renderSettingsModal() {
         <div class="setting-category">${t('settings.category.gameplay')}</div>
         <div class="setting-group">
           <div class="setting-row">
-            <label class="setting-label" for="questionsInput">${t('settings.questions')} <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
-            <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
+            <label class="setting-label" for="questionsInput">${t('settings.questions')} <span class="setting-note">${t('settings.refresh')}</span></label>
+            <input class="number-input" type="number" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
           </div>
           <div class="setting-row">
-            <label class="setting-label" for="optionsInput">${t('settings.options')} <span class="setting-value" id="optionsValue">${loadOptionsCount()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
-            <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
+            <label class="setting-label" for="optionsInput">${t('settings.options')} <span class="setting-note">${t('settings.refresh')}</span></label>
+            <input class="number-input" type="number" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
           </div>
         </div>
         <div class="setting-category">${t('settings.category.interface')}</div>
@@ -447,12 +447,16 @@ function openSettings() {
     rerender()
   })
   document.getElementById('questionsInput').addEventListener('input', (e) => {
-    const count = applyQuestionsPerQuiz(e.target.value)
-    document.getElementById('questionsValue').textContent = `${count}`
+    applyQuestionsPerQuiz(e.target.value)
+  })
+  document.getElementById('questionsInput').addEventListener('change', (e) => {
+    e.target.value = loadQuestionsPerQuiz()
   })
   document.getElementById('optionsInput').addEventListener('input', (e) => {
-    const count = applyOptionsCount(e.target.value)
-    document.getElementById('optionsValue').textContent = `${count}`
+    applyOptionsCount(e.target.value)
+  })
+  document.getElementById('optionsInput').addEventListener('change', (e) => {
+    e.target.value = loadOptionsCount()
   })
   document.getElementById('paddingInput').addEventListener('input', (e) => {
     applyCornerPadding(e.target.value)

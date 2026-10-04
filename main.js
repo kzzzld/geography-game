@@ -91,6 +91,10 @@ let missedQuestions = []
 let currentIndex = 0
 let score = 0
 let points = 0
+let currentStreak = 0
+let bestStreak = 0
+let bestStreakAtStart = 0
+let streakRecordCelebrated = false
 let answered = false
 let lastSelected = null
 let quizStartTime = 0
@@ -205,6 +209,33 @@ function loadOptionsCount() {
   const stored = localStorage.getItem('flag-quiz-options-count')
   if (stored === null) return DEFAULT_OPTIONS_COUNT
   return clampOptionsCount(stored)
+}
+
+// ===== Streak management =====
+function loadBestStreak() {
+  const stored = localStorage.getItem('flag-quiz-best-streak')
+  const parsed = parseInt(stored, 10)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0
+}
+
+function saveBestStreak(value) {
+  bestStreak = Math.max(0, value)
+  localStorage.setItem('flag-quiz-best-streak', String(bestStreak))
+  return bestStreak
+}
+
+function recordCorrectStreak() {
+  currentStreak++
+  if (currentStreak > bestStreak) saveBestStreak(currentStreak)
+  if (!streakRecordCelebrated && currentStreak > bestStreakAtStart) {
+    streakRecordCelebrated = true
+    return true
+  }
+  return false
+}
+
+function resetStreak() {
+  currentStreak = 0
 }
 
 // ===== Quiz mode management =====
@@ -528,6 +559,7 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-cmdline-position')
   localStorage.removeItem('flag-quiz-questions-per-quiz')
   localStorage.removeItem('flag-quiz-options-count')
+  localStorage.removeItem('flag-quiz-best-streak')
   localStorage.removeItem('flag-quiz-mode')
   localStorage.removeItem('flag-quiz-timer-enabled')
   localStorage.removeItem('flag-quiz-timer-seconds')
@@ -539,6 +571,7 @@ function resetApp() {
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())
+  saveBestStreak(loadBestStreak())
   applyQuizMode(loadQuizMode())
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())
@@ -987,6 +1020,7 @@ function handleTimeout() {
   lastSelected = null
   const q = quizQuestions[currentIndex]
   missedQuestions.push(q)
+  resetStreak()
   document.querySelectorAll('.answer-btn').forEach(b => {
     b.disabled = true
     if (b.dataset.country === q.country.country) b.classList.add('correct')
@@ -995,12 +1029,63 @@ function handleTimeout() {
   revealNext()
 }
 
+function streakBadge() {
+  const empty = currentStreak === 0 ? ' empty' : ''
+  const hot = currentStreak >= 3 ? ' hot' : ''
+  return `<span class="score-streak${empty}${hot}" id="scoreStreak" title="${t('quiz.streakTitle')}" aria-label="${t('quiz.streakTitle')}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+    </svg>
+    <span class="score-streak-value">${currentStreak}</span>
+  </span>`
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+}
+
+function animateStreak(isRecord) {
+  const el = document.querySelector('#scoreStreak')
+  if (!el || prefersReducedMotion()) return
+  el.classList.remove('bump', 'record')
+  void el.offsetWidth
+  el.classList.add('bump')
+  if (isRecord) {
+    el.classList.add('record')
+    flashStreakBurst(el)
+  }
+  setTimeout(() => el.classList.remove('bump', 'record'), 900)
+}
+
+function flashStreakBurst(el) {
+  const rect = el.getBoundingClientRect()
+  const burst = document.createElement('div')
+  burst.className = 'streak-burst'
+  burst.style.left = `${rect.left + rect.width / 2}px`
+  burst.style.top = `${rect.top + rect.height / 2}px`
+  const colors = ['var(--primary)', 'var(--accent)', 'var(--error)']
+  for (let i = 0; i < 16; i++) {
+    const particle = document.createElement('span')
+    particle.className = 'streak-particle'
+    const angle = (Math.PI * 2 * i) / 16 + Math.random() * 0.4
+    const dist = 26 + Math.random() * 36
+    particle.style.setProperty('--tx', `${Math.cos(angle) * dist}px`)
+    particle.style.setProperty('--ty', `${Math.sin(angle) * dist}px`)
+    particle.style.background = colors[i % colors.length]
+    particle.style.animationDelay = `${Math.random() * 80}ms`
+    burst.appendChild(particle)
+  }
+  document.body.appendChild(burst)
+  setTimeout(() => burst.remove(), 1000)
+}
+
 function updateScoreBar() {
   const scoreBar = document.querySelector('.score-bar')
   if (!scoreBar) return
   scoreBar.innerHTML = `
     <span class="score-text">${t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
     ${timerEnabled ? `<span class="score-timer${timeLeft <= 5 ? ' low' : ''}" id="scoreTimer" role="timer">${timeLeft}</span>` : ''}
+    ${streakBadge()}
     <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + 1}</span></span>
   `
 }
@@ -1047,6 +1132,7 @@ function renderQuestion() {
     <div class="score-bar">
       <span class="score-text">${t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
       ${timerEnabled ? `<span class="score-timer" id="scoreTimer" role="timer">${timerSeconds}</span>` : ''}
+      ${streakBadge()}
       <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex}</span></span>
     </div>
     <div class="quiz-card">
@@ -1080,11 +1166,14 @@ function handleAnswer(btn) {
   const isCorrect = selectedCountry === q.country.country
   lastSelected = selectedCountry
 
+  let streakRecord = false
   if (isCorrect) {
     score++
+    streakRecord = recordCorrectStreak()
     if (timerEnabled) points += SCORE_BASE + Math.max(0, timeLeft) * SCORE_TIME_BONUS
   } else {
     missedQuestions.push(q)
+    resetStreak()
   }
 
   document.querySelectorAll('.answer-btn').forEach(b => {
@@ -1097,6 +1186,7 @@ function handleAnswer(btn) {
   })
 
   updateScoreBar()
+  if (isCorrect) animateStreak(streakRecord)
   revealNext()
 }
 
@@ -1127,6 +1217,7 @@ function renderResult() {
       <p class="score-text">${t('result.youScored')}</p>
       <div class="final-score">${score} / ${total}</div>
       <p class="result-meta">${t('result.accuracy', { percent: accuracy })}</p>
+      ${bestStreak > 0 ? `<p class="result-meta result-streak">${t('result.bestStreak', { count: bestStreak })}</p>` : ''}
       ${timerEnabled ? `<p class="result-meta">${t('result.points', { points, time: timeStr })}</p>` : ''}
       ${missedQuestions.length ? `<p class="result-meta result-missed">${t('result.missed', { count: missedQuestions.length })}</p>` : ''}
       <div class="result-actions">
@@ -1192,6 +1283,9 @@ function beginQuiz(questions) {
   currentIndex = 0
   score = 0
   points = 0
+  resetStreak()
+  bestStreakAtStart = bestStreak
+  streakRecordCelebrated = false
   lastSelected = null
   quizStartTime = Date.now()
   renderQuestion()
@@ -1216,6 +1310,7 @@ async function init() {
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())
+  saveBestStreak(loadBestStreak())
   applyQuizMode(loadQuizMode())
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())

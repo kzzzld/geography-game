@@ -500,6 +500,86 @@ body {
 }
 .score-timer.low { color: var(--error); }
 
+.score-streak {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s, opacity 0.2s;
+}
+.score-streak svg { width: 1.15rem; height: 1.15rem; transform-origin: 50% 80%; }
+.score-streak.empty { color: var(--text-muted); opacity: 0.5; }
+
+@keyframes streak-breathe {
+  0%, 100% { filter: drop-shadow(0 0 2px color-mix(in srgb, var(--accent) 60%, transparent)); }
+  50% { filter: drop-shadow(0 0 8px var(--accent)); }
+}
+.score-streak.hot svg { animation: streak-breathe 1.6s ease-in-out infinite; }
+
+@keyframes streak-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.55) rotate(-5deg); }
+  65% { transform: scale(0.9) rotate(4deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+.score-streak.bump { animation: streak-pop 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.4); }
+
+@keyframes streak-flicker {
+  0%, 100% { transform: scale(1) rotate(0); }
+  25% { transform: scale(1.22) rotate(-8deg); }
+  50% { transform: scale(1.05) rotate(6deg); }
+  75% { transform: scale(1.28) rotate(-4deg); }
+}
+.score-streak.bump svg { animation: streak-flicker 0.6s ease-out; }
+
+@keyframes streak-ring {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.score-streak.record { color: var(--primary); }
+.score-streak.record::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  animation: streak-ring 0.8s ease-out 2;
+  pointer-events: none;
+}
+
+.streak-burst {
+  position: fixed;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+.streak-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  animation: streak-particle 0.8s cubic-bezier(0.15, 0.65, 0.35, 1) forwards;
+}
+@keyframes streak-particle {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .score-streak.hot svg,
+  .score-streak.bump,
+  .score-streak.bump svg,
+  .score-streak.record::after,
+  .streak-particle { animation: none; }
+}
+
 /* ===== Quiz card ===== */
 .quiz-card {
   background: var(--bg-card);
@@ -665,6 +745,10 @@ body {
 .result-card .retry-btn:hover { border-color: var(--primary); }
 .result-card .result-missed {
   color: var(--text);
+  font-weight: 600;
+}
+.result-card .result-streak {
+  color: var(--accent);
   font-weight: 600;
 }
 

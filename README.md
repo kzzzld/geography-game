@@ -7,6 +7,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 - 🌍 10-question quizzes randomly drawn from a pool of countries and territories (recognized, disputed, autonomous, and unrecognized)
 - 🎯 5 multiple-choice options per question, shuffled each round
 - 🔀 Four game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, and Mixed
+- 🌐 English and Turkish translations, including country and capital names
 - 🏆 Live score tracking with a results screen at the end
 - 🎨 9 color themes (Tokyo Night, Nord, Dark, AMOLED, Catppuccin Mocha/Frappé/Latte/Macchiato, Black Metal)
 - 🔤 3 font choices (Inter, JetBrains Mono, Iosevka)
@@ -61,12 +62,37 @@ npm run preview
 ├── index.html        # App entry HTML
 ├── main.js           # App logic (quiz flow, rendering, settings)
 ├── style.css         # Theming and layout styles
+├── locales/
+│   ├── en.json       # English strings + country/capital names
+│   └── tr.json       # Turkish strings + country/capital names
 ├── public/
 │   └── data.json      # Quiz data (country names + flag image URLs)
 └── package.json
 ```
 
 > **Note:** Quiz data lives in `public/data.json` so it's copied as-is into the build output and available at runtime via `fetch('./data.json')`. Keep any static assets fetched at runtime inside `public/`.
+
+## Translations
+
+Locale files live in `locales/` and are auto-discovered at build time, so adding a
+new language is just a matter of dropping in a new JSON file (e.g. `locales/de.json`).
+Each file has three parts:
+
+```json
+{
+  "name": "Deutsch",
+  "ui": { "app.logo": "Flaggen-Quiz", "...": "..." },
+  "countries": { "Japan": "Japan" },
+  "capitals": { "Tokyo": "Tokio" }
+}
+```
+
+- `name` — label shown in the language selector
+- `ui` — interface strings; `{placeholder}` values are interpolated (e.g. `"quiz.questionOf": "Frage {current} / {total}"`)
+- `countries` / `capitals` — optional maps keyed by the English values in `data.json`; missing entries fall back to English
+
+If a new locale omits the `countries`/`capitals` maps, country and capital names
+simply stay in English.
 
 ## Adding or Editing Countries
 

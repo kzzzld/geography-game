@@ -1,5 +1,49 @@
 import './style.css'
 
+// ===== Localization =====
+const LOCALE_MODULES = import.meta.glob('./locales/*.json', { eager: true, import: 'default' })
+
+const LANGUAGES = Object.entries(LOCALE_MODULES)
+  .map(([path, data]) => ({
+    id: path.replace('./locales/', '').replace(/\.json$/, ''),
+    label: data.name || path,
+    data,
+  }))
+  .sort((a, b) => (a.id === 'en' ? -1 : b.id === 'en' ? 1 : a.id.localeCompare(b.id)))
+
+const FALLBACK_LOCALE = LANGUAGES.find(l => l.id === 'en')?.data || {}
+const DEFAULT_LANGUAGE = 'en'
+
+let language = DEFAULT_LANGUAGE
+let locale = FALLBACK_LOCALE
+
+function t(key, vars) {
+  const value = locale?.ui?.[key] ?? FALLBACK_LOCALE?.ui?.[key] ?? key
+  if (!vars) return value
+  return Object.entries(vars).reduce((str, [k, v]) => str.replaceAll(`{${k}}`, v), value)
+}
+
+function countryName(name) {
+  return locale?.countries?.[name] ?? name
+}
+
+function capitalName(name) {
+  return locale?.capitals?.[name] ?? name
+}
+
+function modeLabel(mode) {
+  return t(`mode.${mode.id}`)
+}
+
+function modeShort(mode) {
+  return t(`mode.${mode.id}.short`)
+}
+
+function positionLabel(position) {
+  return t(`position.${position.id}`)
+}
+
+
 const THEMES = [
   { id: 'tokyonight', label: 'Tokyo Night' },
   { id: 'nord', label: 'Nord' },
@@ -47,6 +91,7 @@ let currentIndex = 0
 let score = 0
 let points = 0
 let answered = false
+let lastSelected = null
 let quizStartTime = 0
 let timerId = null
 let timeLeft = 0
@@ -158,6 +203,21 @@ function loadQuizMode() {
   return QUIZ_MODES.some(m => m.id === stored) ? stored : DEFAULT_QUIZ_MODE
 }
 
+// ===== Language management =====
+function applyLanguage(langId) {
+  const found = LANGUAGES.find(l => l.id === langId) || LANGUAGES.find(l => l.id === DEFAULT_LANGUAGE) || LANGUAGES[0]
+  language = found.id
+  locale = found.data
+  localStorage.setItem('flag-quiz-language', found.id)
+  document.querySelector('#cmdlineInput')?.setAttribute('aria-label', t('cmdline.aria'))
+  return found
+}
+
+function loadLanguage() {
+  const stored = localStorage.getItem('flag-quiz-language')
+  return LANGUAGES.some(l => l.id === stored) ? stored : DEFAULT_LANGUAGE
+}
+
 // ===== Timer management =====
 const DEFAULT_TIMER_ENABLED = false
 const DEFAULT_TIMER_SECONDS = 15
@@ -241,45 +301,51 @@ function renderSettingsModal() {
     <div class="modal-overlay" id="settingsModal">
       <div class="modal">
         <div class="modal-header">
-          <span class="modal-title">Settings</span>
-          <button class="modal-close" id="settingsClose" aria-label="Close">
+          <span class="modal-title">${t('settings.title')}</span>
+          <button class="modal-close" id="settingsClose" aria-label="${t('settings.close')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="fontSelect">Font</label>
+          <label class="setting-label" for="languageSelect">${t('settings.language')}</label>
+          <select class="select" id="languageSelect">
+            ${LANGUAGES.map(l => `<option value="${l.id}" ${l.id === loadLanguage() ? 'selected' : ''}>${l.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="fontSelect">${t('settings.font')}</label>
           <select class="select" id="fontSelect">
             ${FONTS.map(f => `<option value="${f.id}" ${f.id === loadFont() ? 'selected' : ''}>${f.label}</option>`).join('')}
           </select>
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="themeSelect">Theme</label>
+          <label class="setting-label" for="themeSelect">${t('settings.theme')}</label>
           <select class="select" id="themeSelect">
-            ${THEMES.map(t => `<option value="${t.id}" ${t.id === loadTheme() ? 'selected' : ''}>${t.label}</option>`).join('')}
+            ${THEMES.map(th => `<option value="${th.id}" ${th.id === loadTheme() ? 'selected' : ''}>${th.label}</option>`).join('')}
           </select>
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="cmdlineSelect">Command line position</label>
+          <label class="setting-label" for="cmdlineSelect">${t('settings.commandLine')}</label>
           <select class="select" id="cmdlineSelect">
-            ${CMDLINE_POSITIONS.map(p => `<option value="${p.id}" ${p.id === loadCmdlinePosition() ? 'selected' : ''}>${p.label}</option>`).join('')}
+            ${CMDLINE_POSITIONS.map(p => `<option value="${p.id}" ${p.id === loadCmdlinePosition() ? 'selected' : ''}>${positionLabel(p)}</option>`).join('')}
           </select>
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="modeSelect">Quiz mode <span class="setting-note">Next Quiz</span></label>
+          <label class="setting-label" for="modeSelect">${t('settings.quizMode')} <span class="setting-note">${t('settings.nextQuiz')}</span></label>
           <select class="select" id="modeSelect">
-            ${QUIZ_MODES.map(m => `<option value="${m.id}" ${m.id === loadQuizMode() ? 'selected' : ''}>${m.label}</option>`).join('')}
+            ${QUIZ_MODES.map(m => `<option value="${m.id}" ${m.id === loadQuizMode() ? 'selected' : ''}>${modeLabel(m)}</option>`).join('')}
           </select>
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="questionsInput">Questions per quiz <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">Refresh Needed</span></label>
+          <label class="setting-label" for="questionsInput">${t('settings.questions')} <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
           <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="optionsInput">Answer options <span class="setting-value" id="optionsValue">${loadOptionsCount()}</span> <span class="setting-note">Refresh Needed</span></label>
+          <label class="setting-label" for="optionsInput">${t('settings.options')} <span class="setting-value" id="optionsValue">${loadOptionsCount()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
           <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="paddingInput">Corner padding <span id="paddingValue">${loadCornerPadding()}px</span></label>
+          <label class="setting-label" for="paddingInput">${t('settings.corner')} <span id="paddingValue">${loadCornerPadding()}px</span></label>
           <input class="range" type="range" id="paddingInput" min="0" max="32" step="1" value="${loadCornerPadding()}" />
         </div>
       </div>
@@ -301,6 +367,11 @@ function openSettings() {
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
   document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
   document.getElementById('modeSelect').addEventListener('change', (e) => applyQuizMode(e.target.value))
+  document.getElementById('languageSelect').addEventListener('change', (e) => {
+    applyLanguage(e.target.value)
+    closeSettings()
+    rerender()
+  })
   document.getElementById('questionsInput').addEventListener('input', (e) => {
     const count = applyQuestionsPerQuiz(e.target.value)
     document.getElementById('questionsValue').textContent = `${count}`
@@ -346,7 +417,7 @@ const cmdline = document.createElement('div')
 cmdline.id = 'cmdline'
 cmdline.innerHTML = `
   <span class="cmdline-prompt" aria-hidden="true">:</span>
-  <input class="cmdline-input" id="cmdlineInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Command line" />
+  <input class="cmdline-input" id="cmdlineInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="${t('cmdline.aria')}" />
   <span class="cmdline-message" id="cmdlineMessage" role="status" aria-live="polite"></span>
 `
 document.body.appendChild(cmdline)
@@ -408,6 +479,7 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-mode')
   localStorage.removeItem('flag-quiz-timer-enabled')
   localStorage.removeItem('flag-quiz-timer-seconds')
+  localStorage.removeItem('flag-quiz-language')
   applyTheme(loadTheme())
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
@@ -417,6 +489,7 @@ function resetApp() {
   applyQuizMode(loadQuizMode())
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())
+  applyLanguage(loadLanguage())
   showWelcome()
 }
 
@@ -428,97 +501,105 @@ function runCommand(raw) {
     case 'answer':
     case 'a': {
       const buttons = Array.from(document.querySelectorAll('.answer-btn'))
-      if (buttons.length === 0) return showCmdMessage('No active question', true)
-      if (answered) return showCmdMessage('Question already answered', true)
+      if (buttons.length === 0) return showCmdMessage(t('cmd.noQuestion'), true)
+      if (answered) return showCmdMessage(t('cmd.alreadyAnswered'), true)
       const index = LETTERS.indexOf(arg.toUpperCase())
       if (arg.length !== 1 || index === -1 || !buttons[index]) {
-        return showCmdMessage(`Invalid option: use ${LETTERS.slice(0, buttons.length).join(', ').toLowerCase()}`, true)
+        return showCmdMessage(t('cmd.invalidOption', { letters: LETTERS.slice(0, buttons.length).join(', ').toLowerCase() }), true)
       }
       handleAnswer(buttons[index])
       return
     }
     case 'reset':
       resetApp()
-      return showCmdMessage('App reset')
+      return showCmdMessage(t('cmd.appReset'))
     case 'font': {
       const font = findByName(FONTS, arg)
-      if (!font) return showCmdMessage('Invalid font', true)
+      if (!font) return showCmdMessage(t('cmd.invalidFont'), true)
       applyFont(font.id)
-      return showCmdMessage(`Font: ${font.label}`)
+      return showCmdMessage(t('cmd.font', { name: font.label }))
     }
     case 'theme':
     case 'color':
     case 'colorscheme': {
       const theme = findByName(THEMES, arg)
-      if (!theme) return showCmdMessage('Invalid theme', true)
+      if (!theme) return showCmdMessage(t('cmd.invalidTheme'), true)
       applyTheme(theme.id)
-      return showCmdMessage(`Theme: ${theme.label}`)
+      return showCmdMessage(t('cmd.theme', { name: theme.label }))
     }
     case 'cmdline': {
       const position = findByName(CMDLINE_POSITIONS, arg)
-      if (!position) return showCmdMessage('Invalid position: top, bottom, center', true)
+      if (!position) return showCmdMessage(t('cmd.invalidPosition'), true)
       applyCmdlinePosition(position.id)
-      return showCmdMessage(`Command line: ${position.label}`)
+      return showCmdMessage(t('cmd.cmdline', { name: positionLabel(position) }))
     }
     case 'questions': {
       const count = parseInt(arg, 10)
-      if (!Number.isFinite(count)) return showCmdMessage('Invalid number', true)
+      if (!Number.isFinite(count)) return showCmdMessage(t('cmd.invalidNumber'), true)
       if (count < MIN_QUESTIONS_PER_QUIZ || count > MAX_QUESTIONS_PER_QUIZ) {
-        return showCmdMessage(`Number must be between ${MIN_QUESTIONS_PER_QUIZ} and ${MAX_QUESTIONS_PER_QUIZ}`, true)
+        return showCmdMessage(t('cmd.numberBetween', { min: MIN_QUESTIONS_PER_QUIZ, max: MAX_QUESTIONS_PER_QUIZ }), true)
       }
       applyQuestionsPerQuiz(count)
-      return showCmdMessage(`Questions per quiz: ${count}`)
+      return showCmdMessage(t('cmd.questions', { count }))
     }
     case 'corner': {
       const px = parseInt(arg, 10)
-      if (!Number.isFinite(px)) return showCmdMessage('Invalid number', true)
-      if (px < 0 || px > 32) return showCmdMessage('Number must be between 0 and 32', true)
+      if (!Number.isFinite(px)) return showCmdMessage(t('cmd.invalidNumber'), true)
+      if (px < 0 || px > 32) return showCmdMessage(t('cmd.numberBetween', { min: 0, max: 32 }), true)
       applyCornerPadding(px)
-      return showCmdMessage(`Corner padding: ${px}px`)
+      return showCmdMessage(t('cmd.corner', { px }))
     }
     case 'options': {
       const count = parseInt(arg, 10)
-      if (!Number.isFinite(count)) return showCmdMessage('Invalid number', true)
+      if (!Number.isFinite(count)) return showCmdMessage(t('cmd.invalidNumber'), true)
       if (count < MIN_OPTIONS_COUNT || count > MAX_OPTIONS_COUNT) {
-        return showCmdMessage(`Number must be between ${MIN_OPTIONS_COUNT} and ${MAX_OPTIONS_COUNT}`, true)
+        return showCmdMessage(t('cmd.numberBetween', { min: MIN_OPTIONS_COUNT, max: MAX_OPTIONS_COUNT }), true)
       }
       applyOptionsCount(count)
-      return showCmdMessage(`Answer options: ${count}`)
+      return showCmdMessage(t('cmd.options', { count }))
     }
     case 'mode': {
       const mode = findByName(QUIZ_MODES, arg)
-      if (!mode) return showCmdMessage(`Invalid mode: ${QUIZ_MODES.map(m => m.id).join(', ')}`, true)
+      if (!mode) return showCmdMessage(t('cmd.invalidMode', { modes: QUIZ_MODES.map(m => m.id).join(', ') }), true)
       applyQuizMode(mode.id)
-      return showCmdMessage(`Quiz mode: ${mode.label}`)
+      return showCmdMessage(t('cmd.mode', { name: modeLabel(mode) }))
+    }
+    case 'lang':
+    case 'language': {
+      const lang = LANGUAGES.find(l => normalizeName(l.id) === normalizeName(arg) || normalizeName(l.label) === normalizeName(arg))
+      if (!lang) return showCmdMessage(t('cmd.invalidLang'), true)
+      applyLanguage(lang.id)
+      rerender()
+      return showCmdMessage(t('cmd.lang', { name: lang.label }))
     }
     case 'time': {
       const value = arg.trim().toLowerCase()
       if (['off', 'false', 'no', '0'].includes(value)) {
         setTimerEnabled(false)
-        return showCmdMessage('Timed mode: Off')
+        return showCmdMessage(t('cmd.timeOff'))
       }
       if (['on', 'true', 'yes'].includes(value)) {
         setTimerEnabled(true)
-        return showCmdMessage(`Timed mode: On (${timerSeconds}s)`)
+        return showCmdMessage(t('cmd.timeOn', { seconds: timerSeconds }))
       }
       const seconds = parseInt(value, 10)
-      if (!Number.isFinite(seconds)) return showCmdMessage('Use off or a number between 5 and 60', true)
+      if (!Number.isFinite(seconds)) return showCmdMessage(t('cmd.timeUse', { min: MIN_TIMER_SECONDS, max: MAX_TIMER_SECONDS }), true)
       if (seconds < MIN_TIMER_SECONDS || seconds > MAX_TIMER_SECONDS) {
-        return showCmdMessage(`Number must be between ${MIN_TIMER_SECONDS} and ${MAX_TIMER_SECONDS}`, true)
+        return showCmdMessage(t('cmd.numberBetween', { min: MIN_TIMER_SECONDS, max: MAX_TIMER_SECONDS }), true)
       }
       applyTimerSeconds(seconds)
       setTimerEnabled(true)
-      return showCmdMessage(`Seconds per question: ${seconds}`)
+      return showCmdMessage(t('cmd.seconds', { seconds }))
     }
     case '':
       return
     default:
-      return showCmdMessage(`Unknown command: ${name}`, true)
+      return showCmdMessage(t('cmd.unknown', { name }), true)
   }
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'mode', 'options', 'questions', 'reset', 'theme', 'time']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'lang', 'language', 'mode', 'options', 'questions', 'reset', 'theme', 'time']
 let completion = null
 
 function getCompletionItems(text) {
@@ -547,9 +628,13 @@ function getCompletionItems(text) {
   } else if (name === 'cmdline') {
     options = CMDLINE_POSITIONS
       .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
-      .map(o => ({ value: o.id, label: o.label, insert: o.id }))
+      .map(o => ({ value: o.id, label: positionLabel(o), insert: o.id }))
   } else if (name === 'mode') {
     options = QUIZ_MODES
+      .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
+      .map(o => ({ value: o.id, label: modeLabel(o), insert: o.id }))
+  } else if (name === 'lang' || name === 'language') {
+    options = LANGUAGES
       .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
       .map(o => ({ value: o.id, label: o.label, insert: o.id }))
   } else if (name === 'time') {
@@ -723,27 +808,27 @@ document.addEventListener('keydown', (e) => {
 function renderHeader() {
   return `
     <div class="header">
-      <div class="logo">Flag Quiz</div>
+      <div class="logo">${t('app.logo')}</div>
       <div class="controls">
-        <div class="mode-switch" role="tablist" aria-label="Game mode">
+        <div class="mode-switch" role="tablist" aria-label="${t('mode.aria')}">
           ${QUIZ_MODES.map(m => `
-            <button class="mode-btn${m.id === quizMode ? ' active' : ''}" data-mode="${m.id}" role="tab" aria-selected="${m.id === quizMode}" title="${m.label}">${m.short}</button>
+            <button class="mode-btn${m.id === quizMode ? ' active' : ''}" data-mode="${m.id}" role="tab" aria-selected="${m.id === quizMode}" title="${modeLabel(m)}">${modeShort(m)}</button>
           `).join('')}
         </div>
         <div class="timer-control">
-          <button class="timer-btn${timerEnabled ? ' active' : ''}" id="timerToggle" aria-pressed="${timerEnabled}" aria-haspopup="true" title="Timed mode">
+          <button class="timer-btn${timerEnabled ? ' active' : ''}" id="timerToggle" aria-pressed="${timerEnabled}" aria-haspopup="true" title="${t('quiz.timerTitle')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="9"/>
               <path d="M12 7v5l3 2"/>
             </svg>
-            <span>Timed</span>
+            <span>${t('quiz.timed')}</span>
           </button>
-          <div class="timer-popover" role="group" aria-label="Timer settings">
-            <label class="timer-popover-label" for="timerSecondsInput">Seconds per question</label>
+          <div class="timer-popover" role="group" aria-label="${t('quiz.timerTitle')}">
+            <label class="timer-popover-label" for="timerSecondsInput">${t('quiz.secondsPerQuestion')}</label>
             <input class="number-input" type="number" id="timerSecondsInput" min="${MIN_TIMER_SECONDS}" max="${MAX_TIMER_SECONDS}" step="1" value="${timerSeconds}" />
           </div>
         </div>
-        <button class="settings-btn" id="settingsBtn" aria-label="Settings">
+        <button class="settings-btn" id="settingsBtn" aria-label="${t('settings.title')}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -839,6 +924,7 @@ function startTimer(reset = true) {
 function handleTimeout() {
   if (answered) return
   answered = true
+  lastSelected = null
   const q = quizQuestions[currentIndex]
   document.querySelectorAll('.answer-btn').forEach(b => {
     b.disabled = true
@@ -852,7 +938,7 @@ function updateScoreBar() {
   const scoreBar = document.querySelector('.score-bar')
   if (!scoreBar) return
   scoreBar.innerHTML = `
-    <span class="score-text">Question ${currentIndex + 1} / ${quizQuestions.length}</span>
+    <span class="score-text">${t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
     ${timerEnabled ? `<span class="score-timer${timeLeft <= 5 ? ' low' : ''}" id="scoreTimer" role="timer">${timeLeft}</span>` : ''}
     <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + 1}</span></span>
   `
@@ -861,7 +947,7 @@ function updateScoreBar() {
 function revealNext() {
   const nextBtn = document.querySelector('#nextBtn')
   nextBtn.style.display = 'inline-block'
-  nextBtn.textContent = currentIndex + 1 < quizQuestions.length ? 'Next' : 'See Results'
+  nextBtn.textContent = currentIndex + 1 < quizQuestions.length ? t('quiz.next') : t('quiz.seeResults')
   if (!isSettingsOpen()) nextBtn.focus()
 }
 
@@ -875,30 +961,30 @@ function renderQuestion() {
   let promptClass = ''
 
   if (q.mode === 'flag') {
-    prompt = `<img class="flag-img" src="${q.country.flag}" alt="Flag" />`
+    prompt = `<img class="flag-img" src="${q.country.flag}" alt="${t('quiz.flagAlt')}" />`
   } else if (q.mode === 'capital') {
-    prompt = `<div class="prompt-hint">Capital of</div><div class="prompt-country">${q.country.capital}</div>`
+    prompt = `<div class="prompt-hint">${t('quiz.capitalOf')}</div><div class="prompt-country">${capitalName(q.country.capital)}</div>`
     promptClass = ' country-prompt'
   } else {
-    prompt = `<div class="prompt-country">${q.country.country}</div>`
+    prompt = `<div class="prompt-country">${countryName(q.country.country)}</div>`
     promptClass = ' country-prompt'
   }
 
   const options = q.options.map((opt, i) => answerIsFlag
     ? `<button class="answer-btn flag-option" data-country="${opt.country}">
         <span class="letter">${LETTERS[i]}</span>
-        <img class="answer-flag" src="${opt.flag}" alt="${opt.country}" />
+        <img class="answer-flag" src="${opt.flag}" alt="${countryName(opt.country)}" />
       </button>`
     : `<button class="answer-btn" data-country="${opt.country}">
         <span class="letter">${LETTERS[i]}</span>
-        <span>${opt.country}</span>
+        <span>${countryName(opt.country)}</span>
       </button>`
   ).join('')
 
   app.innerHTML = `
     ${renderHeader()}
     <div class="score-bar">
-      <span class="score-text">Question ${currentIndex + 1} / ${quizQuestions.length}</span>
+      <span class="score-text">${t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
       ${timerEnabled ? `<span class="score-timer" id="scoreTimer" role="timer">${timerSeconds}</span>` : ''}
       <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex}</span></span>
     </div>
@@ -909,7 +995,7 @@ function renderQuestion() {
       <div class="answers${answerIsFlag ? ' flags' : ''}" id="answers">
         ${options}
       </div>
-      <button class="next-btn" id="nextBtn" style="display:none">Next</button>
+      <button class="next-btn" id="nextBtn" style="display:none">${t('quiz.next')}</button>
     </div>
   `
 
@@ -931,6 +1017,7 @@ function handleAnswer(btn) {
   const q = quizQuestions[currentIndex]
   const selectedCountry = btn.dataset.country
   const isCorrect = selectedCountry === q.country.country
+  lastSelected = selectedCountry
 
   if (isCorrect) {
     score++
@@ -954,6 +1041,7 @@ function handleAnswer(btn) {
 function handleNext() {
   stopTimer()
   currentIndex++
+  lastSelected = null
   if (currentIndex < quizQuestions.length) {
     renderQuestion()
   } else {
@@ -972,16 +1060,39 @@ function renderResult() {
   app.innerHTML = `
     ${renderHeader()}
     <div class="quiz-card result-card">
-      <h2>Quiz Complete!</h2>
-      <p class="score-text">You scored</p>
+      <h2>${t('result.complete')}</h2>
+      <p class="score-text">${t('result.youScored')}</p>
       <div class="final-score">${score} / ${total}</div>
-      <p class="result-meta">${accuracy}% accuracy</p>
-      ${timerEnabled ? `<p class="result-meta">${points} points · ${timeStr}</p>` : ''}
-      <button class="restart-btn" id="restartBtn">Play Again</button>
+      <p class="result-meta">${t('result.accuracy', { percent: accuracy })}</p>
+      ${timerEnabled ? `<p class="result-meta">${t('result.points', { points, time: timeStr })}</p>` : ''}
+      <button class="restart-btn" id="restartBtn">${t('result.playAgain')}</button>
     </div>
   `
   document.querySelector('#restartBtn').addEventListener('click', startQuiz)
   bindHeaderControls()
+}
+
+// ===== Rerender current view (e.g. after language change) =====
+function rerender() {
+  if (document.querySelector('#playBtn')) return showWelcome()
+  if (document.querySelector('#restartBtn')) return renderResult()
+  if (!document.querySelector('.answer-btn')) return showWelcome()
+
+  const wasAnswered = answered
+  const selected = lastSelected
+  renderQuestion()
+  if (wasAnswered) {
+    answered = true
+    stopTimer()
+    const q = quizQuestions[currentIndex]
+    document.querySelectorAll('.answer-btn').forEach(b => {
+      b.disabled = true
+      if (b.dataset.country === q.country.country) b.classList.add('correct')
+      else if (b.dataset.country === selected) b.classList.add('wrong')
+    })
+    updateScoreBar()
+    revealNext()
+  }
 }
 
 // ===== Welcome screen =====
@@ -989,10 +1100,10 @@ function renderWelcome() {
   return `
     ${renderHeader()}
     <div class="quiz-card welcome-card">
-      <pre class="welcome-ascii" role="img" aria-label="Flag Quiz">${WELCOME_ASCII}</pre>
-      <p class="welcome-text">Guess the country from its flag, its name, or its capital.</p>
-      <p class="welcome-text welcome-hint">Pick a mode in the top bar, then hit Play.</p>
-      <button class="play-btn" id="playBtn">Play</button>
+      <pre class="welcome-ascii" role="img" aria-label="${t('welcome.aria')}">${WELCOME_ASCII}</pre>
+      <p class="welcome-text">${t('welcome.tagline')}</p>
+      <p class="welcome-text welcome-hint">${t('welcome.hint')}</p>
+      <button class="play-btn" id="playBtn">${t('welcome.play')}</button>
     </div>
   `
 }
@@ -1012,6 +1123,7 @@ function startQuiz() {
   currentIndex = 0
   score = 0
   points = 0
+  lastSelected = null
   quizStartTime = Date.now()
   renderQuestion()
 }
@@ -1027,12 +1139,13 @@ async function init() {
   applyQuizMode(loadQuizMode())
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())
+  applyLanguage(loadLanguage())
   try {
     const res = await fetch('./data.json')
     countries = await res.json()
     showWelcome()
   } catch (err) {
-    app.innerHTML = `<div class="quiz-card"><p>Failed to load quiz data.</p></div>`
+    app.innerHTML = `<div class="quiz-card"><p>${t('error.loadFailed')}</p></div>`
   }
 }
 

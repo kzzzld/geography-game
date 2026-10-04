@@ -593,7 +593,7 @@ body {
   color: var(--primary);
   text-align: left;
   white-space: pre;
-  overflow-x: auto;
+  overflow: hidden;
   max-width: 100%;
 }
 

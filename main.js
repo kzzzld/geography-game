@@ -675,7 +675,7 @@ document.addEventListener('keydown', (e) => {
   const activeTag = document.activeElement?.tagName
   if (activeTag === 'INPUT' || activeTag === 'SELECT' || activeTag === 'TEXTAREA') return
 
-  if (e.key === ':') {
+  if (e.key === ':' || (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'p')) {
     e.preventDefault()
     openCommandLine()
     return

@@ -138,7 +138,7 @@ function loadCornerPadding() {
 }
 
 // ===== Corner radius management =====
-const DEFAULT_CORNER_RADIUS = 16
+const DEFAULT_CORNER_RADIUS = 0
 const MIN_CORNER_RADIUS = 0
 const MAX_CORNER_RADIUS = 48
 

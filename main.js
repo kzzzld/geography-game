@@ -24,13 +24,24 @@ const CMDLINE_POSITIONS = [
   { id: 'bottom', label: 'Bottom' },
 ]
 
+const QUIZ_MODES = [
+  { id: 'flag', label: 'Flag → Country' },
+  { id: 'country', label: 'Country → Flag' },
+  { id: 'mixed', label: 'Mixed' },
+]
+
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
 let countries = []
 let quizQuestions = []
 let currentIndex = 0
 let score = 0
+let points = 0
 let answered = false
+let quizStartTime = 0
+let timerId = null
+let timeLeft = 0
+let timerPaused = false
 
 const app = document.querySelector('#app')
 
@@ -121,6 +132,64 @@ function loadOptionsCount() {
   return clampOptionsCount(stored)
 }
 
+// ===== Quiz mode management =====
+const DEFAULT_QUIZ_MODE = 'flag'
+
+let quizMode = DEFAULT_QUIZ_MODE
+
+function applyQuizMode(modeId) {
+  const mode = QUIZ_MODES.find(m => m.id === modeId) || QUIZ_MODES[0]
+  quizMode = mode.id
+  localStorage.setItem('flag-quiz-mode', mode.id)
+  return mode
+}
+
+function loadQuizMode() {
+  const stored = localStorage.getItem('flag-quiz-mode')
+  return QUIZ_MODES.some(m => m.id === stored) ? stored : DEFAULT_QUIZ_MODE
+}
+
+// ===== Timer management =====
+const DEFAULT_TIMER_ENABLED = false
+const DEFAULT_TIMER_SECONDS = 15
+const MIN_TIMER_SECONDS = 5
+const MAX_TIMER_SECONDS = 60
+const SCORE_BASE = 100
+const SCORE_TIME_BONUS = 10
+
+let timerEnabled = DEFAULT_TIMER_ENABLED
+let timerSeconds = DEFAULT_TIMER_SECONDS
+
+function applyTimerEnabled(enabled) {
+  timerEnabled = enabled === true || enabled === 'true' || enabled === 'on'
+  localStorage.setItem('flag-quiz-timer-enabled', String(timerEnabled))
+  return timerEnabled
+}
+
+function loadTimerEnabled() {
+  const stored = localStorage.getItem('flag-quiz-timer-enabled')
+  return stored === null ? DEFAULT_TIMER_ENABLED : stored === 'true'
+}
+
+function clampTimerSeconds(value) {
+  const parsed = parseInt(value, 10)
+  if (!Number.isFinite(parsed)) return DEFAULT_TIMER_SECONDS
+  return Math.min(MAX_TIMER_SECONDS, Math.max(MIN_TIMER_SECONDS, parsed))
+}
+
+function applyTimerSeconds(value) {
+  const seconds = clampTimerSeconds(value)
+  timerSeconds = seconds
+  localStorage.setItem('flag-quiz-timer-seconds', String(seconds))
+  return seconds
+}
+
+function loadTimerSeconds() {
+  const stored = localStorage.getItem('flag-quiz-timer-seconds')
+  if (stored === null) return DEFAULT_TIMER_SECONDS
+  return clampTimerSeconds(stored)
+}
+
 // ===== Command line position management =====
 const DEFAULT_CMDLINE_POSITION = 'center'
 
@@ -152,7 +221,8 @@ function buildQuiz() {
   return selected.map(country => {
     const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
     const options = shuffle([country, ...wrongs])
-    return { country, options }
+    const mode = quizMode === 'mixed' ? (Math.random() < 0.5 ? 'flag' : 'country') : quizMode
+    return { country, options, mode }
   })
 }
 
@@ -186,12 +256,29 @@ function renderSettingsModal() {
           </select>
         </div>
         <div class="setting-row">
+          <label class="setting-label" for="modeSelect">Quiz mode <span class="setting-note">Next Quiz</span></label>
+          <select class="select" id="modeSelect">
+            ${QUIZ_MODES.map(m => `<option value="${m.id}" ${m.id === loadQuizMode() ? 'selected' : ''}>${m.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="setting-row">
           <label class="setting-label" for="questionsInput">Questions per quiz <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">Refresh Needed</span></label>
           <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
         </div>
         <div class="setting-row">
           <label class="setting-label" for="optionsInput">Answer options <span class="setting-value" id="optionsValue">${loadOptionsCount()}</span> <span class="setting-note">Refresh Needed</span></label>
           <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="timerSelect">Timed mode <span class="setting-note">Next Quiz</span></label>
+          <select class="select" id="timerSelect">
+            <option value="off" ${!loadTimerEnabled() ? 'selected' : ''}>Off</option>
+            <option value="on" ${loadTimerEnabled() ? 'selected' : ''}>On</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="timerSecondsInput">Seconds per question <span class="setting-value" id="timerSecondsValue">${loadTimerSeconds()}</span></label>
+          <input class="range" type="range" id="timerSecondsInput" min="${MIN_TIMER_SECONDS}" max="${MAX_TIMER_SECONDS}" step="1" value="${loadTimerSeconds()}" />
         </div>
         <div class="setting-row">
           <label class="setting-label" for="paddingInput">Corner padding <span id="paddingValue">${loadCornerPadding()}px</span></label>
@@ -207,12 +294,20 @@ let lastFocusedBeforeModal = null
 function openSettings() {
   const modal = document.getElementById('settingsModal')
   lastFocusedBeforeModal = document.activeElement
+  timerPaused = timerId !== null
+  stopTimer()
   modal.classList.add('open')
   document.getElementById('settingsClose').addEventListener('click', closeSettings)
   modal.addEventListener('click', (e) => { if (e.target === modal) closeSettings() })
   document.getElementById('themeSelect').addEventListener('change', (e) => applyTheme(e.target.value))
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
   document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
+  document.getElementById('modeSelect').addEventListener('change', (e) => applyQuizMode(e.target.value))
+  document.getElementById('timerSelect').addEventListener('change', (e) => applyTimerEnabled(e.target.value === 'on'))
+  document.getElementById('timerSecondsInput').addEventListener('input', (e) => {
+    const seconds = applyTimerSeconds(e.target.value)
+    document.getElementById('timerSecondsValue').textContent = `${seconds}`
+  })
   document.getElementById('questionsInput').addEventListener('input', (e) => {
     const count = applyQuestionsPerQuiz(e.target.value)
     document.getElementById('questionsValue').textContent = `${count}`
@@ -235,6 +330,10 @@ function closeSettings() {
     lastFocusedBeforeModal.focus()
   }
   lastFocusedBeforeModal = null
+  if (timerPaused && timerEnabled && !answered && document.querySelector('#nextBtn')?.style.display === 'none') {
+    startTimer(false)
+  }
+  timerPaused = false
 }
 
 function isSettingsOpen() {
@@ -313,12 +412,18 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-cmdline-position')
   localStorage.removeItem('flag-quiz-questions-per-quiz')
   localStorage.removeItem('flag-quiz-options-count')
+  localStorage.removeItem('flag-quiz-mode')
+  localStorage.removeItem('flag-quiz-timer-enabled')
+  localStorage.removeItem('flag-quiz-timer-seconds')
   applyTheme(loadTheme())
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())
+  applyQuizMode(loadQuizMode())
+  applyTimerEnabled(loadTimerEnabled())
+  applyTimerSeconds(loadTimerSeconds())
   startQuiz()
 }
 
@@ -348,7 +453,9 @@ function runCommand(raw) {
       applyFont(font.id)
       return showCmdMessage(`Font: ${font.label}`)
     }
-    case 'theme': {
+    case 'theme':
+    case 'color':
+    case 'colorscheme': {
       const theme = findByName(THEMES, arg)
       if (!theme) return showCmdMessage('Invalid theme', true)
       applyTheme(theme.id)
@@ -385,6 +492,31 @@ function runCommand(raw) {
       applyOptionsCount(count)
       return showCmdMessage(`Answer options: ${count}`)
     }
+    case 'mode': {
+      const mode = findByName(QUIZ_MODES, arg)
+      if (!mode) return showCmdMessage('Invalid mode: flag, country, mixed', true)
+      applyQuizMode(mode.id)
+      return showCmdMessage(`Quiz mode: ${mode.label}`)
+    }
+    case 'time': {
+      const value = arg.trim().toLowerCase()
+      if (['off', 'false', 'no', '0'].includes(value)) {
+        applyTimerEnabled(false)
+        return showCmdMessage('Timed mode: Off')
+      }
+      if (['on', 'true', 'yes'].includes(value)) {
+        applyTimerEnabled(true)
+        return showCmdMessage(`Timed mode: On (${timerSeconds}s)`)
+      }
+      const seconds = parseInt(value, 10)
+      if (!Number.isFinite(seconds)) return showCmdMessage('Use off or a number between 5 and 60', true)
+      if (seconds < MIN_TIMER_SECONDS || seconds > MAX_TIMER_SECONDS) {
+        return showCmdMessage(`Number must be between ${MIN_TIMER_SECONDS} and ${MAX_TIMER_SECONDS}`, true)
+      }
+      applyTimerSeconds(seconds)
+      applyTimerEnabled(true)
+      return showCmdMessage(`Seconds per question: ${seconds}`)
+    }
     case '':
       return
     default:
@@ -393,7 +525,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'corner', 'font', 'options', 'questions', 'reset', 'theme']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'mode', 'options', 'questions', 'reset', 'theme', 'time']
 let completion = null
 
 function getCompletionItems(text) {
@@ -411,15 +543,26 @@ function getCompletionItems(text) {
   const typed = normalizeName(text.slice(spaceIndex).trim())
   let options = []
 
-  if (name === 'font' || name === 'theme') {
-    const list = name === 'font' ? FONTS : THEMES
-    options = list
+  if (name === 'font') {
+    options = FONTS
+      .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
+      .map(o => ({ value: o.id, label: o.label, insert: o.id }))
+  } else if (name === 'theme' || name === 'color' || name === 'colorscheme') {
+    options = THEMES
       .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
       .map(o => ({ value: o.id, label: o.label, insert: o.id }))
   } else if (name === 'cmdline') {
     options = CMDLINE_POSITIONS
       .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
       .map(o => ({ value: o.id, label: o.label, insert: o.id }))
+  } else if (name === 'mode') {
+    options = QUIZ_MODES
+      .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
+      .map(o => ({ value: o.id, label: o.label, insert: o.id }))
+  } else if (name === 'time') {
+    options = ['off']
+      .filter(o => o.startsWith(typed))
+      .map(o => ({ value: o, label: o, insert: o }))
   } else if (name === 'answer' || name === 'a') {
     const count = document.querySelectorAll('.answer-btn').length
     options = LETTERS.slice(0, count)
@@ -599,28 +742,98 @@ function renderHeader() {
   `
 }
 
+// ===== Timer =====
+function updateTimerDisplay() {
+  const el = document.querySelector('#scoreTimer')
+  if (!el) return
+  el.textContent = `${timeLeft}`
+  el.classList.toggle('low', timeLeft <= 5)
+}
+
+function stopTimer() {
+  if (timerId !== null) {
+    clearInterval(timerId)
+    timerId = null
+  }
+}
+
+function startTimer(reset = true) {
+  stopTimer()
+  if (reset) timeLeft = timerSeconds
+  updateTimerDisplay()
+  timerId = setInterval(() => {
+    timeLeft--
+    updateTimerDisplay()
+    if (timeLeft <= 0) {
+      stopTimer()
+      handleTimeout()
+    }
+  }, 1000)
+}
+
+function handleTimeout() {
+  if (answered) return
+  answered = true
+  const q = quizQuestions[currentIndex]
+  document.querySelectorAll('.answer-btn').forEach(b => {
+    b.disabled = true
+    if (b.dataset.country === q.country.country) b.classList.add('correct')
+  })
+  updateScoreBar()
+  revealNext()
+}
+
+function updateScoreBar() {
+  const scoreBar = document.querySelector('.score-bar')
+  if (!scoreBar) return
+  scoreBar.innerHTML = `
+    <span class="score-text">Question ${currentIndex + 1} / ${quizQuestions.length}</span>
+    ${timerEnabled ? `<span class="score-timer${timeLeft <= 5 ? ' low' : ''}" id="scoreTimer" role="timer">${timeLeft}</span>` : ''}
+    <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + 1}</span></span>
+  `
+}
+
+function revealNext() {
+  const nextBtn = document.querySelector('#nextBtn')
+  nextBtn.style.display = 'inline-block'
+  nextBtn.textContent = currentIndex + 1 < quizQuestions.length ? 'Next' : 'See Results'
+  if (!isSettingsOpen()) nextBtn.focus()
+}
+
 // ===== Render question =====
 function renderQuestion() {
   const q = quizQuestions[currentIndex]
   answered = false
 
+  const isFlagPrompt = q.mode === 'flag'
+  const prompt = isFlagPrompt
+    ? `<img class="flag-img" src="${q.country.flag}" alt="Flag" />`
+    : `<div class="prompt-country">${q.country.country}</div>`
+
+  const options = q.options.map((opt, i) => isFlagPrompt
+    ? `<button class="answer-btn" data-country="${opt.country}">
+        <span class="letter">${LETTERS[i]}</span>
+        <span>${opt.country}</span>
+      </button>`
+    : `<button class="answer-btn flag-option" data-country="${opt.country}">
+        <span class="letter">${LETTERS[i]}</span>
+        <img class="answer-flag" src="${opt.flag}" alt="${opt.country}" />
+      </button>`
+  ).join('')
+
   app.innerHTML = `
     ${renderHeader()}
     <div class="score-bar">
       <span class="score-text">Question ${currentIndex + 1} / ${quizQuestions.length}</span>
+      ${timerEnabled ? `<span class="score-timer" id="scoreTimer" role="timer">${timerSeconds}</span>` : ''}
       <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex}</span></span>
     </div>
     <div class="quiz-card">
-      <div class="flag-wrap">
-        <img class="flag-img" src="${q.country.flag}" alt="Flag" />
+      <div class="flag-wrap${isFlagPrompt ? '' : ' country-prompt'}">
+        ${prompt}
       </div>
-      <div class="answers" id="answers">
-        ${q.options.map((opt, i) => `
-          <button class="answer-btn" data-country="${opt.country}">
-            <span class="letter">${LETTERS[i]}</span>
-            <span>${opt.country}</span>
-          </button>
-        `).join('')}
+      <div class="answers${isFlagPrompt ? '' : ' flags'}" id="answers">
+        ${options}
       </div>
       <button class="next-btn" id="nextBtn" style="display:none">Next</button>
     </div>
@@ -632,18 +845,23 @@ function renderQuestion() {
   document.querySelector('#nextBtn').addEventListener('click', handleNext)
   document.querySelector('#settingsBtn').addEventListener('click', openSettings)
   document.querySelector('.answer-btn')?.focus()
+  if (timerEnabled) startTimer()
 }
 
 // ===== Handle answer selection =====
 function handleAnswer(btn) {
   if (answered) return
   answered = true
+  stopTimer()
 
   const q = quizQuestions[currentIndex]
   const selectedCountry = btn.dataset.country
   const isCorrect = selectedCountry === q.country.country
 
-  if (isCorrect) score++
+  if (isCorrect) {
+    score++
+    if (timerEnabled) points += SCORE_BASE + Math.max(0, timeLeft) * SCORE_TIME_BONUS
+  }
 
   document.querySelectorAll('.answer-btn').forEach(b => {
     b.disabled = true
@@ -654,20 +872,13 @@ function handleAnswer(btn) {
     }
   })
 
-  // Update score display
-  const scoreBar = document.querySelector('.score-bar')
-  scoreBar.innerHTML = `
-    <span class="score-text">Question ${currentIndex + 1} / ${quizQuestions.length}</span>
-    <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + 1}</span></span>
-  `
-
-  document.querySelector('#nextBtn').style.display = 'inline-block'
-  document.querySelector('#nextBtn').textContent = currentIndex + 1 < quizQuestions.length ? 'Next' : 'See Results'
-  document.querySelector('#nextBtn').focus()
+  updateScoreBar()
+  revealNext()
 }
 
 // ===== Handle next =====
 function handleNext() {
+  stopTimer()
   currentIndex++
   if (currentIndex < quizQuestions.length) {
     renderQuestion()
@@ -678,12 +889,20 @@ function handleNext() {
 
 // ===== Render result =====
 function renderResult() {
+  stopTimer()
+  const total = quizQuestions.length
+  const accuracy = total ? Math.round((score / total) * 100) : 0
+  const elapsed = Math.max(0, Math.round((Date.now() - quizStartTime) / 1000))
+  const timeStr = `${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`
+
   app.innerHTML = `
     ${renderHeader()}
     <div class="quiz-card result-card">
       <h2>Quiz Complete!</h2>
       <p class="score-text">You scored</p>
-      <div class="final-score">${score} / ${quizQuestions.length}</div>
+      <div class="final-score">${score} / ${total}</div>
+      <p class="result-meta">${accuracy}% accuracy</p>
+      ${timerEnabled ? `<p class="result-meta">${points} points · ${timeStr}</p>` : ''}
       <button class="restart-btn" id="restartBtn">Play Again</button>
     </div>
   `
@@ -693,9 +912,12 @@ function renderResult() {
 
 // ===== Start quiz =====
 function startQuiz() {
+  stopTimer()
   quizQuestions = buildQuiz()
   currentIndex = 0
   score = 0
+  points = 0
+  quizStartTime = Date.now()
   renderQuestion()
 }
 
@@ -707,6 +929,9 @@ async function init() {
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())
+  applyQuizMode(loadQuizMode())
+  applyTimerEnabled(loadTimerEnabled())
+  applyTimerSeconds(loadTimerSeconds())
   try {
     const res = await fetch('./data.json')
     countries = await res.json()

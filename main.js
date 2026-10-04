@@ -812,7 +812,7 @@ document.addEventListener('keydown', (e) => {
 function renderHeader() {
   return `
     <div class="header">
-      <div class="logo">${t('app.logo')}</div>
+      <a class="logo" href="${import.meta.env.BASE_URL}">${t('app.logo')}</a>
       <div class="controls">
         <div class="mode-switch" role="tablist" aria-label="${t('mode.aria')}">
           ${QUIZ_MODES.map(m => `

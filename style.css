@@ -208,6 +208,8 @@ body {
   font-weight: 700;
   color: var(--primary);
   letter-spacing: -0.02em;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* ===== Settings button ===== */

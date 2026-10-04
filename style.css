@@ -579,6 +579,51 @@ body {
 .type-badge.disputed { background: color-mix(in srgb, var(--warning) 20%, transparent); color: var(--warning); }
 .type-badge.autonomous { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
 
+/* ===== Welcome screen ===== */
+.welcome-card {
+  padding: 3rem 2rem;
+}
+
+.welcome-ascii {
+  display: inline-block;
+  margin: 0 auto 2rem;
+  font-family: var(--font-family, 'Iosevka'), ui-monospace, monospace;
+  font-size: clamp(0.5rem, 2.2vw, 1rem);
+  line-height: 1.15;
+  color: var(--primary);
+  text-align: left;
+  white-space: pre;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.welcome-text {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin: 0.25rem 0;
+}
+
+.welcome-hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.play-btn {
+  background: var(--primary);
+  color: var(--bg);
+  border: none;
+  border-radius: 10px;
+  padding: 1rem 3.5rem;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.play-btn:hover { opacity: 0.9; }
+.play-btn:active { transform: scale(0.97); }
+
 /* ===== Responsive ===== */
 @media (max-width: 600px) {
   .app { padding: 1rem; }

@@ -33,6 +33,12 @@ const QUIZ_MODES = [
 
 const MIXED_PROMPT_MODES = ['flag', 'country', 'capital']
 
+const WELCOME_ASCII = `█████ ██     ███   ████     ███  █   █ ███ █████
+██    ██    █   █ █        █   █ █   █  █     █ 
+████  ██    █████ █  ██    █   █ █   █  █    █  
+██    ██    █   █ █   █    █  ██ █   █  █   █   
+██    █████ █   █  ███      ████  ███  ███ █████`
+
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
 let countries = []
@@ -430,7 +436,7 @@ function resetApp() {
   applyQuizMode(loadQuizMode())
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())
-  startQuiz()
+  showWelcome()
 }
 
 function runCommand(raw) {
@@ -773,6 +779,14 @@ function bindHeaderControls() {
 function switchMode(modeId) {
   if (modeId === quizMode) return
   applyQuizMode(modeId)
+  if (document.querySelector('#playBtn')) {
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      const active = btn.dataset.mode === modeId
+      btn.classList.toggle('active', active)
+      btn.setAttribute('aria-selected', String(active))
+    })
+    return
+  }
   startQuiz()
 }
 
@@ -785,7 +799,7 @@ function setTimerEnabled(enabled) {
   syncTimerToggle()
   if (enabled) {
     updateScoreBar()
-    if (!answered && !isSettingsOpen()) startTimer()
+    if (!answered && !isSettingsOpen() && document.querySelector('.answer-btn')) startTimer()
   } else {
     stopTimer()
     updateScoreBar()
@@ -976,6 +990,27 @@ function renderResult() {
   bindHeaderControls()
 }
 
+// ===== Welcome screen =====
+function renderWelcome() {
+  return `
+    ${renderHeader()}
+    <div class="quiz-card welcome-card">
+      <pre class="welcome-ascii" role="img" aria-label="Flag Quiz">${WELCOME_ASCII}</pre>
+      <p class="welcome-text">Guess the country from its flag, its name, or its capital.</p>
+      <p class="welcome-text welcome-hint">Pick a mode in the top bar, then hit Play.</p>
+      <button class="play-btn" id="playBtn">Play</button>
+    </div>
+  `
+}
+
+function showWelcome() {
+  stopTimer()
+  app.innerHTML = renderWelcome()
+  bindHeaderControls()
+  document.querySelector('#playBtn').addEventListener('click', startQuiz)
+  document.querySelector('#playBtn').focus()
+}
+
 // ===== Start quiz =====
 function startQuiz() {
   stopTimer()
@@ -1001,7 +1036,7 @@ async function init() {
   try {
     const res = await fetch('./data.json')
     countries = await res.json()
-    startQuiz()
+    showWelcome()
   } catch (err) {
     app.innerHTML = `<div class="quiz-card"><p>Failed to load quiz data.</p></div>`
   }

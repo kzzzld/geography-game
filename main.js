@@ -337,45 +337,57 @@ function renderSettingsModal() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
         </div>
-        <div class="setting-row">
-          <label class="setting-label" for="languageSelect">${t('settings.language')}</label>
-          <select class="select" id="languageSelect">
-            ${LANGUAGES.map(l => `<option value="${l.id}" ${l.id === loadLanguage() ? 'selected' : ''}>${l.label}</option>`).join('')}
-          </select>
+        <div class="setting-category">${t('settings.category.general')}</div>
+        <div class="setting-group">
+          <div class="setting-row">
+            <label class="setting-label" for="languageSelect">${t('settings.language')}</label>
+            <select class="select" id="languageSelect">
+              ${LANGUAGES.map(l => `<option value="${l.id}" ${l.id === loadLanguage() ? 'selected' : ''}>${l.label}</option>`).join('')}
+            </select>
+          </div>
         </div>
-        <div class="setting-row">
-          <label class="setting-label" for="fontSelect">${t('settings.font')}</label>
-          <select class="select" id="fontSelect">
-            ${FONTS.map(f => `<option value="${f.id}" ${f.id === loadFont() ? 'selected' : ''}>${f.label}</option>`).join('')}
-          </select>
+        <div class="setting-category">${t('settings.category.appearance')}</div>
+        <div class="setting-group">
+          <div class="setting-row">
+            <label class="setting-label" for="fontSelect">${t('settings.font')}</label>
+            <select class="select" id="fontSelect">
+              ${FONTS.map(f => `<option value="${f.id}" ${f.id === loadFont() ? 'selected' : ''}>${f.label}</option>`).join('')}
+            </select>
+          </div>
+          <div class="setting-row">
+            <label class="setting-label" for="themeSelect">${t('settings.theme')}</label>
+            <select class="select" id="themeSelect">
+              ${THEMES.map(th => `<option value="${th.id}" ${th.id === loadTheme() ? 'selected' : ''}>${th.label}</option>`).join('')}
+            </select>
+          </div>
+          <div class="setting-row">
+            <label class="setting-label" for="radiusInput">${t('settings.radius')}</label>
+            <input class="number-input" type="number" id="radiusInput" min="${MIN_CORNER_RADIUS}" max="${MAX_CORNER_RADIUS}" step="1" value="${loadCornerRadius()}" />
+          </div>
+          <div class="setting-row">
+            <label class="setting-label" for="paddingInput">${t('settings.corner')}</label>
+            <input class="number-input" type="number" id="paddingInput" min="${MIN_CORNER_PADDING}" max="${MAX_CORNER_PADDING}" step="1" value="${loadCornerPadding()}" />
+          </div>
         </div>
-        <div class="setting-row">
-          <label class="setting-label" for="themeSelect">${t('settings.theme')}</label>
-          <select class="select" id="themeSelect">
-            ${THEMES.map(th => `<option value="${th.id}" ${th.id === loadTheme() ? 'selected' : ''}>${th.label}</option>`).join('')}
-          </select>
+        <div class="setting-category">${t('settings.category.gameplay')}</div>
+        <div class="setting-group">
+          <div class="setting-row">
+            <label class="setting-label" for="questionsInput">${t('settings.questions')} <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
+            <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
+          </div>
+          <div class="setting-row">
+            <label class="setting-label" for="optionsInput">${t('settings.options')} <span class="setting-value" id="optionsValue">${loadOptionsCount()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
+            <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
+          </div>
         </div>
-        <div class="setting-row">
-          <label class="setting-label" for="cmdlineSelect">${t('settings.commandLine')}</label>
-          <select class="select" id="cmdlineSelect">
-            ${CMDLINE_POSITIONS.map(p => `<option value="${p.id}" ${p.id === loadCmdlinePosition() ? 'selected' : ''}>${positionLabel(p)}</option>`).join('')}
-          </select>
-        </div>
-        <div class="setting-row">
-          <label class="setting-label" for="questionsInput">${t('settings.questions')} <span class="setting-value" id="questionsValue">${loadQuestionsPerQuiz()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
-          <input class="range" type="range" id="questionsInput" min="${MIN_QUESTIONS_PER_QUIZ}" max="${MAX_QUESTIONS_PER_QUIZ}" step="1" value="${loadQuestionsPerQuiz()}" />
-        </div>
-        <div class="setting-row">
-          <label class="setting-label" for="optionsInput">${t('settings.options')} <span class="setting-value" id="optionsValue">${loadOptionsCount()}</span> <span class="setting-note">${t('settings.refresh')}</span></label>
-          <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
-        </div>
-        <div class="setting-row">
-          <label class="setting-label" for="paddingInput">${t('settings.corner')}</label>
-          <input class="number-input" type="number" id="paddingInput" min="${MIN_CORNER_PADDING}" max="${MAX_CORNER_PADDING}" step="1" value="${loadCornerPadding()}" />
-        </div>
-        <div class="setting-row">
-          <label class="setting-label" for="radiusInput">${t('settings.radius')}</label>
-          <input class="number-input" type="number" id="radiusInput" min="${MIN_CORNER_RADIUS}" max="${MAX_CORNER_RADIUS}" step="1" value="${loadCornerRadius()}" />
+        <div class="setting-category">${t('settings.category.interface')}</div>
+        <div class="setting-group">
+          <div class="setting-row">
+            <label class="setting-label" for="cmdlineSelect">${t('settings.commandLine')}</label>
+            <select class="select" id="cmdlineSelect">
+              ${CMDLINE_POSITIONS.map(p => `<option value="${p.id}" ${p.id === loadCmdlinePosition() ? 'selected' : ''}>${positionLabel(p)}</option>`).join('')}
+            </select>
+          </div>
         </div>
       </div>
     </div>

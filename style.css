@@ -188,7 +188,7 @@ body {
   color: var(--text-muted);
   border: none;
   border-radius: 7px;
-  padding: 0.4rem 0.75rem;
+  padding: 0.55rem 1rem;
   font-family: inherit;
   font-size: 0.8rem;
   font-weight: 600;
@@ -215,8 +215,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   background: var(--bg-elev);
   color: var(--text);
   border: 1px solid var(--border);
@@ -229,12 +229,16 @@ body {
 .settings-btn svg { width: 20px; height: 20px; }
 
 /* ===== Timer toggle ===== */
+.timer-control {
+  position: relative;
+}
+
 .timer-btn {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  height: 40px;
-  padding: 0 0.75rem;
+  height: 42px;
+  padding: 0 1rem;
   background: var(--bg-elev);
   color: var(--text-muted);
   border: 1px solid var(--border);
@@ -251,6 +255,52 @@ body {
   background: var(--primary);
   color: var(--bg);
   border-color: var(--primary);
+}
+
+.timer-popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  width: 210px;
+  max-width: calc(100vw - 2rem);
+  padding: 0.875rem 1rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  z-index: 50;
+}
+.timer-popover::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+.timer-control:hover .timer-popover,
+.timer-control:focus-within .timer-popover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.timer-popover-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+}
+.timer-popover-value {
+  color: var(--primary);
+  font-weight: 700;
 }
 
 /* ===== Modal ===== */

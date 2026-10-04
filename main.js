@@ -279,17 +279,6 @@ function renderSettingsModal() {
           <input class="range" type="range" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
         </div>
         <div class="setting-row">
-          <label class="setting-label" for="timerSelect">Timed mode <span class="setting-note">Next Quiz</span></label>
-          <select class="select" id="timerSelect">
-            <option value="off" ${!loadTimerEnabled() ? 'selected' : ''}>Off</option>
-            <option value="on" ${loadTimerEnabled() ? 'selected' : ''}>On</option>
-          </select>
-        </div>
-        <div class="setting-row">
-          <label class="setting-label" for="timerSecondsInput">Seconds per question <span class="setting-value" id="timerSecondsValue">${loadTimerSeconds()}</span></label>
-          <input class="range" type="range" id="timerSecondsInput" min="${MIN_TIMER_SECONDS}" max="${MAX_TIMER_SECONDS}" step="1" value="${loadTimerSeconds()}" />
-        </div>
-        <div class="setting-row">
           <label class="setting-label" for="paddingInput">Corner padding <span id="paddingValue">${loadCornerPadding()}px</span></label>
           <input class="range" type="range" id="paddingInput" min="0" max="32" step="1" value="${loadCornerPadding()}" />
         </div>
@@ -312,14 +301,6 @@ function openSettings() {
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
   document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
   document.getElementById('modeSelect').addEventListener('change', (e) => applyQuizMode(e.target.value))
-  document.getElementById('timerSelect').addEventListener('change', (e) => {
-    applyTimerEnabled(e.target.value === 'on')
-    syncTimerToggle()
-  })
-  document.getElementById('timerSecondsInput').addEventListener('input', (e) => {
-    const seconds = applyTimerSeconds(e.target.value)
-    document.getElementById('timerSecondsValue').textContent = `${seconds}`
-  })
   document.getElementById('questionsInput').addEventListener('input', (e) => {
     const count = applyQuestionsPerQuiz(e.target.value)
     document.getElementById('questionsValue').textContent = `${count}`
@@ -749,13 +730,19 @@ function renderHeader() {
             <button class="mode-btn${m.id === quizMode ? ' active' : ''}" data-mode="${m.id}" role="tab" aria-selected="${m.id === quizMode}" title="${m.label}">${m.short}</button>
           `).join('')}
         </div>
-        <button class="timer-btn${timerEnabled ? ' active' : ''}" id="timerToggle" aria-pressed="${timerEnabled}" title="Timed mode">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 7v5l3 2"/>
-          </svg>
-          <span>Timed</span>
-        </button>
+        <div class="timer-control">
+          <button class="timer-btn${timerEnabled ? ' active' : ''}" id="timerToggle" aria-pressed="${timerEnabled}" aria-haspopup="true" title="Timed mode">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v5l3 2"/>
+            </svg>
+            <span>Timed</span>
+          </button>
+          <div class="timer-popover" role="group" aria-label="Timer settings">
+            <label class="timer-popover-label" for="timerSecondsInput">Seconds per question <span class="timer-popover-value" id="timerSecondsValue">${timerSeconds}</span></label>
+            <input class="range" type="range" id="timerSecondsInput" min="${MIN_TIMER_SECONDS}" max="${MAX_TIMER_SECONDS}" step="1" value="${timerSeconds}" />
+          </div>
+        </div>
         <button class="settings-btn" id="settingsBtn" aria-label="Settings">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -771,6 +758,10 @@ function renderHeader() {
 function bindHeaderControls() {
   document.querySelector('#settingsBtn')?.addEventListener('click', openSettings)
   document.querySelector('#timerToggle')?.addEventListener('click', toggleTimer)
+  document.querySelector('#timerSecondsInput')?.addEventListener('input', (e) => {
+    const seconds = applyTimerSeconds(e.target.value)
+    document.querySelector('#timerSecondsValue').textContent = seconds
+  })
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => switchMode(btn.dataset.mode))
   })

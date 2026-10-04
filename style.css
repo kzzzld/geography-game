@@ -298,10 +298,19 @@ body {
   letter-spacing: 0.05em;
   margin-bottom: 0.6rem;
 }
-.timer-popover-value {
-  color: var(--primary);
-  font-weight: 700;
+.number-input {
+  width: 100%;
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
 }
+.number-input:hover { border-color: var(--primary); }
+.number-input:focus { outline: 2px solid var(--primary); outline-offset: 0; }
 
 /* ===== Modal ===== */
 .modal-overlay {

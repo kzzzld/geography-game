@@ -739,8 +739,8 @@ function renderHeader() {
             <span>Timed</span>
           </button>
           <div class="timer-popover" role="group" aria-label="Timer settings">
-            <label class="timer-popover-label" for="timerSecondsInput">Seconds per question <span class="timer-popover-value" id="timerSecondsValue">${timerSeconds}</span></label>
-            <input class="range" type="range" id="timerSecondsInput" min="${MIN_TIMER_SECONDS}" max="${MAX_TIMER_SECONDS}" step="1" value="${timerSeconds}" />
+            <label class="timer-popover-label" for="timerSecondsInput">Seconds per question</label>
+            <input class="number-input" type="number" id="timerSecondsInput" min="${MIN_TIMER_SECONDS}" max="${MAX_TIMER_SECONDS}" step="1" value="${timerSeconds}" />
           </div>
         </div>
         <button class="settings-btn" id="settingsBtn" aria-label="Settings">
@@ -759,8 +759,11 @@ function bindHeaderControls() {
   document.querySelector('#settingsBtn')?.addEventListener('click', openSettings)
   document.querySelector('#timerToggle')?.addEventListener('click', toggleTimer)
   document.querySelector('#timerSecondsInput')?.addEventListener('input', (e) => {
+    applyTimerSeconds(e.target.value)
+  })
+  document.querySelector('#timerSecondsInput')?.addEventListener('change', (e) => {
     const seconds = applyTimerSeconds(e.target.value)
-    document.querySelector('#timerSecondsValue').textContent = seconds
+    e.target.value = seconds
   })
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => switchMode(btn.dataset.mode))

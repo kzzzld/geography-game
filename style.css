@@ -137,7 +137,7 @@ button:focus-visible,
 }
 
 :root {
-  --corner-padding: 4px;
+  --corner-padding: 32px;
 }
 
 body {

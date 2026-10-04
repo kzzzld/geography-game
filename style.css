@@ -138,6 +138,7 @@ button:focus-visible,
 
 :root {
   --corner-padding: 32px;
+  --corner-radius: 16px;
 }
 
 body {
@@ -180,14 +181,14 @@ body {
   padding: 4px;
   background: var(--bg-elev);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: calc(var(--corner-radius) * 0.6);
 }
 
 .mode-btn {
   background: transparent;
   color: var(--text-muted);
   border: none;
-  border-radius: 7px;
+  border-radius: calc(var(--corner-radius) * 0.45);
   padding: 0.55rem 1rem;
   font-family: inherit;
   font-size: 0.8rem;
@@ -222,7 +223,7 @@ body {
   background: var(--bg-elev);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: calc(var(--corner-radius) * 0.5);
   cursor: pointer;
   transition: border-color 0.2s, transform 0.1s;
 }
@@ -244,7 +245,7 @@ body {
   background: var(--bg-elev);
   color: var(--text-muted);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: calc(var(--corner-radius) * 0.5);
   font-family: inherit;
   font-size: 0.8rem;
   font-weight: 600;
@@ -269,7 +270,7 @@ body {
   padding: 0.875rem 1rem;
   background: var(--bg-elev);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: calc(var(--corner-radius) * 0.6);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   opacity: 0;
   visibility: hidden;
@@ -305,7 +306,7 @@ body {
   background: var(--bg-card);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: calc(var(--corner-radius) * 0.5);
   padding: 0.5rem 0.7rem;
   font-family: inherit;
   font-size: 0.9rem;
@@ -335,7 +336,7 @@ body {
 .modal {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--corner-radius);
   padding: 1.75rem;
   width: 90%;
   max-width: 420px;
@@ -363,7 +364,7 @@ body {
   background: var(--bg-elev);
   color: var(--text-muted);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: calc(var(--corner-radius) * 0.5);
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
 }
@@ -395,7 +396,7 @@ body {
   background: var(--bg-elev);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: calc(var(--corner-radius) * 0.5);
   padding: 0.625rem 0.75rem;
   font-family: inherit;
   font-size: 0.9rem;
@@ -448,7 +449,7 @@ body {
   align-items: center;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: calc(var(--corner-radius) * 0.75);
   padding: 1rem 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -481,7 +482,7 @@ body {
 .quiz-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--corner-radius);
   padding: 2rem;
   text-align: center;
 }
@@ -493,7 +494,7 @@ body {
   height: 220px;
   margin-bottom: 1.5rem;
   background: var(--bg-elev);
-  border-radius: 12px;
+  border-radius: calc(var(--corner-radius) * 0.75);
   overflow: hidden;
 }
 
@@ -537,7 +538,7 @@ body {
   background: var(--bg-elev);
   color: var(--text);
   border: 2px solid var(--border);
-  border-radius: 10px;
+  border-radius: calc(var(--corner-radius) * 0.6);
   padding: 0.875rem 1.25rem;
   font-family: inherit;
   font-size: 1rem;
@@ -582,7 +583,7 @@ body {
   background: var(--primary);
   color: var(--bg);
   border: none;
-  border-radius: 10px;
+  border-radius: calc(var(--corner-radius) * 0.6);
   padding: 0.875rem 2.5rem;
   font-family: inherit;
   font-size: 1rem;
@@ -615,7 +616,7 @@ body {
   background: var(--primary);
   color: var(--bg);
   border: none;
-  border-radius: 10px;
+  border-radius: calc(var(--corner-radius) * 0.6);
   padding: 0.875rem 2.5rem;
   font-family: inherit;
   font-size: 1rem;
@@ -703,7 +704,7 @@ body {
   background: var(--primary);
   color: var(--bg);
   border: none;
-  border-radius: 10px;
+  border-radius: calc(var(--corner-radius) * 0.6);
   padding: 1rem 3.5rem;
   font-family: inherit;
   font-size: 1.1rem;
@@ -736,7 +737,7 @@ body {
   padding: 10px 16px;
   background: var(--bg-elev);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: calc(var(--corner-radius) * 0.6);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   font-family: var(--font-family, 'Iosevka'), monospace;
   font-size: 14px;
@@ -803,7 +804,7 @@ body {
   list-style: none;
   background: var(--bg-elev);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: calc(var(--corner-radius) * 0.5);
 }
 
 #cmdline[data-position="top"] .cmdline-menu {
@@ -816,7 +817,7 @@ body {
   justify-content: space-between;
   gap: 16px;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: calc(var(--corner-radius) * 0.25);
   color: var(--text);
 }
 

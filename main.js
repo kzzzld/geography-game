@@ -137,6 +137,23 @@ function loadCornerPadding() {
   return Math.min(MAX_CORNER_PADDING, Math.max(MIN_CORNER_PADDING, parsed))
 }
 
+// ===== Corner radius management =====
+const DEFAULT_CORNER_RADIUS = 16
+const MIN_CORNER_RADIUS = 0
+const MAX_CORNER_RADIUS = 48
+
+function applyCornerRadius(px) {
+  document.documentElement.style.setProperty('--corner-radius', `${px}px`)
+  localStorage.setItem('flag-quiz-corner-radius', String(px))
+}
+
+function loadCornerRadius() {
+  const stored = localStorage.getItem('flag-quiz-corner-radius')
+  const parsed = stored === null ? NaN : parseInt(stored, 10)
+  if (!Number.isFinite(parsed)) return DEFAULT_CORNER_RADIUS
+  return Math.min(MAX_CORNER_RADIUS, Math.max(MIN_CORNER_RADIUS, parsed))
+}
+
 // ===== Questions per quiz management =====
 const DEFAULT_QUESTIONS_PER_QUIZ = 20
 const MIN_QUESTIONS_PER_QUIZ = 5
@@ -356,6 +373,10 @@ function renderSettingsModal() {
           <label class="setting-label" for="paddingInput">${t('settings.corner')} <span id="paddingValue">${loadCornerPadding()}px</span></label>
           <input class="range" type="range" id="paddingInput" min="${MIN_CORNER_PADDING}" max="${MAX_CORNER_PADDING}" step="1" value="${loadCornerPadding()}" />
         </div>
+        <div class="setting-row">
+          <label class="setting-label" for="radiusInput">${t('settings.radius')}</label>
+          <input class="number-input" type="number" id="radiusInput" min="${MIN_CORNER_RADIUS}" max="${MAX_CORNER_RADIUS}" step="1" value="${loadCornerRadius()}" />
+        </div>
       </div>
     </div>
   `
@@ -391,6 +412,13 @@ function openSettings() {
     const px = parseInt(e.target.value, 10)
     applyCornerPadding(px)
     document.getElementById('paddingValue').textContent = `${px}px`
+  })
+  document.getElementById('radiusInput').addEventListener('input', (e) => {
+    applyCornerRadius(e.target.value)
+  })
+  document.getElementById('radiusInput').addEventListener('change', (e) => {
+    const px = loadCornerRadius()
+    e.target.value = px
   })
   document.getElementById('settingsClose').focus()
 }
@@ -480,6 +508,7 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-theme')
   localStorage.removeItem('flag-quiz-font')
   localStorage.removeItem('flag-quiz-corner-padding')
+  localStorage.removeItem('flag-quiz-corner-radius')
   localStorage.removeItem('flag-quiz-cmdline-position')
   localStorage.removeItem('flag-quiz-questions-per-quiz')
   localStorage.removeItem('flag-quiz-options-count')
@@ -490,6 +519,7 @@ function resetApp() {
   applyTheme(loadTheme())
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
+  applyCornerRadius(loadCornerRadius())
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())
@@ -556,6 +586,13 @@ function runCommand(raw) {
       applyCornerPadding(px)
       return showCmdMessage(t('cmd.corner', { px }))
     }
+    case 'radius': {
+      const px = parseInt(arg, 10)
+      if (!Number.isFinite(px)) return showCmdMessage(t('cmd.invalidNumber'), true)
+      if (px < MIN_CORNER_RADIUS || px > MAX_CORNER_RADIUS) return showCmdMessage(t('cmd.numberBetween', { min: MIN_CORNER_RADIUS, max: MAX_CORNER_RADIUS }), true)
+      applyCornerRadius(px)
+      return showCmdMessage(t('cmd.radius', { px }))
+    }
     case 'options': {
       const count = parseInt(arg, 10)
       if (!Number.isFinite(count)) return showCmdMessage(t('cmd.invalidNumber'), true)
@@ -606,7 +643,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'lang', 'language', 'mode', 'options', 'questions', 'reset', 'theme', 'time']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'lang', 'language', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time']
 let completion = null
 
 function getCompletionItems(text) {
@@ -1140,6 +1177,7 @@ async function init() {
   applyTheme(loadTheme())
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
+  applyCornerRadius(loadCornerRadius())
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())

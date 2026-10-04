@@ -122,6 +122,8 @@ function loadFont() {
 
 // ===== Corner padding management =====
 const DEFAULT_CORNER_PADDING = 32
+const MIN_CORNER_PADDING = 0
+const MAX_CORNER_PADDING = 48
 
 function applyCornerPadding(px) {
   document.documentElement.style.setProperty('--corner-padding', `${px}px`)
@@ -131,7 +133,8 @@ function applyCornerPadding(px) {
 function loadCornerPadding() {
   const stored = localStorage.getItem('flag-quiz-corner-padding')
   const parsed = stored === null ? NaN : parseInt(stored, 10)
-  return Number.isFinite(parsed) ? parsed : DEFAULT_CORNER_PADDING
+  if (!Number.isFinite(parsed)) return DEFAULT_CORNER_PADDING
+  return Math.min(MAX_CORNER_PADDING, Math.max(MIN_CORNER_PADDING, parsed))
 }
 
 // ===== Questions per quiz management =====
@@ -351,7 +354,7 @@ function renderSettingsModal() {
         </div>
         <div class="setting-row">
           <label class="setting-label" for="paddingInput">${t('settings.corner')} <span id="paddingValue">${loadCornerPadding()}px</span></label>
-          <input class="range" type="range" id="paddingInput" min="0" max="32" step="1" value="${loadCornerPadding()}" />
+          <input class="range" type="range" id="paddingInput" min="${MIN_CORNER_PADDING}" max="${MAX_CORNER_PADDING}" step="1" value="${loadCornerPadding()}" />
         </div>
       </div>
     </div>
@@ -549,7 +552,7 @@ function runCommand(raw) {
     case 'corner': {
       const px = parseInt(arg, 10)
       if (!Number.isFinite(px)) return showCmdMessage(t('cmd.invalidNumber'), true)
-      if (px < 0 || px > 32) return showCmdMessage(t('cmd.numberBetween', { min: 0, max: 32 }), true)
+      if (px < MIN_CORNER_PADDING || px > MAX_CORNER_PADDING) return showCmdMessage(t('cmd.numberBetween', { min: MIN_CORNER_PADDING, max: MAX_CORNER_PADDING }), true)
       applyCornerPadding(px)
       return showCmdMessage(t('cmd.corner', { px }))
     }

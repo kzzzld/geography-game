@@ -372,6 +372,22 @@ function buildQuiz() {
   return selected.map(country => buildQuestion(country))
 }
 
+// ===== Number input max guard =====
+function guardNumberInputs(scope = document) {
+  scope.querySelectorAll('.number-input').forEach(input => {
+    if (input.dataset.maxGuarded === 'true') return
+    input.dataset.maxGuarded = 'true'
+    input.addEventListener('input', () => {
+      if (input.value === '') return
+      const max = Number(input.max)
+      const value = Number(input.value)
+      if (Number.isFinite(max) && Number.isFinite(value) && value > max) {
+        input.value = String(max)
+      }
+    })
+  })
+}
+
 // ===== Settings modal =====
 function renderSettingsModal() {
   return `
@@ -950,6 +966,7 @@ function renderHeader() {
 }
 
 function bindHeaderControls() {
+  guardNumberInputs()
   document.querySelector('#settingsBtn')?.addEventListener('click', openSettings)
   document.querySelector('#timerToggle')?.addEventListener('click', toggleTimer)
   document.querySelector('#timerSecondsInput')?.addEventListener('input', (e) => {

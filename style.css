@@ -507,15 +507,23 @@ body {
 }
 
 #cmdline[data-position="top"] {
-  left: 50%;
-  top: var(--corner-padding);
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  top: 0;
+  width: auto;
+  max-width: none;
+  border-radius: 0 0 10px 10px;
+  transform: none;
 }
 
 #cmdline[data-position="bottom"] {
-  left: 50%;
-  bottom: var(--corner-padding);
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  max-width: none;
+  border-radius: 10px 10px 0 0;
+  transform: none;
 }
 
 #cmdline.visible { display: flex; }

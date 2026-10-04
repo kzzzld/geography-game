@@ -6,6 +6,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 
 - 🌍 10-question quizzes randomly drawn from a pool of countries and territories (recognized, disputed, autonomous, and unrecognized)
 - 🎯 5 multiple-choice options per question, shuffled each round
+- 🔀 Four game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, and Mixed
 - 🏆 Live score tracking with a results screen at the end
 - 🎨 9 color themes (Tokyo Night, Nord, Dark, AMOLED, Catppuccin Mocha/Frappé/Latte/Macchiato, Black Metal)
 - 🔤 3 font choices (Inter, JetBrains Mono, Iosevka)
@@ -72,12 +73,13 @@ npm run preview
 Edit `public/data.json`. Each entry follows this shape:
 
 ```json
-{ "country": "Japan", "flag": "https://flagcdn.com/w320/jp.png", "type": "recognized" }
+{ "country": "Japan", "flag": "https://flagcdn.com/w320/jp.png", "type": "recognized", "capital": "Tokyo" }
 ```
 
 - `country` — display name shown as an answer option
 - `flag` — URL to the flag image
 - `type` — classification (`recognized`, `disputed`, `autonomous`, `unrecognized`) — informational, not currently used to filter quizzes
+- `capital` — capital city name, used as the prompt in Capital → Country mode
 
 ## Deployment
 

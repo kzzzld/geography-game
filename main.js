@@ -25,10 +25,13 @@ const CMDLINE_POSITIONS = [
 ]
 
 const QUIZ_MODES = [
-  { id: 'flag', label: 'Flag → Country' },
-  { id: 'country', label: 'Country → Flag' },
-  { id: 'mixed', label: 'Mixed' },
+  { id: 'flag', label: 'Flag → Country', short: 'Flag' },
+  { id: 'country', label: 'Country → Flag', short: 'Country' },
+  { id: 'capital', label: 'Capital → Country', short: 'Capital' },
+  { id: 'mixed', label: 'Mixed', short: 'Mixed' },
 ]
+
+const MIXED_PROMPT_MODES = ['flag', 'country', 'capital']
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
@@ -221,7 +224,7 @@ function buildQuiz() {
   return selected.map(country => {
     const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
     const options = shuffle([country, ...wrongs])
-    const mode = quizMode === 'mixed' ? (Math.random() < 0.5 ? 'flag' : 'country') : quizMode
+    const mode = quizMode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : quizMode
     return { country, options, mode }
   })
 }
@@ -494,7 +497,7 @@ function runCommand(raw) {
     }
     case 'mode': {
       const mode = findByName(QUIZ_MODES, arg)
-      if (!mode) return showCmdMessage('Invalid mode: flag, country, mixed', true)
+      if (!mode) return showCmdMessage(`Invalid mode: ${QUIZ_MODES.map(m => m.id).join(', ')}`, true)
       applyQuizMode(mode.id)
       return showCmdMessage(`Quiz mode: ${mode.label}`)
     }
@@ -731,15 +734,35 @@ function renderHeader() {
   return `
     <div class="header">
       <div class="logo">Flag Quiz</div>
-      <button class="settings-btn" id="settingsBtn" aria-label="Settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-      </button>
+      <div class="controls">
+        <div class="mode-switch" role="tablist" aria-label="Game mode">
+          ${QUIZ_MODES.map(m => `
+            <button class="mode-btn${m.id === quizMode ? ' active' : ''}" data-mode="${m.id}" role="tab" aria-selected="${m.id === quizMode}" title="${m.label}">${m.short}</button>
+          `).join('')}
+        </div>
+        <button class="settings-btn" id="settingsBtn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
     </div>
     ${renderSettingsModal()}
   `
+}
+
+function bindHeaderControls() {
+  document.querySelector('#settingsBtn')?.addEventListener('click', openSettings)
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchMode(btn.dataset.mode))
+  })
+}
+
+function switchMode(modeId) {
+  if (modeId === quizMode) return
+  applyQuizMode(modeId)
+  startQuiz()
 }
 
 // ===== Timer =====
@@ -805,19 +828,28 @@ function renderQuestion() {
   const q = quizQuestions[currentIndex]
   answered = false
 
-  const isFlagPrompt = q.mode === 'flag'
-  const prompt = isFlagPrompt
-    ? `<img class="flag-img" src="${q.country.flag}" alt="Flag" />`
-    : `<div class="prompt-country">${q.country.country}</div>`
+  const answerIsFlag = q.mode === 'country'
+  let prompt
+  let promptClass = ''
 
-  const options = q.options.map((opt, i) => isFlagPrompt
-    ? `<button class="answer-btn" data-country="${opt.country}">
-        <span class="letter">${LETTERS[i]}</span>
-        <span>${opt.country}</span>
-      </button>`
-    : `<button class="answer-btn flag-option" data-country="${opt.country}">
+  if (q.mode === 'flag') {
+    prompt = `<img class="flag-img" src="${q.country.flag}" alt="Flag" />`
+  } else if (q.mode === 'capital') {
+    prompt = `<div class="prompt-hint">Capital of</div><div class="prompt-country">${q.country.capital}</div>`
+    promptClass = ' country-prompt'
+  } else {
+    prompt = `<div class="prompt-country">${q.country.country}</div>`
+    promptClass = ' country-prompt'
+  }
+
+  const options = q.options.map((opt, i) => answerIsFlag
+    ? `<button class="answer-btn flag-option" data-country="${opt.country}">
         <span class="letter">${LETTERS[i]}</span>
         <img class="answer-flag" src="${opt.flag}" alt="${opt.country}" />
+      </button>`
+    : `<button class="answer-btn" data-country="${opt.country}">
+        <span class="letter">${LETTERS[i]}</span>
+        <span>${opt.country}</span>
       </button>`
   ).join('')
 
@@ -829,10 +861,10 @@ function renderQuestion() {
       <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex}</span></span>
     </div>
     <div class="quiz-card">
-      <div class="flag-wrap${isFlagPrompt ? '' : ' country-prompt'}">
+      <div class="flag-wrap${promptClass}">
         ${prompt}
       </div>
-      <div class="answers${isFlagPrompt ? '' : ' flags'}" id="answers">
+      <div class="answers${answerIsFlag ? ' flags' : ''}" id="answers">
         ${options}
       </div>
       <button class="next-btn" id="nextBtn" style="display:none">Next</button>
@@ -843,7 +875,7 @@ function renderQuestion() {
     btn.addEventListener('click', () => handleAnswer(btn))
   })
   document.querySelector('#nextBtn').addEventListener('click', handleNext)
-  document.querySelector('#settingsBtn').addEventListener('click', openSettings)
+  bindHeaderControls()
   document.querySelector('.answer-btn')?.focus()
   if (timerEnabled) startTimer()
 }
@@ -907,7 +939,7 @@ function renderResult() {
     </div>
   `
   document.querySelector('#restartBtn').addEventListener('click', startQuiz)
-  document.querySelector('#settingsBtn').addEventListener('click', openSettings)
+  bindHeaderControls()
 }
 
 // ===== Start quiz =====

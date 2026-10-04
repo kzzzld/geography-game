@@ -170,6 +170,37 @@ body {
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ===== Mode switch ===== */
+.mode-switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.mode-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  border-radius: 7px;
+  padding: 0.4rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.mode-btn:hover { color: var(--text); }
+
+.mode-btn.active {
+  background: var(--primary);
+  color: var(--bg);
 }
 
 .logo {
@@ -388,12 +419,19 @@ body {
   box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
-.flag-wrap.country-prompt { padding: 1.5rem; }
+.flag-wrap.country-prompt { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
 .prompt-country {
   font-size: 2rem;
   font-weight: 700;
   color: var(--text);
   line-height: 1.2;
+}
+.prompt-hint {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
 }
 
 /* ===== Answer buttons ===== */

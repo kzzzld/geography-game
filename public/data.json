@@ -2,1036 +2,1243 @@
   {
     "country": "Afghanistan",
     "flag": "https://flagcdn.com/w320/af.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kabul"
   },
   {
     "country": "Albania",
     "flag": "https://flagcdn.com/w320/al.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tirana"
   },
   {
     "country": "Algeria",
     "flag": "https://flagcdn.com/w320/dz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Algiers"
   },
   {
     "country": "Andorra",
     "flag": "https://flagcdn.com/w320/ad.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Andorra la Vella"
   },
   {
     "country": "Angola",
     "flag": "https://flagcdn.com/w320/ao.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Luanda"
   },
   {
     "country": "Antigua and Barbuda",
     "flag": "https://flagcdn.com/w320/ag.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Saint John's"
   },
   {
     "country": "Argentina",
     "flag": "https://flagcdn.com/w320/ar.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Buenos Aires"
   },
   {
     "country": "Armenia",
     "flag": "https://flagcdn.com/w320/am.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Yerevan"
   },
   {
     "country": "Australia",
     "flag": "https://flagcdn.com/w320/au.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Canberra"
   },
   {
     "country": "Austria",
     "flag": "https://flagcdn.com/w320/at.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Vienna"
   },
   {
     "country": "Azerbaijan",
     "flag": "https://flagcdn.com/w320/az.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Baku"
   },
   {
     "country": "Bahamas",
     "flag": "https://flagcdn.com/w320/bs.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Nassau"
   },
   {
     "country": "Bahrain",
     "flag": "https://flagcdn.com/w320/bh.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Manama"
   },
   {
     "country": "Bangladesh",
     "flag": "https://flagcdn.com/w320/bd.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Dhaka"
   },
   {
     "country": "Barbados",
     "flag": "https://flagcdn.com/w320/bb.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bridgetown"
   },
   {
     "country": "Belarus",
     "flag": "https://flagcdn.com/w320/by.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Minsk"
   },
   {
     "country": "Belgium",
     "flag": "https://flagcdn.com/w320/be.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Brussels"
   },
   {
     "country": "Belize",
     "flag": "https://flagcdn.com/w320/bz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Belmopan"
   },
   {
     "country": "Benin",
     "flag": "https://flagcdn.com/w320/bj.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Porto-Novo"
   },
   {
     "country": "Bhutan",
     "flag": "https://flagcdn.com/w320/bt.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Thimphu"
   },
   {
     "country": "Bolivia",
     "flag": "https://flagcdn.com/w320/bo.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Sucre"
   },
   {
     "country": "Bosnia and Herzegovina",
     "flag": "https://flagcdn.com/w320/ba.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Sarajevo"
   },
   {
     "country": "Botswana",
     "flag": "https://flagcdn.com/w320/bw.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Gaborone"
   },
   {
     "country": "Brazil",
     "flag": "https://flagcdn.com/w320/br.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Brasília"
   },
   {
     "country": "Brunei",
     "flag": "https://flagcdn.com/w320/bn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bandar Seri Begawan"
   },
   {
     "country": "Bulgaria",
     "flag": "https://flagcdn.com/w320/bg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Sofia"
   },
   {
     "country": "Burkina Faso",
     "flag": "https://flagcdn.com/w320/bf.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Ouagadougou"
   },
   {
     "country": "Burundi",
     "flag": "https://flagcdn.com/w320/bi.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Gitega"
   },
   {
     "country": "Cabo Verde",
     "flag": "https://flagcdn.com/w320/cv.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Praia"
   },
   {
     "country": "Cambodia",
     "flag": "https://flagcdn.com/w320/kh.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Phnom Penh"
   },
   {
     "country": "Cameroon",
     "flag": "https://flagcdn.com/w320/cm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Yaoundé"
   },
   {
     "country": "Canada",
     "flag": "https://flagcdn.com/w320/ca.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Ottawa"
   },
   {
     "country": "Central African Republic",
     "flag": "https://flagcdn.com/w320/cf.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bangui"
   },
   {
     "country": "Chad",
     "flag": "https://flagcdn.com/w320/td.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "N'Djamena"
   },
   {
     "country": "Chile",
     "flag": "https://flagcdn.com/w320/cl.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Santiago"
   },
   {
     "country": "China",
     "flag": "https://flagcdn.com/w320/cn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Beijing"
   },
   {
     "country": "Colombia",
     "flag": "https://flagcdn.com/w320/co.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bogotá"
   },
   {
     "country": "Comoros",
     "flag": "https://flagcdn.com/w320/km.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Moroni"
   },
   {
     "country": "Congo (Republic)",
     "flag": "https://flagcdn.com/w320/cg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Brazzaville"
   },
   {
     "country": "Congo (DR)",
     "flag": "https://flagcdn.com/w320/cd.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kinshasa"
   },
   {
     "country": "Costa Rica",
     "flag": "https://flagcdn.com/w320/cr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "San José"
   },
   {
     "country": "Croatia",
     "flag": "https://flagcdn.com/w320/hr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Zagreb"
   },
   {
     "country": "Cuba",
     "flag": "https://flagcdn.com/w320/cu.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Havana"
   },
   {
     "country": "Cyprus",
     "flag": "https://flagcdn.com/w320/cy.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Nicosia"
   },
   {
     "country": "Czechia",
     "flag": "https://flagcdn.com/w320/cz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Prague"
   },
   {
     "country": "Denmark",
     "flag": "https://flagcdn.com/w320/dk.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Copenhagen"
   },
   {
     "country": "Djibouti",
     "flag": "https://flagcdn.com/w320/dj.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Djibouti"
   },
   {
     "country": "Dominica",
     "flag": "https://flagcdn.com/w320/dm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Roseau"
   },
   {
     "country": "Dominican Republic",
     "flag": "https://flagcdn.com/w320/do.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Santo Domingo"
   },
   {
     "country": "Ecuador",
     "flag": "https://flagcdn.com/w320/ec.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Quito"
   },
   {
     "country": "Egypt",
     "flag": "https://flagcdn.com/w320/eg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Cairo"
   },
   {
     "country": "El Salvador",
     "flag": "https://flagcdn.com/w320/sv.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "San Salvador"
   },
   {
     "country": "Equatorial Guinea",
     "flag": "https://flagcdn.com/w320/gq.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Malabo"
   },
   {
     "country": "Eritrea",
     "flag": "https://flagcdn.com/w320/er.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Asmara"
   },
   {
     "country": "Estonia",
     "flag": "https://flagcdn.com/w320/ee.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tallinn"
   },
   {
     "country": "Eswatini",
     "flag": "https://flagcdn.com/w320/sz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Mbabane"
   },
   {
     "country": "Ethiopia",
     "flag": "https://flagcdn.com/w320/et.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Addis Ababa"
   },
   {
     "country": "Fiji",
     "flag": "https://flagcdn.com/w320/fj.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Suva"
   },
   {
     "country": "Finland",
     "flag": "https://flagcdn.com/w320/fi.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Helsinki"
   },
   {
     "country": "France",
     "flag": "https://flagcdn.com/w320/fr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Paris"
   },
   {
     "country": "Gabon",
     "flag": "https://flagcdn.com/w320/ga.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Libreville"
   },
   {
     "country": "Gambia",
     "flag": "https://flagcdn.com/w320/gm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Banjul"
   },
   {
     "country": "Georgia",
     "flag": "https://flagcdn.com/w320/ge.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tbilisi"
   },
   {
     "country": "Germany",
     "flag": "https://flagcdn.com/w320/de.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Berlin"
   },
   {
     "country": "Ghana",
     "flag": "https://flagcdn.com/w320/gh.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Accra"
   },
   {
     "country": "Greece",
     "flag": "https://flagcdn.com/w320/gr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Athens"
   },
   {
     "country": "Grenada",
     "flag": "https://flagcdn.com/w320/gd.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "St. George's"
   },
   {
     "country": "Guatemala",
     "flag": "https://flagcdn.com/w320/gt.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Guatemala City"
   },
   {
     "country": "Guinea",
     "flag": "https://flagcdn.com/w320/gn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Conakry"
   },
   {
     "country": "Guinea-Bissau",
     "flag": "https://flagcdn.com/w320/gw.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bissau"
   },
   {
     "country": "Guyana",
     "flag": "https://flagcdn.com/w320/gy.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Georgetown"
   },
   {
     "country": "Haiti",
     "flag": "https://flagcdn.com/w320/ht.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Port-au-Prince"
   },
   {
     "country": "Honduras",
     "flag": "https://flagcdn.com/w320/hn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tegucigalpa"
   },
   {
     "country": "Hungary",
     "flag": "https://flagcdn.com/w320/hu.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Budapest"
   },
   {
     "country": "Iceland",
     "flag": "https://flagcdn.com/w320/is.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Reykjavík"
   },
   {
     "country": "India",
     "flag": "https://flagcdn.com/w320/in.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "New Delhi"
   },
   {
     "country": "Indonesia",
     "flag": "https://flagcdn.com/w320/id.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Jakarta"
   },
   {
     "country": "Iran",
     "flag": "https://flagcdn.com/w320/ir.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tehran"
   },
   {
     "country": "Iraq",
     "flag": "https://flagcdn.com/w320/iq.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Baghdad"
   },
   {
     "country": "Ireland",
     "flag": "https://flagcdn.com/w320/ie.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Dublin"
   },
   {
     "country": "Israel",
     "flag": "https://flagcdn.com/w320/il.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Jerusalem"
   },
   {
     "country": "Italy",
     "flag": "https://flagcdn.com/w320/it.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Rome"
   },
   {
     "country": "Jamaica",
     "flag": "https://flagcdn.com/w320/jm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kingston"
   },
   {
     "country": "Japan",
     "flag": "https://flagcdn.com/w320/jp.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tokyo"
   },
   {
     "country": "Jordan",
     "flag": "https://flagcdn.com/w320/jo.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Amman"
   },
   {
     "country": "Kazakhstan",
     "flag": "https://flagcdn.com/w320/kz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Astana"
   },
   {
     "country": "Kenya",
     "flag": "https://flagcdn.com/w320/ke.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Nairobi"
   },
   {
     "country": "Kiribati",
     "flag": "https://flagcdn.com/w320/ki.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tarawa"
   },
   {
     "country": "Kuwait",
     "flag": "https://flagcdn.com/w320/kw.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kuwait City"
   },
   {
     "country": "Kyrgyzstan",
     "flag": "https://flagcdn.com/w320/kg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bishkek"
   },
   {
     "country": "Laos",
     "flag": "https://flagcdn.com/w320/la.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Vientiane"
   },
   {
     "country": "Latvia",
     "flag": "https://flagcdn.com/w320/lv.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Riga"
   },
   {
     "country": "Lebanon",
     "flag": "https://flagcdn.com/w320/lb.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Beirut"
   },
   {
     "country": "Lesotho",
     "flag": "https://flagcdn.com/w320/ls.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Maseru"
   },
   {
     "country": "Liberia",
     "flag": "https://flagcdn.com/w320/lr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Monrovia"
   },
   {
     "country": "Libya",
     "flag": "https://flagcdn.com/w320/ly.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tripoli"
   },
   {
     "country": "Liechtenstein",
     "flag": "https://flagcdn.com/w320/li.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Vaduz"
   },
   {
     "country": "Lithuania",
     "flag": "https://flagcdn.com/w320/lt.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Vilnius"
   },
   {
     "country": "Luxembourg",
     "flag": "https://flagcdn.com/w320/lu.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Luxembourg"
   },
   {
     "country": "Madagascar",
     "flag": "https://flagcdn.com/w320/mg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Antananarivo"
   },
   {
     "country": "Malawi",
     "flag": "https://flagcdn.com/w320/mw.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Lilongwe"
   },
   {
     "country": "Malaysia",
     "flag": "https://flagcdn.com/w320/my.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kuala Lumpur"
   },
   {
     "country": "Maldives",
     "flag": "https://flagcdn.com/w320/mv.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Malé"
   },
   {
     "country": "Mali",
     "flag": "https://flagcdn.com/w320/ml.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bamako"
   },
   {
     "country": "Malta",
     "flag": "https://flagcdn.com/w320/mt.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Valletta"
   },
   {
     "country": "Marshall Islands",
     "flag": "https://flagcdn.com/w320/mh.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Majuro"
   },
   {
     "country": "Mauritania",
     "flag": "https://flagcdn.com/w320/mr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Nouakchott"
   },
   {
     "country": "Mauritius",
     "flag": "https://flagcdn.com/w320/mu.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Port Louis"
   },
   {
     "country": "Mexico",
     "flag": "https://flagcdn.com/w320/mx.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Mexico City"
   },
   {
     "country": "Micronesia",
     "flag": "https://flagcdn.com/w320/fm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Palikir"
   },
   {
     "country": "Moldova",
     "flag": "https://flagcdn.com/w320/md.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Chișinău"
   },
   {
     "country": "Monaco",
     "flag": "https://flagcdn.com/w320/mc.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Monaco"
   },
   {
     "country": "Mongolia",
     "flag": "https://flagcdn.com/w320/mn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Ulaanbaatar"
   },
   {
     "country": "Montenegro",
     "flag": "https://flagcdn.com/w320/me.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Podgorica"
   },
   {
     "country": "Morocco",
     "flag": "https://flagcdn.com/w320/ma.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Rabat"
   },
   {
     "country": "Mozambique",
     "flag": "https://flagcdn.com/w320/mz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Maputo"
   },
   {
     "country": "Myanmar",
     "flag": "https://flagcdn.com/w320/mm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Naypyidaw"
   },
   {
     "country": "Namibia",
     "flag": "https://flagcdn.com/w320/na.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Windhoek"
   },
   {
     "country": "Nauru",
     "flag": "https://flagcdn.com/w320/nr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Yaren"
   },
   {
     "country": "Nepal",
     "flag": "https://flagcdn.com/w320/np.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kathmandu"
   },
   {
     "country": "Netherlands",
     "flag": "https://flagcdn.com/w320/nl.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Amsterdam"
   },
   {
     "country": "New Zealand",
     "flag": "https://flagcdn.com/w320/nz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Wellington"
   },
   {
     "country": "Nicaragua",
     "flag": "https://flagcdn.com/w320/ni.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Managua"
   },
   {
     "country": "Niger",
     "flag": "https://flagcdn.com/w320/ne.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Niamey"
   },
   {
     "country": "Nigeria",
     "flag": "https://flagcdn.com/w320/ng.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Abuja"
   },
   {
     "country": "North Korea",
     "flag": "https://flagcdn.com/w320/kp.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Pyongyang"
   },
   {
     "country": "North Macedonia",
     "flag": "https://flagcdn.com/w320/mk.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Skopje"
   },
   {
     "country": "Norway",
     "flag": "https://flagcdn.com/w320/no.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Oslo"
   },
   {
     "country": "Oman",
     "flag": "https://flagcdn.com/w320/om.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Muscat"
   },
   {
     "country": "Pakistan",
     "flag": "https://flagcdn.com/w320/pk.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Islamabad"
   },
   {
     "country": "Palau",
     "flag": "https://flagcdn.com/w320/pw.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Ngerulmud"
   },
   {
     "country": "Panama",
     "flag": "https://flagcdn.com/w320/pa.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Panama City"
   },
   {
     "country": "Papua New Guinea",
     "flag": "https://flagcdn.com/w320/pg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Port Moresby"
   },
   {
     "country": "Paraguay",
     "flag": "https://flagcdn.com/w320/py.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Asunción"
   },
   {
     "country": "Peru",
     "flag": "https://flagcdn.com/w320/pe.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Lima"
   },
   {
     "country": "Philippines",
     "flag": "https://flagcdn.com/w320/ph.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Manila"
   },
   {
     "country": "Poland",
     "flag": "https://flagcdn.com/w320/pl.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Warsaw"
   },
   {
     "country": "Portugal",
     "flag": "https://flagcdn.com/w320/pt.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Lisbon"
   },
   {
     "country": "Qatar",
     "flag": "https://flagcdn.com/w320/qa.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Doha"
   },
   {
     "country": "Romania",
     "flag": "https://flagcdn.com/w320/ro.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bucharest"
   },
   {
     "country": "Russia",
     "flag": "https://flagcdn.com/w320/ru.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Moscow"
   },
   {
     "country": "Rwanda",
     "flag": "https://flagcdn.com/w320/rw.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kigali"
   },
   {
     "country": "Saint Kitts and Nevis",
     "flag": "https://flagcdn.com/w320/kn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Basseterre"
   },
   {
     "country": "Saint Lucia",
     "flag": "https://flagcdn.com/w320/lc.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Castries"
   },
   {
     "country": "Saint Vincent and the Grenadines",
     "flag": "https://flagcdn.com/w320/vc.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kingstown"
   },
   {
     "country": "Samoa",
     "flag": "https://flagcdn.com/w320/ws.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Apia"
   },
   {
     "country": "San Marino",
     "flag": "https://flagcdn.com/w320/sm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "San Marino"
   },
   {
     "country": "Sao Tome and Principe",
     "flag": "https://flagcdn.com/w320/st.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "São Tomé"
   },
   {
     "country": "Saudi Arabia",
     "flag": "https://flagcdn.com/w320/sa.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Riyadh"
   },
   {
     "country": "Senegal",
     "flag": "https://flagcdn.com/w320/sn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Dakar"
   },
   {
     "country": "Serbia",
     "flag": "https://flagcdn.com/w320/rs.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Belgrade"
   },
   {
     "country": "Seychelles",
     "flag": "https://flagcdn.com/w320/sc.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Victoria"
   },
   {
     "country": "Sierra Leone",
     "flag": "https://flagcdn.com/w320/sl.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Freetown"
   },
   {
     "country": "Singapore",
     "flag": "https://flagcdn.com/w320/sg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Singapore"
   },
   {
     "country": "Slovakia",
     "flag": "https://flagcdn.com/w320/sk.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bratislava"
   },
   {
     "country": "Slovenia",
     "flag": "https://flagcdn.com/w320/si.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Ljubljana"
   },
   {
     "country": "Solomon Islands",
     "flag": "https://flagcdn.com/w320/sb.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Honiara"
   },
   {
     "country": "Somalia",
     "flag": "https://flagcdn.com/w320/so.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Mogadishu"
   },
   {
     "country": "South Africa",
     "flag": "https://flagcdn.com/w320/za.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Pretoria"
   },
   {
     "country": "South Korea",
     "flag": "https://flagcdn.com/w320/kr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Seoul"
   },
   {
     "country": "South Sudan",
     "flag": "https://flagcdn.com/w320/ss.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Juba"
   },
   {
     "country": "Spain",
     "flag": "https://flagcdn.com/w320/es.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Madrid"
   },
   {
     "country": "Sri Lanka",
     "flag": "https://flagcdn.com/w320/lk.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Sri Jayawardenepura Kotte"
   },
   {
     "country": "Sudan",
     "flag": "https://flagcdn.com/w320/sd.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Khartoum"
   },
   {
     "country": "Suriname",
     "flag": "https://flagcdn.com/w320/sr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Paramaribo"
   },
   {
     "country": "Sweden",
     "flag": "https://flagcdn.com/w320/se.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Stockholm"
   },
   {
     "country": "Switzerland",
     "flag": "https://flagcdn.com/w320/ch.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bern"
   },
   {
     "country": "Syria",
     "flag": "https://flagcdn.com/w320/sy.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Damascus"
   },
   {
     "country": "Tajikistan",
     "flag": "https://flagcdn.com/w320/tj.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Dushanbe"
   },
   {
     "country": "Tanzania",
     "flag": "https://flagcdn.com/w320/tz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Dodoma"
   },
   {
     "country": "Thailand",
     "flag": "https://flagcdn.com/w320/th.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Bangkok"
   },
   {
     "country": "Timor-Leste",
     "flag": "https://flagcdn.com/w320/tl.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Dili"
   },
   {
     "country": "Togo",
     "flag": "https://flagcdn.com/w320/tg.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Lomé"
   },
   {
     "country": "Tonga",
     "flag": "https://flagcdn.com/w320/to.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Nuku'alofa"
   },
   {
     "country": "Trinidad and Tobago",
     "flag": "https://flagcdn.com/w320/tt.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Port of Spain"
   },
   {
     "country": "Tunisia",
     "flag": "https://flagcdn.com/w320/tn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tunis"
   },
   {
     "country": "Turkiye",
     "flag": "https://flagcdn.com/w320/tr.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Ankara"
   },
   {
     "country": "Turkmenistan",
     "flag": "https://flagcdn.com/w320/tm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Ashgabat"
   },
   {
     "country": "Tuvalu",
     "flag": "https://flagcdn.com/w320/tv.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Funafuti"
   },
   {
     "country": "Uganda",
     "flag": "https://flagcdn.com/w320/ug.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kampala"
   },
   {
     "country": "Ukraine",
     "flag": "https://flagcdn.com/w320/ua.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Kyiv"
   },
   {
     "country": "United Arab Emirates",
     "flag": "https://flagcdn.com/w320/ae.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Abu Dhabi"
   },
   {
     "country": "United Kingdom",
     "flag": "https://flagcdn.com/w320/gb.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "London"
   },
   {
     "country": "United States",
     "flag": "https://flagcdn.com/w320/us.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Washington, D.C."
   },
   {
     "country": "Uruguay",
     "flag": "https://flagcdn.com/w320/uy.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Montevideo"
   },
   {
     "country": "Uzbekistan",
     "flag": "https://flagcdn.com/w320/uz.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Tashkent"
   },
   {
     "country": "Vanuatu",
     "flag": "https://flagcdn.com/w320/vu.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Port Vila"
   },
   {
     "country": "Vatican City",
     "flag": "https://flagcdn.com/w320/va.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Vatican City"
   },
   {
     "country": "Venezuela",
     "flag": "https://flagcdn.com/w320/ve.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Caracas"
   },
   {
     "country": "Vietnam",
     "flag": "https://flagcdn.com/w320/vn.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Hanoi"
   },
   {
     "country": "Yemen",
     "flag": "https://flagcdn.com/w320/ye.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Sanaa"
   },
   {
     "country": "Zambia",
     "flag": "https://flagcdn.com/w320/zm.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Lusaka"
   },
   {
     "country": "Zimbabwe",
     "flag": "https://flagcdn.com/w320/zw.png",
-    "type": "recognized"
+    "type": "recognized",
+    "capital": "Harare"
   },
   {
     "country": "Taiwan",
     "flag": "https://flagcdn.com/w320/tw.png",
-    "type": "disputed"
+    "type": "disputed",
+    "capital": "Taipei"
   },
   {
     "country": "Palestine",
     "flag": "https://flagcdn.com/w320/ps.png",
-    "type": "disputed"
+    "type": "disputed",
+    "capital": "Ramallah"
   },
   {
     "country": "Kosovo",
     "flag": "https://flagcdn.com/w320/xk.png",
-    "type": "disputed"
+    "type": "disputed",
+    "capital": "Pristina"
   },
   {
     "country": "Western Sahara",
     "flag": "https://flagcdn.com/w320/eh.png",
-    "type": "disputed"
+    "type": "disputed",
+    "capital": "Laayoune"
   },
   {
     "country": "Hong Kong",
     "flag": "https://flagcdn.com/w320/hk.png",
-    "type": "autonomous"
+    "type": "autonomous",
+    "capital": "Hong Kong"
   },
   {
     "country": "Greenland",
     "flag": "https://flagcdn.com/w320/gl.png",
-    "type": "autonomous"
+    "type": "autonomous",
+    "capital": "Nuuk"
   },
   {
     "country": "Faroe Islands",
     "flag": "https://flagcdn.com/w320/fo.png",
-    "type": "autonomous"
+    "type": "autonomous",
+    "capital": "Tórshavn"
   },
   {
     "country": "Catalonia",
     "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Catalonia.svg",
-    "type": "autonomous"
+    "type": "autonomous",
+    "capital": "Barcelona"
   },
   {
     "country": "Turkish Republic of Northern Cyprus",
     "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg",
-    "type": "unrecognized"
+    "type": "unrecognized",
+    "capital": "North Nicosia"
   },
   {
     "country": "Somaliland",
     "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Somaliland.svg",
-    "type": "unrecognized"
+    "type": "unrecognized",
+    "capital": "Hargeisa"
   },
   {
     "country": "Transnistria",
     "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Transnistria.svg",
-    "type": "unrecognized"
+    "type": "unrecognized",
+    "capital": "Tiraspol"
   },
   {
     "country": "South Ossetia",
     "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_South_Ossetia.svg",
-    "type": "unrecognized"
+    "type": "unrecognized",
+    "capital": "Tskhinvali"
   },
   {
     "country": "Abkhazia",
     "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Abkhazia.svg",
-    "type": "unrecognized"
+    "type": "unrecognized",
+    "capital": "Sukhumi"
   },
   {
     "country": "Artsakh (Nagorno-Karabakh)",
     "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Artsakh.svg",
-    "type": "unrecognized"
+    "type": "unrecognized",
+    "capital": "Stepanakert"
   }
 ]

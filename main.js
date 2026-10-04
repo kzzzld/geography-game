@@ -319,6 +319,28 @@ function runCommand(raw) {
       applyTheme(theme.id)
       return showCmdMessage(`Theme: ${theme.label}`)
     }
+    case 'cmdline': {
+      const position = findByName(CMDLINE_POSITIONS, arg)
+      if (!position) return showCmdMessage('Invalid position: top, bottom, center', true)
+      applyCmdlinePosition(position.id)
+      return showCmdMessage(`Command line: ${position.label}`)
+    }
+    case 'questions': {
+      const count = parseInt(arg, 10)
+      if (!Number.isFinite(count)) return showCmdMessage('Invalid number', true)
+      if (count < MIN_QUESTIONS_PER_QUIZ || count > MAX_QUESTIONS_PER_QUIZ) {
+        return showCmdMessage(`Number must be between ${MIN_QUESTIONS_PER_QUIZ} and ${MAX_QUESTIONS_PER_QUIZ}`, true)
+      }
+      applyQuestionsPerQuiz(count)
+      return showCmdMessage(`Questions per quiz: ${count}`)
+    }
+    case 'corner': {
+      const px = parseInt(arg, 10)
+      if (!Number.isFinite(px)) return showCmdMessage('Invalid number', true)
+      if (px < 0 || px > 32) return showCmdMessage('Number must be between 0 and 32', true)
+      applyCornerPadding(px)
+      return showCmdMessage(`Corner padding: ${px}px`)
+    }
     case '':
       return
     default:
@@ -327,7 +349,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'font', 'reset', 'theme']
+const COMMAND_NAMES = ['answer', 'cmdline', 'corner', 'font', 'questions', 'reset', 'theme']
 let completion = null
 
 function getCompletionItems(text) {
@@ -348,6 +370,10 @@ function getCompletionItems(text) {
   if (name === 'font' || name === 'theme') {
     const list = name === 'font' ? FONTS : THEMES
     options = list
+      .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
+      .map(o => ({ value: o.id, label: o.label, insert: o.id }))
+  } else if (name === 'cmdline') {
+    options = CMDLINE_POSITIONS
       .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
       .map(o => ({ value: o.id, label: o.label, insert: o.id }))
   } else if (name === 'answer' || name === 'a') {

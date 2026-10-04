@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="kzzzl's geography game">
+  <circle cx="32" cy="32" r="32" fill="#1a1b26"/>
+  <circle cx="32" cy="32" r="19" fill="#7aa2f7"/>
+  <g fill="none" stroke="#1a1b26" stroke-width="3" stroke-linecap="round">
+    <path d="M32 13v38"/>
+    <ellipse cx="32" cy="32" rx="8" ry="19"/>
+    <path d="M14 25h36M14 39h36"/>
+  </g>
+  <circle cx="32" cy="32" r="19" fill="none" stroke="#bb9af7" stroke-width="3"/>
+</svg>

@@ -1,5 +1,5 @@
 {
-  description = "Flag Quiz - a Vite-based geography game";
+  description = "kzzzl's geography game - a Vite-based flag quiz";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -21,7 +21,7 @@
         default = pkgs.mkShell {
           packages = with pkgs; [ nodejs_22 ];
           shellHook = ''
-            echo "Flag Quiz dev shell"
+            echo "kzzzl's geography game dev shell"
             echo "  npm install   # install dependencies"
             echo "  npm run dev   # start the dev server"
           '';
@@ -30,7 +30,7 @@
 
       packages = forAllSystems (pkgs: {
         default = pkgs.buildNpmPackage {
-          pname = "flag-quiz";
+          pname = "kzzzl-geography-game";
           version = "0.0.0";
           src = ./.;
           npmDepsHash = "sha256-BkjU+Rwo1SkE22V4W3y3raJrrrkfUA/IfEM6jIl6/8Q=";
@@ -42,7 +42,7 @@
             runHook postInstall
           '';
           meta = with pkgs.lib; {
-            description = "A geography flag quiz game built with Vite";
+            description = "kzzzl's geography game, built with Vite";
             license = licenses.mit;
             platforms = systems;
           };

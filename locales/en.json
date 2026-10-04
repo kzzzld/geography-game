@@ -1,7 +1,7 @@
 {
   "name": "English",
   "ui": {
-    "app.logo": "Flag Quiz",
+    "app.logo": "kzzzl's geography game",
     "mode.aria": "Game mode",
     "mode.flag": "Flag → Country",
     "mode.flag.short": "Flag",
@@ -14,7 +14,7 @@
     "welcome.tagline": "Guess the country from its flag, its name, or its capital.",
     "welcome.hint": "Pick a mode in the top bar, then hit Play.",
     "welcome.play": "Play",
-    "welcome.aria": "Flag Quiz",
+    "welcome.aria": "kzzzl's geography game",
     "quiz.questionOf": "Question {current} / {total}",
     "quiz.capitalOf": "Capital of",
     "quiz.flagAlt": "Flag",

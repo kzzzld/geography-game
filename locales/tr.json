@@ -1,7 +1,7 @@
 {
   "name": "Türkçe",
   "ui": {
-    "app.logo": "Bayrak Quiz",
+    "app.logo": "kzzzl'in coğrafya oyunu",
     "mode.aria": "Oyun modu",
     "mode.flag": "Bayrak → Ülke",
     "mode.flag.short": "Bayrak",
@@ -14,7 +14,7 @@
     "welcome.tagline": "Ülkeyi bayrağından, adından veya başkentinden tahmin et.",
     "welcome.hint": "Üst çubuktan bir mod seç, sonra Oyna'ya bas.",
     "welcome.play": "Oyna",
-    "welcome.aria": "Bayrak Quiz",
+    "welcome.aria": "kzzzl'in coğrafya oyunu",
     "quiz.questionOf": "Soru {current} / {total}",
     "quiz.capitalOf": "Başkenti",
     "quiz.flagAlt": "Bayrak",

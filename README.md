@@ -1,4 +1,4 @@
-# Flag Quiz
+# kzzzl's geography game
 
 A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess the country from its flag, track your score, and customize the look with multiple themes and fonts.
 

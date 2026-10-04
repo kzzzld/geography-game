@@ -649,11 +649,39 @@ body {
   font-family: var(--font-family, 'Iosevka'), ui-monospace, monospace;
   font-size: clamp(0.5rem, 2.2vw, 1rem);
   line-height: 1.15;
-  color: var(--primary);
   text-align: left;
   white-space: pre;
   overflow: hidden;
   max-width: 100%;
+  background: linear-gradient(
+    100deg,
+    var(--primary) 0%,
+    var(--accent) 20%,
+    var(--primary) 40%,
+    var(--primary) 60%,
+    var(--accent) 80%,
+    var(--primary) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--primary) 35%, transparent));
+  animation: ascii-shimmer 7s linear infinite, ascii-float 4s ease-in-out infinite;
+}
+
+@keyframes ascii-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes ascii-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-ascii { animation: none; }
 }
 
 .welcome-text {

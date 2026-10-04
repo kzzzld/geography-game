@@ -773,6 +773,23 @@ body {
   padding: 3rem 2rem;
 }
 
+.welcome-ascii-link {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+.welcome-ascii-link:hover { transform: scale(1.02); }
+.welcome-ascii-link:hover .welcome-ascii {
+  filter: drop-shadow(0 0 22px color-mix(in srgb, var(--accent) 55%, transparent));
+}
+.welcome-ascii-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 6px;
+  border-radius: calc(var(--corner-radius) * 0.5);
+}
+
 .welcome-ascii {
   display: inline-block;
   margin: 0 auto 2rem;
@@ -841,6 +858,80 @@ body {
 }
 .play-btn:hover { opacity: 0.9; border-color: var(--primary); }
 .play-btn:active { transform: scale(0.97); }
+
+/* ===== Button highlight (ascii-style shine) ===== */
+.answer-btn,
+.next-btn,
+.result-card .restart-btn,
+.play-btn,
+.mode-btn,
+.settings-btn,
+.timer-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.answer-btn::after,
+.next-btn::after,
+.result-card .restart-btn::after,
+.play-btn::after,
+.mode-btn::after,
+.settings-btn::after,
+.timer-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -80%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 55%, transparent) 50%,
+    transparent 100%
+  );
+  transform: rotate(20deg);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.answer-btn:hover:not(:disabled),
+.next-btn:hover,
+.result-card .restart-btn:hover,
+.play-btn:hover,
+.mode-btn:hover,
+.settings-btn:hover,
+.timer-btn:hover {
+  box-shadow: 0 0 14px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.answer-btn:hover:not(:disabled)::after,
+.next-btn:hover::after,
+.result-card .restart-btn:hover::after,
+.play-btn:hover::after,
+.mode-btn:hover::after,
+.settings-btn:hover::after,
+.timer-btn:hover::after {
+  opacity: 1;
+  animation: btn-shine 0.75s ease;
+}
+
+@keyframes btn-shine {
+  from { left: -80%; }
+  to { left: 130%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-btn::after,
+  .next-btn::after,
+  .result-card .restart-btn::after,
+  .play-btn::after,
+  .mode-btn::after,
+  .settings-btn::after,
+  .timer-btn::after {
+    animation: none;
+  }
+}
 
 /* ===== Responsive ===== */
 @media (max-width: 600px) {

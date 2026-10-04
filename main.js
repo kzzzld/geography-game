@@ -1259,7 +1259,9 @@ function renderWelcome() {
   return `
     ${renderHeader()}
     <div class="quiz-card welcome-card">
-      <pre class="welcome-ascii" role="img" aria-label="${t('welcome.aria')}">${WELCOME_ASCII}</pre>
+      <a class="welcome-ascii-link" href="${import.meta.env.BASE_URL}" aria-label="${t('app.logo')}">
+        <pre class="welcome-ascii" role="img" aria-label="${t('welcome.aria')}">${WELCOME_ASCII}</pre>
+      </a>
       <p class="welcome-text">${t('welcome.tagline')}</p>
       <p class="welcome-text welcome-hint">${t('welcome.hint')}</p>
       <button class="play-btn" id="playBtn">${t('welcome.play')}</button>

@@ -31,6 +31,29 @@ function capitalName(name) {
   return locale?.capitals?.[name] ?? name
 }
 
+const MAP_BASE_URL = 'https://cdn.jsdelivr.net/gh/djaiss/mapsicon@33ba28808f8d32b5bae0ffada9cadd07073852e1/all'
+const MISSING_MAP_CODES = new Set(['fm', 'mh', 'ps', 'tv', 'xk'])
+
+function countryMap(country) {
+  const code = /flagcdn\.com\/w320\/([a-z]{2})\.png/.exec(country?.flag || '')?.[1]
+  if (!code || MISSING_MAP_CODES.has(code)) return null
+  return `${MAP_BASE_URL}/${code}/vector.svg`
+}
+
+function preloadImage(url) {
+  if (!url) return
+  const img = new Image()
+  img.decoding = 'async'
+  img.src = url
+}
+
+function preloadQuestionImages(questions) {
+  questions.forEach(q => {
+    if (q.mode === 'map') preloadImage(countryMap(q.country))
+    else if (q.mode === 'flag') preloadImage(q.country.flag)
+  })
+}
+
 function modeLabel(mode) {
   return t(`mode.${mode.id}`)
 }
@@ -72,10 +95,11 @@ const QUIZ_MODES = [
   { id: 'flag', label: 'Flag → Country', short: 'Flag' },
   { id: 'country', label: 'Country → Flag', short: 'Country' },
   { id: 'capital', label: 'Capital → Country', short: 'Capital' },
+  { id: 'map', label: 'Map → Country', short: 'Map' },
   { id: 'mixed', label: 'Mixed', short: 'Mixed' },
 ]
 
-const MIXED_PROMPT_MODES = ['flag', 'country', 'capital']
+const MIXED_PROMPT_MODES = ['flag', 'country', 'capital', 'map']
 
 const WELCOME_ASCII = `      █   █ █████ █████ █████ █      ██   █████
       █  █     █     █     █  █      █    █
@@ -362,12 +386,14 @@ function shuffle(arr) {
 function buildQuestion(country, mode = quizMode) {
   const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
   const options = shuffle([country, ...wrongs])
-  const resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : mode
+  let resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : mode
+  if (resolvedMode === 'map' && !countryMap(country)) resolvedMode = 'flag'
   return { country, options, mode: resolvedMode }
 }
 
 function buildQuiz() {
-  const shuffled = shuffle(countries)
+  const pool = quizMode === 'map' ? countries.filter(c => countryMap(c)) : countries
+  const shuffled = shuffle(pool)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
   return selected.map(country => buildQuestion(country))
 }
@@ -1131,6 +1157,18 @@ function revealNext() {
 }
 
 // ===== Render question =====
+function hydrateMapImage() {
+  const el = document.querySelector('.map-mask')
+  const url = el?.dataset.mapUrl
+  if (!el || !url) return
+  const img = new Image()
+  img.onload = () => {
+    el.style.setProperty('--map-url', `url('${url}')`)
+    el.classList.add('loaded')
+  }
+  img.src = url
+}
+
 function renderQuestion() {
   const q = quizQuestions[currentIndex]
   answered = false
@@ -1144,6 +1182,9 @@ function renderQuestion() {
   } else if (q.mode === 'capital') {
     prompt = `<div class="prompt-hint">${t('quiz.capitalOf')}</div><div class="prompt-country">${capitalName(q.country.capital)}</div>`
     promptClass = ' country-prompt'
+  } else if (q.mode === 'map') {
+    prompt = `<div class="map-mask" role="img" aria-label="${t('quiz.mapAlt')}" data-map-url="${countryMap(q.country)}"></div>`
+    promptClass = ' map-prompt'
   } else {
     prompt = `<div class="prompt-country">${countryName(q.country.country)}</div>`
     promptClass = ' country-prompt'
@@ -1184,6 +1225,7 @@ function renderQuestion() {
   })
   document.querySelector('#nextBtn').addEventListener('click', handleNext)
   bindHeaderControls()
+  hydrateMapImage()
   document.querySelector('.answer-btn')?.focus()
   if (timerEnabled) startTimer()
 }
@@ -1323,6 +1365,7 @@ function beginQuiz(questions) {
   streakRecordCelebrated = false
   lastSelected = null
   quizStartTime = Date.now()
+  preloadQuestionImages(quizQuestions)
   renderQuestion()
 }
 

@@ -6,7 +6,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 
 - 🌍 10-question quizzes randomly drawn from a pool of countries and territories (recognized, disputed, autonomous, and unrecognized)
 - 🎯 5 multiple-choice options per question, shuffled each round
-- 🔀 Four game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, and Mixed
+- 🔀 Five game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, Map → Country, and Mixed
 - 🌐 English and Turkish translations, including country and capital names
 - 🏆 Live score tracking with a results screen at the end
 - 🔥 Streak counter for consecutive correct answers, with an all-time best saved between sessions
@@ -108,6 +108,12 @@ Edit `public/data.json`. Each entry follows this shape:
 - `flag` — URL to the flag image
 - `type` — classification (`recognized`, `disputed`, `autonomous`, `unrecognized`) — informational, not currently used to filter quizzes
 - `capital` — capital city name, used as the prompt in Capital → Country mode
+
+> **Map mode:** The country outline is derived from the two-letter code in the
+> flag URL (`flagcdn.com/w320/<code>.png`) and rendered from
+> [mapsicon](https://github.com/djaiss/mapsicon). Countries whose code has no
+> outline are skipped in Map → Country mode and fall back to the flag prompt in
+> Mixed mode.
 
 ## Deployment
 

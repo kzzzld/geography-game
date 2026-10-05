@@ -781,7 +781,8 @@ function runCommand(raw) {
       applyOptionsCount(count)
       return showCmdMessage(t('cmd.options', { count }))
     }
-    case 'mode': {
+    case 'mode':
+    case 'gamemode': {
       const mode = findByName(QUIZ_MODES, arg)
       if (!mode) return showCmdMessage(t('cmd.invalidMode', { modes: QUIZ_MODES.map(m => m.id).join(', ') }), true)
       applyQuizMode(mode.id)
@@ -822,7 +823,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'lang', 'language', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'gamemode', 'lang', 'language', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
 let completion = null
 
 function getCompletionItems(text) {
@@ -852,7 +853,7 @@ function getCompletionItems(text) {
     options = CMDLINE_POSITIONS
       .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
       .map(o => ({ value: o.id, label: positionLabel(o), insert: o.id }))
-  } else if (name === 'mode') {
+  } else if (name === 'mode' || name === 'gamemode') {
     options = QUIZ_MODES
       .filter(o => normalizeName(o.id).startsWith(typed) || normalizeName(o.label).startsWith(typed))
       .map(o => ({ value: o.id, label: modeLabel(o), insert: o.id }))

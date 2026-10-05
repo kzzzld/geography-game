@@ -337,10 +337,19 @@ const DEFAULT_QUIZ_MODE = 'flag'
 
 let quizMode = DEFAULT_QUIZ_MODE
 
+function syncModeButtons() {
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    const active = btn.dataset.mode === quizMode
+    btn.classList.toggle('active', active)
+    btn.setAttribute('aria-selected', String(active))
+  })
+}
+
 function applyQuizMode(modeId) {
   const mode = QUIZ_MODES.find(m => m.id === modeId) || QUIZ_MODES[0]
   quizMode = mode.id
   localStorage.setItem('flag-quiz-mode', mode.id)
+  syncModeButtons()
   return mode
 }
 
@@ -1098,14 +1107,7 @@ function bindHeaderControls() {
 function switchMode(modeId) {
   if (modeId === quizMode) return
   applyQuizMode(modeId)
-  if (document.querySelector('#playBtn')) {
-    document.querySelectorAll('.mode-btn').forEach(btn => {
-      const active = btn.dataset.mode === modeId
-      btn.classList.toggle('active', active)
-      btn.setAttribute('aria-selected', String(active))
-    })
-    return
-  }
+  if (document.querySelector('#playBtn')) return
   startQuiz()
 }
 

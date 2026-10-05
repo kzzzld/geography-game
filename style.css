@@ -70,20 +70,6 @@
   --border: #45475a;
 }
 
-[data-theme="frappe"] {
-  --bg: #303446;
-  --bg-card: #414559;
-  --bg-elev: #51576d;
-  --text: #c6d0f5;
-  --text-muted: #838ba7;
-  --primary: #ca9ee6;
-  --accent: #f4b8e4;
-  --success: #81c8be;
-  --error: #e78284;
-  --warning: #e5c890;
-  --border: #51576d;
-}
-
 [data-theme="latte"] {
   --bg: #eff1f5;
   --bg-card: #e6e9ef;
@@ -98,20 +84,6 @@
   --border: #bcc0cc;
 }
 
-[data-theme="macchiato"] {
-  --bg: #24273a;
-  --bg-card: #363a4f;
-  --bg-elev: #494d64;
-  --text: #cad3f5;
-  --text-muted: #8087a2;
-  --primary: #c6a0f6;
-  --accent: #f5bde6;
-  --success: #a6da95;
-  --error: #ed8796;
-  --warning: #eed49f;
-  --border: #494d64;
-}
-
 [data-theme="blackmetal"] {
   --bg: #0a0a0a;
   --bg-card: #121212;
@@ -124,6 +96,76 @@
   --error: #cc2222;
   --warning: #8a7530;
   --border: #2a2a2a;
+}
+
+[data-theme="tokyonight-day"] {
+  --bg: #e1e2e7;
+  --bg-card: #d8dae3;
+  --bg-elev: #c8cad8;
+  --text: #3760bf;
+  --text-muted: #6a6fa3;
+  --primary: #2e7de9;
+  --accent: #9854f1;
+  --success: #587539;
+  --error: #f52a65;
+  --warning: #8c6c3e;
+  --border: #b4b8d0;
+}
+
+[data-theme="nord-light"] {
+  --bg: #eceff4;
+  --bg-card: #e5e9f0;
+  --bg-elev: #d8dee9;
+  --text: #2e3440;
+  --text-muted: #4c566a;
+  --primary: #5e81ac;
+  --accent: #81a1c1;
+  --success: #a3be8c;
+  --error: #bf616a;
+  --warning: #d08770;
+  --border: #cbd2e0;
+}
+
+[data-theme="light"] {
+  --bg: #f7f7f7;
+  --bg-card: #efefef;
+  --bg-elev: #e5e5e5;
+  --text: #1e1e1e;
+  --text-muted: #6b6b6b;
+  --primary: #2563eb;
+  --accent: #db2777;
+  --success: #16a34a;
+  --error: #dc2626;
+  --warning: #d97706;
+  --border: #d4d4d4;
+}
+
+[data-theme="amoled-light"] {
+  --bg: #ffffff;
+  --bg-card: #f5f5f5;
+  --bg-elev: #ebebeb;
+  --text: #000000;
+  --text-muted: #737373;
+  --primary: #0088cc;
+  --accent: #cc0088;
+  --success: #00a652;
+  --error: #cc2222;
+  --warning: #cc9900;
+  --border: #e0e0e0;
+}
+
+[data-theme="blackmetal-light"] {
+  --bg: #f2f2f0;
+  --bg-card: #e8e8e5;
+  --bg-elev: #ddddda;
+  --text: #1a1a1a;
+  --text-muted: #6b6b6b;
+  --primary: #8b0000;
+  --accent: #b22222;
+  --success: #4a7c59;
+  --error: #cc2222;
+  --warning: #8a7530;
+  --border: #d0d0cc;
 }
 
 /* ===== Base ===== */
@@ -258,6 +300,28 @@ body {
 .settings-btn:hover { border-color: var(--primary); }
 .settings-btn:active { transform: scale(0.95); }
 .settings-btn svg { width: 20px; height: 20px; }
+
+/* ===== Theme variant toggle ===== */
+.variant-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: var(--bg-elev);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: calc(var(--corner-radius) * 0.5);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s, opacity 0.2s;
+}
+.variant-btn:hover:not(:disabled) { border-color: var(--primary); }
+.variant-btn:active:not(:disabled) { transform: scale(0.95); }
+.variant-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.variant-btn svg { width: 20px; height: 20px; }
+.variant-btn .icon-moon { display: none; }
+[data-variant="light"] .variant-btn .icon-sun { display: none; }
+[data-variant="light"] .variant-btn .icon-moon { display: block; }
 
 /* ===== Timer toggle ===== */
 .timer-control {
@@ -808,9 +872,9 @@ body {
 
 .welcome-ascii {
   display: inline-block;
-  margin: 0 auto 2rem;
+  margin: 0 auto 0.75rem;
   font-family: 'Iosevka', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'DejaVu Sans Mono', 'Liberation Mono', monospace;
-  font-size: clamp(0.5rem, 2.2vw, 1rem);
+  font-size: min(0.9rem, calc((100vw - 8rem) / 43));
   line-height: 1.15;
   font-variant-ligatures: none;
   text-align: left;
@@ -842,6 +906,13 @@ body {
 @keyframes ascii-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
+}
+
+.welcome-credit {
+  margin: 0 0 1.25rem;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  opacity: 0.7;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -993,7 +1064,7 @@ body {
   .result-card .final-score { font-size: 2.25rem; }
 
   .welcome-card { padding: 2rem 1.25rem; }
-  .welcome-ascii { font-size: clamp(0.3rem, 1.9vw, 0.75rem); }
+  .welcome-ascii { font-size: clamp(0.3rem, 1.4vw, 0.7rem); }
   .welcome-text { font-size: 1rem; }
 
   .modal { width: calc(100% - 1.5rem); padding: 1.25rem; max-height: 90vh; }
@@ -1004,7 +1075,7 @@ body {
 @media (max-width: 380px) {
   .mode-btn { font-size: 0.66rem; padding: 0.5rem 0.2rem; }
   .score-text { font-size: 0.75rem; }
-  .welcome-ascii { font-size: clamp(0.28rem, 1.8vw, 0.65rem); }
+  .welcome-ascii { font-size: clamp(0.28rem, 1.3vw, 0.65rem); }
 }
 
 /* ===== Vim-style command line ===== */

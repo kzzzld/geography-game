@@ -68,21 +68,22 @@ function positionLabel(position) {
 
 
 const THEMES = [
-  { id: 'tokyonight', label: 'Tokyo Night' },
-  { id: 'nord', label: 'Nord' },
-  { id: 'dark', label: 'Dark' },
-  { id: 'amoled', label: 'AMOLED' },
-  { id: 'mocha', label: 'Catppuccin Mocha' },
-  { id: 'frappe', label: 'Catppuccin Frappé' },
-  { id: 'latte', label: 'Catppuccin Latte' },
-  { id: 'macchiato', label: 'Catppuccin Macchiato' },
-  { id: 'blackmetal', label: 'Black Metal' },
+  { id: 'tokyonight', label: 'Tokyo Night', dark: 'tokyonight', light: 'tokyonight-day' },
+  { id: 'nord', label: 'Nord', dark: 'nord', light: 'nord-light' },
+  { id: 'dark', label: 'Dark', dark: 'dark', light: 'light' },
+  { id: 'amoled', label: 'AMOLED', dark: 'amoled', light: 'amoled-light' },
+  { id: 'catppuccin', label: 'Catppuccin', dark: 'mocha', light: 'latte' },
+  { id: 'blackmetal', label: 'Black Metal', dark: 'blackmetal', light: 'blackmetal-light' },
 ]
 
 const FONTS = [
   { id: 'inter', label: 'Inter', family: "'Inter', system-ui, sans-serif" },
   { id: 'jetbrains', label: 'JetBrains Mono', family: "'JetBrains Mono', monospace" },
   { id: 'iosevka', label: 'Iosevka', family: "'Iosevka', monospace" },
+  { id: 'firacode', label: 'Fira Code', family: "'Fira Code', monospace" },
+  { id: 'ibmplexmono', label: 'IBM Plex Mono', family: "'IBM Plex Mono', monospace" },
+  { id: 'sourcecodepro', label: 'Source Code Pro', family: "'Source Code Pro', monospace" },
+  { id: 'robotomono', label: 'Roboto Mono', family: "'Roboto Mono', monospace" },
 ]
 
 const CMDLINE_POSITIONS = [
@@ -101,23 +102,32 @@ const QUIZ_MODES = [
 
 const MIXED_PROMPT_MODES = ['flag', 'country', 'capital', 'map']
 
-const WELCOME_ASCII = `      █   █ █████ █████ █████ █      ██   █████
-      █  █     █     █     █  █      █    █
-      ███     █     █     █   █           ████
-      █  █   █     █     █    █               █
-      █   █ █████ █████ █████ █████       █████
-
-█████ █████ █████ █████ ████  █████ ████  █   █ █   █
-█     █     █   █ █     █   █ █   █ █   █ █   █ █   █
-█ ███ ████  █   █ █ ███ ████  █████ ████  █████  ███
-█   █ █     █   █ █   █ █  █  █   █ █     █   █   █
-█████ █████ █████ █████ █   █ █   █ █     █   █   █
-
-               █████ █████ █   █ █████
-               █     █   █ ██ ██ █
-               █ ███ █████ █ █ █ ████
-               █   █ █   █ █   █ █
-               █████ █   █ █   █ █████`
+const WELCOME_ASCII = [
+  "-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----",
+  "           . _..::__:  ,-\"-\"._        |7       ,     _,.__",
+  "   _.___ _ _<_>`!(._`.`-.    /         _._     `_ ,_/  '  '-._.---.-.__",
+  ">.{     \" \" `-==,',._\\{  \\  / {)      / _ \">_,-' `                mt-2_",
+  "  \\_.:--.       `._ )`^-. \"'       , [_/(                       __,/-'",
+  " '\"'     \\         \"    _L        oD_,--'                )     /. (|",
+  "          |           ,'          _)_.\\\\._<> 6              _,' /  '",
+  "          `.         /           [_/_'` `\"(                <'}  )",
+  "           \\\\    .-. )           /   `-'\"..' `:.#          _)  '",
+  "    `        \\  (  `(           /         `:\\  > \\  ,-^.  /' '",
+  "              `._,   \"\"         |           \\`'   \\|   ?_)  {\\",
+  "                 `=.---.        `._._       ,'     \"`  |' ,- '.",
+  "                   |    `-._         |     /          `:`<_|h--._",
+  "                   (        >        .     | ,          `=.__.`-'\\",
+  "                    `.     /         |     |{|              ,-.,\\     .",
+  "                     |   ,'           \\   / `'            ,\"     \\",
+  "                     |  /              |_'                |  __  /",
+  "                     | |                                  '-'  `-'   \\.",
+  "                     |/                                         \"    /",
+  "                     \\.                                             '",
+  "                      ,/            ______._.--._ _..---.---------._",
+  "     ,-----\"-..?----_/ )      __,-'\"             \"                  (",
+  "-.._(                  `-----'                                       `-",
+  "-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----",
+].join("\n")
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
@@ -141,13 +151,61 @@ let timerPaused = false
 const app = document.querySelector('#app')
 
 // ===== Theme management =====
-function applyTheme(themeId) {
-  document.documentElement.setAttribute('data-theme', themeId)
-  localStorage.setItem('flag-quiz-theme', themeId)
+const DEFAULT_THEME = 'tokyonight'
+let themeVariant = 'dark'
+
+function getTheme(themeId) {
+  return THEMES.find(t => t.id === themeId) || THEMES[0]
+}
+
+function resolveThemeVariant(theme, variant) {
+  const wantsLight = variant === 'light' && Boolean(theme.light)
+  return { variant: wantsLight ? 'light' : 'dark', cssId: wantsLight ? theme.light : theme.dark }
+}
+
+function applyTheme(themeId, variant = themeVariant) {
+  const theme = getTheme(themeId)
+  const resolved = resolveThemeVariant(theme, variant)
+  themeVariant = resolved.variant
+  document.documentElement.setAttribute('data-theme', resolved.cssId)
+  document.documentElement.setAttribute('data-variant', resolved.variant)
+  localStorage.setItem('flag-quiz-theme', theme.id)
+  localStorage.setItem('flag-quiz-theme-variant', resolved.variant)
+  syncVariantToggle()
+  return theme
 }
 
 function loadTheme() {
-  return localStorage.getItem('flag-quiz-theme') || 'tokyonight'
+  const stored = localStorage.getItem('flag-quiz-theme')
+  if (THEMES.some(t => t.id === stored)) return stored
+  const legacy = THEMES.find(t => t.dark === stored || t.light === stored)
+  return legacy ? legacy.id : DEFAULT_THEME
+}
+
+function applyStoredTheme() {
+  const stored = localStorage.getItem('flag-quiz-theme')
+  let variant = localStorage.getItem('flag-quiz-theme-variant') === 'light' ? 'light' : 'dark'
+  if (THEMES.some(t => t.id === stored)) return applyTheme(stored, variant)
+  const legacy = THEMES.find(t => t.dark === stored || t.light === stored)
+  if (!legacy) return applyTheme(DEFAULT_THEME, variant)
+  if (stored === legacy.light) variant = 'light'
+  return applyTheme(legacy.id, variant)
+}
+
+function toggleThemeVariant() {
+  const theme = getTheme(loadTheme())
+  if (!theme.light) return
+  applyTheme(theme.id, themeVariant === 'light' ? 'dark' : 'light')
+}
+
+function syncVariantToggle() {
+  const btn = document.querySelector('#variantToggle')
+  if (!btn) return
+  const theme = getTheme(loadTheme())
+  btn.disabled = !theme.light
+  btn.setAttribute('aria-pressed', String(themeVariant === 'light'))
+  btn.title = !theme.light ? t('theme.noLight') : themeVariant === 'light' ? t('theme.toDark') : t('theme.toLight')
+  btn.setAttribute('aria-label', btn.title)
 }
 
 // ===== Font management =====
@@ -611,6 +669,7 @@ function findByName(list, query) {
 
 function resetApp() {
   localStorage.removeItem('flag-quiz-theme')
+  localStorage.removeItem('flag-quiz-theme-variant')
   localStorage.removeItem('flag-quiz-font')
   localStorage.removeItem('flag-quiz-corner-padding')
   localStorage.removeItem('flag-quiz-corner-radius')
@@ -622,7 +681,7 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-timer-enabled')
   localStorage.removeItem('flag-quiz-timer-seconds')
   localStorage.removeItem('flag-quiz-language')
-  applyTheme(loadTheme())
+  applyStoredTheme()
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
   applyCornerRadius(loadCornerRadius())
@@ -676,6 +735,19 @@ function runCommand(raw) {
       if (!position) return showCmdMessage(t('cmd.invalidPosition'), true)
       applyCmdlinePosition(position.id)
       return showCmdMessage(t('cmd.cmdline', { name: positionLabel(position) }))
+    }
+    case 'variant': {
+      const value = arg.trim().toLowerCase()
+      const theme = getTheme(loadTheme())
+      if (value === 'toggle') {
+        if (!theme.light) return showCmdMessage(t('theme.noLight'), true)
+        toggleThemeVariant()
+        return showCmdMessage(t('cmd.variant', { name: themeVariant === 'light' ? t('theme.light') : t('theme.dark') }))
+      }
+      if (value !== 'dark' && value !== 'light') return showCmdMessage(t('cmd.invalidVariant'), true)
+      if (value === 'light' && !theme.light) return showCmdMessage(t('theme.noLight'), true)
+      applyTheme(theme.id, value)
+      return showCmdMessage(t('cmd.variant', { name: value === 'light' ? t('theme.light') : t('theme.dark') }))
     }
     case 'questions': {
       const count = parseInt(arg, 10)
@@ -750,7 +822,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'lang', 'language', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'lang', 'language', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
 let completion = null
 
 function getCompletionItems(text) {
@@ -790,6 +862,10 @@ function getCompletionItems(text) {
       .map(o => ({ value: o.id, label: o.label, insert: o.id }))
   } else if (name === 'time') {
     options = ['off']
+      .filter(o => o.startsWith(typed))
+      .map(o => ({ value: o, label: o, insert: o }))
+  } else if (name === 'variant') {
+    options = ['dark', 'light', 'toggle']
       .filter(o => o.startsWith(typed))
       .map(o => ({ value: o, label: o, insert: o }))
   } else if (name === 'answer' || name === 'a') {
@@ -979,6 +1055,15 @@ function renderHeader() {
             <input class="number-input" type="number" id="timerSecondsInput" min="${MIN_TIMER_SECONDS}" max="${MAX_TIMER_SECONDS}" step="1" value="${timerSeconds}" />
           </div>
         </div>
+        <button class="variant-btn" id="variantToggle" aria-pressed="${themeVariant === 'light'}" title="${t('theme.toLight')}">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+        </button>
         <button class="settings-btn" id="settingsBtn" aria-label="${t('settings.title')}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -994,6 +1079,8 @@ function renderHeader() {
 function bindHeaderControls() {
   guardNumberInputs()
   document.querySelector('#settingsBtn')?.addEventListener('click', openSettings)
+  document.querySelector('#variantToggle')?.addEventListener('click', toggleThemeVariant)
+  syncVariantToggle()
   document.querySelector('#timerToggle')?.addEventListener('click', toggleTimer)
   document.querySelector('#timerSecondsInput')?.addEventListener('input', (e) => {
     applyTimerSeconds(e.target.value)
@@ -1337,6 +1424,7 @@ function renderWelcome() {
       <a class="welcome-ascii-link" href="${import.meta.env.BASE_URL}" aria-label="${t('app.logo')}">
         <pre class="welcome-ascii" role="img" aria-label="${t('welcome.aria')}">${WELCOME_ASCII}</pre>
       </a>
+      <p class="welcome-credit">Map (C) 1998 Matthew Thomas. Freely usable if this line is included.</p>
       <p class="welcome-text">${t('welcome.tagline')}</p>
       <p class="welcome-text welcome-hint">${t('welcome.hint')}</p>
       <button class="play-btn" id="playBtn">${t('welcome.play')}</button>
@@ -1381,7 +1469,7 @@ function retryMissed() {
 
 // ===== Init =====
 async function init() {
-  applyTheme(loadTheme())
+  applyStoredTheme()
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
   applyCornerRadius(loadCornerRadius())

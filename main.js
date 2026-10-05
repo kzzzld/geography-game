@@ -1019,6 +1019,16 @@ document.addEventListener('keydown', (e) => {
     return
   }
 
+  const letterIndex = /^[a-hA-H]$/.test(e.key) ? LETTERS.indexOf(e.key.toUpperCase()) : -1
+  if (!answered && letterIndex !== -1) {
+    const btns = document.querySelectorAll('.answer-btn')
+    if (btns[letterIndex]) {
+      e.preventDefault()
+      handleAnswer(btns[letterIndex])
+    }
+    return
+  }
+
   if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && document.activeElement?.classList.contains('answer-btn')) {
     e.preventDefault()
     const btns = Array.from(document.querySelectorAll('.answer-btn'))

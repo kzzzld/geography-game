@@ -72,6 +72,8 @@ npm run preview
 │   ├── world.svg     # World map for Map mode
 │   └── focus.json    # Per-country zoom rectangles for Map mode
 ├── flake.nix         # Nix flake: dev shell, package, NixOS module
+├── Dockerfile        # Build + serve with nginx {UNTESTED}
+├── compose.yml       # Docker Compose service {UNTESTED}
 ├── LICENSE           # MIT
 └── package.json
 ```
@@ -132,6 +134,28 @@ npm run build
 ```
 
 Vercel will detect the Vite framework preset automatically and serve the `dist/` output.
+
+## Docker {UNTESTED}
+
+> **{UNTESTED}** — these files are provided as a starting point and have not been verified.
+
+The included `Dockerfile` builds the site and serves it with nginx. `compose.yml`
+wires it up on port `8080`.
+
+Run with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+The app will be available at `http://localhost:8080`.
+
+Or build and run the image directly:
+
+```bash
+docker build -t kzzzl-geography-game .
+docker run --rm -p 8080:80 kzzzl-geography-game
+```
 
 ## Nix
 

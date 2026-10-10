@@ -49,6 +49,72 @@
         };
       });
 
+      nixosModules.default =
+        { config, lib, pkgs, ... }:
+        let
+          cfg = config.services.kzzzl-geography-game;
+          nginxConf = pkgs.writeText "kzzzl-geography-game-nginx.conf" ''
+            worker_processes 1;
+            pid /run/kzzzl-geography-game/nginx.pid;
+            error_log stderr;
+            events { worker_connections 1024; }
+            http {
+              include ${pkgs.nginx}/conf/mime.types;
+              default_type application/octet-stream;
+              access_log /dev/stdout;
+              client_body_temp_path /run/kzzzl-geography-game/client_temp;
+              proxy_temp_path /run/kzzzl-geography-game/proxy_temp;
+              fastcgi_temp_path /run/kzzzl-geography-game/fastcgi_temp;
+              uwsgi_temp_path /run/kzzzl-geography-game/uwsgi_temp;
+              scgi_temp_path /run/kzzzl-geography-game/scgi_temp;
+              server {
+                listen ${toString cfg.port};
+                listen [::]:${toString cfg.port};
+                root ${cfg.package};
+                index index.html;
+                location / {
+                  try_files $uri $uri/ /index.html;
+                }
+              }
+            }
+          '';
+        in
+        {
+          options.services.kzzzl-geography-game = {
+            enable = lib.mkEnableOption "kzzzl's geography game";
+            port = lib.mkOption {
+              type = lib.types.port;
+              default = 8080;
+              description = "Port to serve kzzzl's geography game on.";
+            };
+            package = lib.mkOption {
+              type = lib.types.package;
+              default = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+              description = "The kzzzl's geography game package to serve.";
+            };
+          };
+
+          config = lib.mkIf cfg.enable {
+            systemd.services.kzzzl-geography-game = {
+              description = "kzzzl's geography game";
+              wantedBy = [ "multi-user.target" ];
+              after = [ "network.target" ];
+              serviceConfig = {
+                ExecStart = "${pkgs.nginx}/bin/nginx -c ${nginxConf} -g 'daemon off;'";
+                Restart = "on-failure";
+                DynamicUser = true;
+                RuntimeDirectory = "kzzzl-geography-game";
+                AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+                CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
+                NoNewPrivileges = true;
+                ProtectSystem = "strict";
+                ProtectHome = true;
+                PrivateTmp = true;
+              };
+            };
+          };
+        };
+
       formatter = forAllSystems (pkgs: pkgs.nixfmt-rfc-style);
     };
 }

@@ -68,7 +68,11 @@ npm run preview
 │   ├── en.json       # English strings + country/capital names
 │   └── tr.json       # Turkish strings + country/capital names
 ├── public/
-│   └── data.json      # Quiz data (country names + flag image URLs)
+│   ├── data.json     # Quiz data (country names + flag image URLs)
+│   ├── world.svg     # World map for Map mode
+│   └── focus.json    # Per-country zoom rectangles for Map mode
+├── flake.nix         # Nix flake: dev shell, package, NixOS module
+├── LICENSE           # MIT
 └── package.json
 ```
 
@@ -128,6 +132,75 @@ npm run build
 ```
 
 Vercel will detect the Vite framework preset automatically and serve the `dist/` output.
+
+## Nix
+
+The project ships a `flake.nix` providing a dev shell, a package, and a NixOS module.
+
+### Dev shell
+
+```bash
+nix develop
+```
+
+### Build
+
+```bash
+nix build
+```
+
+The static site is written to `result/`.
+
+### NixOS hosting
+
+Add the flake as an input and enable the module. It serves the built site with
+nginx bound to `127.0.0.1` (meant to sit behind a reverse proxy):
+
+```nix
+{
+  inputs.geography-game.url = "github:kzzzl/geography-game";
+
+  outputs = { nixpkgs, geography-game, ... }: {
+    nixosConfigurations.myvps = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./configuration.nix
+        geography-game.nixosModules.default
+      ];
+    };
+  };
+}
+```
+
+```nix
+{
+  services.kzzzl-geography-game.enable = true;
+  services.kzzzl-geography-game.port = 8080; # default
+}
+```
+
+Module options:
+
+- `enable` — turn the service on
+- `port` — port to listen on (default `8080`)
+- `package` — package to serve (defaults to the flake's package)
+
+Example reverse proxy for a public domain:
+
+```nix
+{
+  services.nginx = {
+    enable = true;
+    virtualHosts."geog.example.com" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/".proxyPass = "http://127.0.0.1:8080";
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
+}
+```
 
 ## Tech Stack
 

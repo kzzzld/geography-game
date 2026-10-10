@@ -50,11 +50,17 @@
       });
 
       nixosModules.default =
-        { config, lib, pkgs, ... }:
+        {
+          config,
+          lib,
+          pkgs,
+          ...
+        }:
         let
           cfg = config.services.kzzzl-geography-game;
           nginxConf = pkgs.writeText "kzzzl-geography-game-nginx.conf" ''
             worker_processes 1;
+            daemon off;
             pid /run/kzzzl-geography-game/nginx.pid;
             error_log stderr;
             events { worker_connections 1024; }
@@ -68,8 +74,7 @@
               uwsgi_temp_path /run/kzzzl-geography-game/uwsgi_temp;
               scgi_temp_path /run/kzzzl-geography-game/scgi_temp;
               server {
-                listen ${toString cfg.port};
-                listen [::]:${toString cfg.port};
+                listen 127.0.0.1:${toString cfg.port};
                 root ${cfg.package};
                 index index.html;
                 location / {
@@ -100,7 +105,7 @@
               wantedBy = [ "multi-user.target" ];
               after = [ "network.target" ];
               serviceConfig = {
-                ExecStart = "${pkgs.nginx}/bin/nginx -c ${nginxConf} -g 'daemon off;'";
+                ExecStart = "${pkgs.nginx}/bin/nginx -e stderr -c ${nginxConf}";
                 Restart = "on-failure";
                 DynamicUser = true;
                 RuntimeDirectory = "kzzzl-geography-game";

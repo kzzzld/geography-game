@@ -33,7 +33,7 @@ can read ES modules and a bit of CSS, you can work on this.
 - No comments in the source unless they clarify something non-obvious.
 - Every user-visible string comes from a locale file (see
   [Localization](Localization.md)).
-- Only commit when asked. Patches are welcome by email (see
+- Commit after every logical change. Patches are welcome by email (see
   [Contributing](Contributing.md)).
 
 Related: [User wiki](../User/README.md) · [Hoster wiki](../Hoster/README.md)

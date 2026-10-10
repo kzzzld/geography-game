@@ -19,7 +19,8 @@ patch.
   command line gains a new command by adding a `case` and a
   `COMMAND_NAMES` entry.
 - **Keep patches focused.** One logical change per patch.
-- **Don't commit unless asked**, and never commit secrets.
+- **Commit every logical change** as soon as it's done, and never commit
+  secrets.
 
 ## Commit messages
 

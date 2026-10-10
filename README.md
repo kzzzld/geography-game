@@ -226,6 +226,11 @@ Example reverse proxy for a public domain:
 }
 ```
 
+## Contributing
+
+Patches are welcome by email only, to **kzzzl@kzzzl.xyz**. Pull requests are not
+accepted.
+
 ## Tech Stack
 
 - [Vite](https://vitejs.dev/) — build tool and dev server

@@ -67,7 +67,7 @@
             http {
               include ${pkgs.nginx}/conf/mime.types;
               default_type application/octet-stream;
-              access_log /dev/stdout;
+              access_log off;
               client_body_temp_path /run/kzzzl-geography-game/client_temp;
               proxy_temp_path /run/kzzzl-geography-game/proxy_temp;
               fastcgi_temp_path /run/kzzzl-geography-game/fastcgi_temp;

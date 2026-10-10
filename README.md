@@ -109,11 +109,15 @@ Edit `public/data.json`. Each entry follows this shape:
 - `type` — classification (`recognized`, `disputed`, `autonomous`, `unrecognized`) — informational, not currently used to filter quizzes
 - `capital` — capital city name, used as the prompt in Capital → Country mode
 
-> **Map mode:** The country outline is derived from the two-letter code in the
-> flag URL (`flagcdn.com/w320/<code>.png`) and rendered from
-> [mapsicon](https://github.com/djaiss/mapsicon). Countries whose code has no
-> outline are skipped in Map → Country mode and fall back to the flag prompt in
-> Mixed mode.
+> **Map mode:** The country is identified by the two-letter code in its flag URL
+> (`flagcdn.com/w320/<code>.png`) and located on a world map
+> (`public/world.svg`, sourced from
+> [@svg-maps/world](https://github.com/VictorCazanave/svg-maps), where each
+> country path is keyed by its ISO alpha-2 code). The map zooms to the country
+> and highlights it. `public/focus.json` holds a per-country focus rectangle
+> (`[x, y, width, height]`) that excludes far-flung territories (e.g. Alaska for
+> the US, Azores for Portugal) so remote islands don't defeat the zoom; it is
+> generated from the map geometry.
 
 ## Deployment
 

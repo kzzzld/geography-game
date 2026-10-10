@@ -31,13 +31,32 @@ function capitalName(name) {
   return locale?.capitals?.[name] ?? name
 }
 
-const MAP_BASE_URL = 'https://cdn.jsdelivr.net/gh/djaiss/mapsicon@33ba28808f8d32b5bae0ffada9cadd07073852e1/all'
-const MISSING_MAP_CODES = new Set(['fm', 'mh', 'ps', 'tv', 'xk'])
+function countryCode(country) {
+  return /flagcdn\.com\/w320\/([a-z]{2})\.png/.exec(country?.flag || '')?.[1] || null
+}
 
-function countryMap(country) {
-  const code = /flagcdn\.com\/w320\/([a-z]{2})\.png/.exec(country?.flag || '')?.[1]
-  if (!code || MISSING_MAP_CODES.has(code)) return null
-  return `${MAP_BASE_URL}/${code}/vector.svg`
+const WORLD_MAP_URL = './world.svg'
+const WORLD_FOCUS_URL = './focus.json'
+let worldMapPromise = null
+let worldFocusPromise = null
+
+function loadWorldMap() {
+  if (!worldMapPromise) {
+    worldMapPromise = fetch(WORLD_MAP_URL)
+      .then(res => res.text())
+      .then(text => new DOMParser().parseFromString(text, 'image/svg+xml').documentElement)
+      .catch(() => null)
+  }
+  return worldMapPromise
+}
+
+function loadWorldFocus() {
+  if (!worldFocusPromise) {
+    worldFocusPromise = fetch(WORLD_FOCUS_URL)
+      .then(res => res.json())
+      .catch(() => null)
+  }
+  return worldFocusPromise
 }
 
 function preloadImage(url) {
@@ -49,8 +68,12 @@ function preloadImage(url) {
 
 function preloadQuestionImages(questions) {
   questions.forEach(q => {
-    if (q.mode === 'map') preloadImage(countryMap(q.country))
-    else if (q.mode === 'flag') preloadImage(q.country.flag)
+    if (q.mode === 'map') {
+      loadWorldMap()
+      loadWorldFocus()
+    } else if (q.mode === 'flag') {
+      preloadImage(q.country.flag)
+    }
   })
 }
 
@@ -454,13 +477,11 @@ function buildQuestion(country, mode = quizMode) {
   const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
   const options = shuffle([country, ...wrongs])
   let resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : mode
-  if (resolvedMode === 'map' && !countryMap(country)) resolvedMode = 'flag'
   return { country, options, mode: resolvedMode }
 }
 
 function buildQuiz() {
-  const pool = quizMode === 'map' ? countries.filter(c => countryMap(c)) : countries
-  const shuffled = shuffle(pool)
+  const shuffled = shuffle(countries)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
   return selected.map(country => buildQuestion(country))
 }
@@ -1257,16 +1278,46 @@ function revealNext() {
 }
 
 // ===== Render question =====
-function hydrateMapImage() {
-  const el = document.querySelector('.map-mask')
-  const url = el?.dataset.mapUrl
-  if (!el || !url) return
-  const img = new Image()
-  img.onload = () => {
-    el.style.setProperty('--map-url', `url('${url}')`)
-    el.classList.add('loaded')
+const WORLD_VIEWBOX = { width: 1010, height: 666 }
+const WORLD_MIN_EXTENT = { width: 55, height: 36 }
+
+function zoomViewBox(bbox) {
+  const ratio = WORLD_VIEWBOX.width / WORLD_VIEWBOX.height
+  let width = Math.max(bbox.width * 2.2, WORLD_MIN_EXTENT.width)
+  let height = Math.max(bbox.height * 2.2, WORLD_MIN_EXTENT.height)
+  if (width / height > ratio) height = width / ratio
+  else width = height * ratio
+  const cx = bbox.x + bbox.width / 2
+  const cy = bbox.y + bbox.height / 2
+  return `${cx - width / 2} ${cy - height / 2} ${width} ${height}`
+}
+
+async function hydrateWorldMap() {
+  const el = document.querySelector('.world-map')
+  if (!el) return
+  const code = el.dataset.code
+  const [template, focus] = await Promise.all([loadWorldMap(), loadWorldFocus()])
+  if (!el.isConnected) return
+  if (!template) { el.classList.add('loaded'); return }
+
+  const svg = template.cloneNode(true)
+  svg.removeAttribute('aria-label')
+  svg.setAttribute('aria-hidden', 'true')
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
+  svg.classList.add('world-svg')
+  svg.querySelectorAll('path').forEach(p => p.classList.add('world-country'))
+  const target = svg.querySelector(`[id="${code}"]`)
+  if (target) target.classList.add('world-target')
+  el.replaceChildren(svg)
+
+  const box = focus?.[code]
+  if (box) {
+    svg.setAttribute('viewBox', zoomViewBox({ x: box[0], y: box[1], width: box[2], height: box[3] }))
+  } else if (target) {
+    const bbox = target.getBBox()
+    if (bbox.width > 0 && bbox.height > 0) svg.setAttribute('viewBox', zoomViewBox(bbox))
   }
-  img.src = url
+  el.classList.add('loaded')
 }
 
 function renderQuestion() {
@@ -1283,7 +1334,7 @@ function renderQuestion() {
     prompt = `<div class="prompt-hint">${t('quiz.capitalOf')}</div><div class="prompt-country">${capitalName(q.country.capital)}</div>`
     promptClass = ' country-prompt'
   } else if (q.mode === 'map') {
-    prompt = `<div class="map-mask" role="img" aria-label="${t('quiz.mapAlt')}" data-map-url="${countryMap(q.country)}"></div>`
+    prompt = `<div class="world-map" role="img" aria-label="${t('quiz.mapAlt')}" data-code="${countryCode(q.country)}"></div>`
     promptClass = ' map-prompt'
   } else {
     prompt = `<div class="prompt-country">${countryName(q.country.country)}</div>`
@@ -1325,7 +1376,7 @@ function renderQuestion() {
   })
   document.querySelector('#nextBtn').addEventListener('click', handleNext)
   bindHeaderControls()
-  hydrateMapImage()
+  hydrateWorldMap()
   document.querySelector('.answer-btn')?.focus()
   if (timerEnabled) startTimer()
 }

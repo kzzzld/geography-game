@@ -4,7 +4,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 
 ## Features
 
-- 🌍 10-question quizzes randomly drawn from a pool of countries and territories (recognized, disputed, autonomous, and unrecognized)
+- 🌍 20-question quizzes (configurable from 5–50) randomly drawn from a pool of 207 countries and territories (recognized, disputed, autonomous, and unrecognized)
 - 🎯 5 multiple-choice options per question, shuffled each round
 - 🔀 Five game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, Map → Country, and Mixed
 - 🌐 English and Turkish translations, including country and capital names
@@ -229,7 +229,20 @@ Example reverse proxy for a public domain:
 ## Contributing
 
 Patches are welcome by email only, to **kzzzl@kzzzl.xyz**. Pull requests are not
-accepted.
+accepted. See the [Contributing guide](wiki/Developer/Contributing.md) for code
+style and how to send a patch with `git send-email` or `git format-patch`.
+
+## Documentation
+
+Long-form documentation lives in the [wiki](wiki/README.md), split into three
+audiences:
+
+- **[User wiki](wiki/User/README.md)** — game modes, scoring, settings, themes,
+  keyboard shortcuts, and the command line.
+- **[Developer wiki](wiki/Developer/README.md)** — architecture, data model, quiz
+  flow, map mode, localization, theming, and contributing.
+- **[Hoster wiki](wiki/Hoster/README.md)** — building, static hosting, NixOS, and
+  Docker.
 
 ## Tech Stack
 

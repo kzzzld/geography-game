@@ -8,6 +8,9 @@ patch.
 
 - **No frameworks.** The app is plain ES modules plus CSS, bundled by Vite.
   Keep it that way.
+- **Keep it small and clear.** No bloat — write the simplest thing that works,
+  prefer clarity over cleverness, and avoid unnecessary abstractions, helpers,
+  or dependencies.
 - **No comments** in the source unless they clarify something genuinely
   non-obvious. Section banners (`// ===== Name =====`) are the accepted
   exception.

@@ -63,6 +63,10 @@ Rules:
 
 ## 3. Code conventions
 
+- **Keep code small, understandable, and easy to maintain. No bloat.** Write the
+  simplest thing that works, prefer clarity over cleverness, and avoid
+  unnecessary abstractions, helpers, or dependencies. If a change makes a file
+  or function noticeably bigger, stop and ask whether it can be simpler.
 - **No frameworks, no new runtime dependencies.** Plain ES modules + CSS bundled
   by Vite.
 - **No comments** unless they clarify something non-obvious. Section banners

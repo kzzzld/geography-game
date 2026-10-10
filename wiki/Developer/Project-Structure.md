@@ -4,6 +4,7 @@ What every file in the repository is for.
 
 ```
 .
+├── AGENTS.md               # Instructions for AI agents (wiki-sync rules)
 ├── index.html              # App shell: #app div, font <link>s, loads main.js
 ├── main.js                 # Entire app logic (see note below)
 ├── style.css               # All styles and theme palettes

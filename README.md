@@ -61,6 +61,7 @@ npm run preview
 
 ```
 .
+├── AGENTS.md         # Instructions for AI agents working on the project
 ├── index.html        # App entry HTML
 ├── main.js           # App logic (quiz flow, rendering, settings)
 ├── style.css         # Theming and layout styles

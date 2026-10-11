@@ -93,8 +93,10 @@ building and running the app.
 
 ## 5. Git
 
-- **Commit after every change.** Every logical unit of work gets its own commit
-  as soon as it's done — do not leave changes sitting uncommitted.
+- **You commit every change you make.** Commit as part of doing the work — do
+  not ask whether to commit, do not wait for permission, and do not leave
+  changes sitting uncommitted. Every logical unit of work gets its own commit as
+  soon as it's done.
 - Keep commits focused; write imperative, conventional commit subjects
   (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`).
 - Include the doc/wiki updates in the same commit as the code they describe.

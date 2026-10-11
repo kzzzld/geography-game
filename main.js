@@ -477,11 +477,13 @@ function buildQuestion(country, mode = quizMode) {
   const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
   const options = shuffle([country, ...wrongs])
   let resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : mode
+  if (resolvedMode === 'map' && !countryCode(country)) resolvedMode = 'flag'
   return { country, options, mode: resolvedMode }
 }
 
 function buildQuiz() {
-  const shuffled = shuffle(countries)
+  const pool = quizMode === 'map' ? countries.filter(c => countryCode(c)) : countries
+  const shuffled = shuffle(pool)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
   return selected.map(country => buildQuestion(country))
 }
@@ -1279,7 +1281,7 @@ function revealNext() {
 
 // ===== Render question =====
 const WORLD_VIEWBOX = { width: 1010, height: 666 }
-const WORLD_MIN_EXTENT = { width: 55, height: 36 }
+const WORLD_MIN_EXTENT = { width: 3, height: 2 }
 
 function zoomViewBox(bbox) {
   const ratio = WORLD_VIEWBOX.width / WORLD_VIEWBOX.height

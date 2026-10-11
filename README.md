@@ -120,11 +120,14 @@ Edit `public/data.json`. Each entry follows this shape:
 > (`flagcdn.com/w320/<code>.png`) and located on a world map
 > (`public/world.svg`, sourced from
 > [@svg-maps/world](https://github.com/VictorCazanave/svg-maps), where each
-> country path is keyed by its ISO alpha-2 code). The map zooms to the country
-> and highlights it. `public/focus.json` holds a per-country focus rectangle
-> (`[x, y, width, height]`) that excludes far-flung territories (e.g. Alaska for
-> the US, Azores for Portugal) so remote islands don't defeat the zoom; it is
-> generated from the map geometry.
+> country path is keyed by its ISO alpha-2 code). The map zooms tightly to the
+> country and highlights it. `public/focus.json` holds a per-country focus
+> rectangle (`[x, y, width, height]`) that excludes far-flung territories (e.g.
+> Alaska for the US, Azores for Portugal) so remote islands don't defeat the
+> zoom; it is generated from the map geometry. Entries whose flags aren't hosted
+> on `flagcdn.com` (Abkhazia, South Ossetia, Transnistria, Northern Cyprus,
+> Somaliland, Artsakh, Catalonia) have no code and aren't drawn on the map, so
+> they're skipped as Map prompts but still appear in the other modes.
 
 ## Deployment
 

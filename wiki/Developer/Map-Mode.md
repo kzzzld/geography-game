@@ -67,7 +67,7 @@ country's own bounding box (`getBBox()`).
 
 ```js
 const WORLD_VIEWBOX = { width: 1010, height: 666 }
-const WORLD_MIN_EXTENT = { width: 55, height: 36 }
+const WORLD_MIN_EXTENT = { width: 3, height: 2 }
 
 function zoomViewBox(bbox) {
   const ratio = WORLD_VIEWBOX.width / WORLD_VIEWBOX.height
@@ -82,10 +82,26 @@ function zoomViewBox(bbox) {
 ```
 
 - The view is **2.2×** the target's extent, with a **minimum** extent of
-  `55 × 36` so tiny countries (and tiny dots) don't zoom absurdly far in.
+  `3 × 2` so point-sized targets still get a valid viewBox.
 - The result is expanded to the map's `1010:666` aspect ratio so nothing is
   stretched.
 - Centres the box on the target.
+
+## Countries without a map code
+
+`world.svg` only contains the ~250 ISO-keyed countries and territories. A
+handful of entries in `data.json` — the unrecognized/autonomous territories
+whose flags come from Wikimedia instead of `flagcdn.com` (Abkhazia, South
+Ossetia, Transnistria, Northern Cyprus, Somaliland, Artsakh, Catalonia) — have
+no two-letter code and no path to highlight, so Map mode cannot draw them.
+
+Those entries are filtered out of map questions at build time:
+
+- **Map → Country** builds its pool from `countries.filter(c => countryCode(c))`.
+- **Mixed** falls back to a flag prompt if it would otherwise resolve `map` for
+  such a country.
+
+They still appear normally in Flag, Country, and Capital modes.
 
 ## Why `focus.json` exists
 

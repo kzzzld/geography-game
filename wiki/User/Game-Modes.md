@@ -44,9 +44,14 @@ highlighting it. Pick the country shown.
   (`flagcdn.com/w320/<code>.png`).
 - The map is `public/world.svg`, with each country path keyed by its ISO
   alpha-2 code.
+- Entries with no such code (the territories whose flags aren't hosted on
+  `flagcdn.com`) aren't on the map, so they're skipped as Map prompts. They
+  can still be answers, and still show up in the other modes.
 - A per-country focus rectangle from `public/focus.json` keeps far-flung
   territories (Alaska, the Azores, …) out of the zoom, so remote islands don't
   wreck the framing.
+- The map zooms tightly on the target — small states and islands are shown
+  large and highlighted rather than lost in a continental view.
 - The map fades in once it has loaded; a map question is the only one that
   needs to fetch extra data.
 

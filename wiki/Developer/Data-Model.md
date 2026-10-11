@@ -36,6 +36,11 @@ few codes repeat (e.g. shared or duplicate flags). Every entry has a `capital`.
 `type` is displayed nowhere and is not used to filter quizzes; it exists purely
 as metadata for future use and for readers of the data file.
 
+Seven entries (unrecognized/autonomous territories such as Abkhazia and South
+Ossetia) have Wikimedia flag URLs instead of `flagcdn.com` ones, so they have no
+two-letter map code and are skipped in Map mode. See
+[Map Mode](Map-Mode.md#countries-without-a-map-code).
+
 ## Question (runtime only)
 
 Questions are **not** stored in `data.json` — they're built in memory by
@@ -59,18 +64,23 @@ Questions are **not** stored in `data.json` — they're built in memory by
 
 - `mode` is resolved at build time. For a normal mode it's just that mode; for
   **Mixed** it's randomly chosen from `['flag', 'country', 'capital', 'map']`.
+  If that choice is `map` but the country has no map code, it falls back to
+  `flag`.
 
 ## Building a quiz
 
 ```js
 function buildQuiz() {
-  const shuffled = shuffle(countries)
+  const pool = quizMode === 'map' ? countries.filter(c => countryCode(c)) : countries
+  const shuffled = shuffle(pool)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
   return selected.map(country => buildQuestion(country))
 }
 ```
 
-The country pool is shuffled, the first `questionsPerQuiz` are taken, then each
+For **Map → Country** the pool first drops countries that aren't on
+`world.svg` (see [Map Mode](Map-Mode.md)); the other modes use the full pool.
+The pool is then shuffled, the first `questionsPerQuiz` are taken, and each
 becomes a question with its own shuffled options.
 
 ## Retrying missed questions

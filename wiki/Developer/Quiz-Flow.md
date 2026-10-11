@@ -40,8 +40,9 @@ init() ─▶ showWelcome() ─[Play]─▶ startQuiz()
 
 ## 2. Starting
 
-`startQuiz()` calls `beginQuiz(buildQuiz())`. `buildQuiz()` shuffles the pool,
-takes `questionsPerQuiz`, and builds each question.
+`startQuiz()` calls `beginQuiz(buildQuiz())`. `buildQuiz()` builds a pool (in
+**Map → Country**, countries without a two-letter map code are dropped), shuffles
+it, takes `questionsPerQuiz`, and builds each question.
 
 `beginQuiz(questions)` resets all per-quiz state:
 

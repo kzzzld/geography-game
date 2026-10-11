@@ -34,9 +34,12 @@ init() ─▶ showWelcome() ─[Play]─▶ startQuiz()
 `init()` (last line of `main.js`):
 
 1. Applies every stored setting via `apply(load())`.
-2. `await fetch('./data.json')` into `countries`.
-3. Calls `showWelcome()`.
-4. On fetch failure, renders the `error.loadFailed` message.
+2. Shows the loading screen and starts preloading fonts and map assets in
+   parallel — see [Architecture](Architecture.md).
+3. `await fetch('./data.json')` into `countries`.
+4. Waits for the preloads (unless the user pressed **Skip**), then calls
+   `showWelcome()`.
+5. On fetch failure, renders the `error.loadFailed` message.
 
 ## 2. Starting
 

@@ -5,7 +5,7 @@ What every file in the repository is for.
 ```
 .
 ├── AGENTS.md               # Instructions for AI agents (wiki-sync rules)
-├── index.html              # App shell: #app div, font <link>s, loads main.js
+├── index.html              # App shell: #loader (loading screen + critical CSS), #app div, font <link>s, loads main.js
 ├── main.js                 # Entire app logic (see note below)
 ├── style.css               # All styles and theme palettes
 ├── vite.config.js          # Vite dev-server config (allowedHosts)
@@ -32,7 +32,7 @@ What every file in the repository is for.
 
 ## `main.js`
 
-One file, ~1550 lines, organised into sections separated by `// ===== Name =====`
+One file, ~1600 lines, organised into sections separated by `// ===== Name =====`
 banner comments. In order:
 
 | Section | Responsibility |
@@ -63,7 +63,8 @@ banner comments. In order:
 | Rerender current view | Re-render after language change |
 | Welcome screen | ASCII map + Play |
 | Start quiz | `beginQuiz()`, `startQuiz()`, `retryMissed()` |
-| Init | Apply saved settings, fetch data, show welcome |
+| Loading screen | Progress, font/map preload, skip |
+| Init | Apply saved settings, fetch data, preload, show welcome |
 
 Constants live near their section, or at the top (`THEMES`, `FONTS`,
 `QUIZ_MODES`, `CMDLINE_POSITIONS`, `LETTERS`, `WELCOME_ASCII`).
@@ -82,5 +83,9 @@ Constants live near their section, or at the top (`THEMES`, `FONTS`,
 Starts with all theme palettes (`[data-theme="…"]` blocks of CSS variables),
 then base/reset styles, layout, and component styles. See
 [Theming](Theming.md).
+
+The loading-screen styles are the one exception: they live inline in
+`index.html` so the screen can paint before this stylesheet loads. See
+[Architecture](Architecture.md).
 
 Related: [Architecture](Architecture.md) · [Data Model](Data-Model.md)

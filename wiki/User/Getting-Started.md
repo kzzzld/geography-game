@@ -10,9 +10,20 @@ quiz. No account, no install — it runs entirely in your browser.
   [http://localhost:5173](http://localhost:5173) — see the
   [Hoster wiki](../Hoster/README.md) for build details.
 
+## Loading screen
+
+Before the welcome screen appears, the game loads what it needs to run: the
+country pool, the world-map geometry, and the fonts. While that happens you see a
+loading screen with an ASCII world map and a spinning ring of dots, plus a live
+progress count.
+
+On a slow connection you can press **Skip** to jump straight to the welcome
+screen. The core data still loads, but things you skipped may not be ready —
+fonts can fall back, and maps or images can appear late or not at all.
+
 ## The welcome screen
 
-The first thing you see is the welcome screen:
+The first thing you see after loading finishes is the welcome screen:
 
 - An ASCII world map drawn as text.
 - A **Play** button.

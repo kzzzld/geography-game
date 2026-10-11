@@ -1533,6 +1533,47 @@ function retryMissed() {
   beginQuiz(questions)
 }
 
+// ===== Loading screen =====
+const loader = document.querySelector('#loader')
+const loaderStatus = document.querySelector('#loader-status')
+const loaderNote = document.querySelector('#loader-note')
+const loaderSkip = document.querySelector('#loader-skip')
+let loaderSkipped = false
+
+function setLoaderStatus(key, vars) {
+  if (loaderStatus) loaderStatus.textContent = t(key, vars)
+}
+
+function hideLoader() {
+  if (!loader || loader.classList.contains('hidden')) return
+  loader.classList.add('hidden')
+  setTimeout(() => loader.remove(), 400)
+}
+
+function loadFonts() {
+  if (!document.fonts) return Promise.resolve()
+  const faces = FONTS.flatMap(font => {
+    const family = font.family.split(',')[0].trim()
+    return [400, 500, 700].map(weight => document.fonts.load(`${weight} 1rem ${family}`))
+  })
+  return Promise.allSettled(faces).then(() => document.fonts.ready)
+}
+
+async function preloadOptional() {
+  const assets = [
+    loadFonts,
+    loadWorldMap,
+    loadWorldFocus,
+  ]
+  let done = 0
+  await Promise.allSettled(assets.map(load =>
+    Promise.resolve(load()).finally(() => {
+      done += 1
+      setLoaderStatus('loading.progress', { done, total: assets.length })
+    })
+  ))
+}
+
 // ===== Init =====
 async function init() {
   applyStoredTheme()
@@ -1547,13 +1588,28 @@ async function init() {
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())
   applyLanguage(loadLanguage())
+
+  document.querySelector('#loader-ascii').textContent = WELCOME_ASCII
+  loaderSkip.textContent = t('loading.skip')
+  loaderNote.textContent = t('loading.skipNote')
+  loader.setAttribute('aria-label', t('loading.aria'))
+  loaderSkip.addEventListener('click', () => { loaderSkipped = true })
+  setLoaderStatus('loading.title')
+
+  const optional = preloadOptional()
+  let loaded = true
   try {
     const res = await fetch('./data.json')
     countries = await res.json()
-    showWelcome()
   } catch (err) {
+    loaded = false
     app.innerHTML = `<div class="quiz-card"><p>${t('error.loadFailed')}</p></div>`
   }
+  if (loaded) {
+    if (!loaderSkipped) await optional
+    showWelcome()
+  }
+  hideLoader()
 }
 
 init()

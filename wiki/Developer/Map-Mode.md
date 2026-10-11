@@ -119,7 +119,8 @@ countries have one; countries without a focus box fall back to `getBBox()`.
 
 `preloadQuestionImages()` calls `loadWorldMap()` and `loadWorldFocus()` as soon
 as a quiz containing any map question starts, so the assets are usually ready by
-the time you reach one.
+the time you reach one. The loading screen also warms both at startup (unless
+skipped), so they are often already cached.
 
 ## Degradation
 

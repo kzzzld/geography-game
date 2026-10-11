@@ -14,6 +14,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 - 🎨 6 themes (Tokyo Night, Nord, Dark, AMOLED, Catppuccin, Black Metal) with a dark/light variant toggle for themes that provide both
 - 🔤 7 font choices (Inter, JetBrains Mono, Iosevka, Fira Code, IBM Plex Mono, Source Code Pro, Roboto Mono)
 - 💾 Theme and font preferences persisted in `localStorage`
+- ⏳ A loading screen that preloads the country data, map geometry, and fonts before the welcome screen — with a skip button for slow connections
 - ⚡ No frameworks — plain JS, HTML, and CSS, bundled with Vite
 
 ## Getting Started
@@ -62,7 +63,7 @@ npm run preview
 ```
 .
 ├── AGENTS.md         # Instructions for AI agents working on the project
-├── index.html        # App entry HTML
+├── index.html        # App entry HTML (incl. the loading-screen markup + critical CSS)
 ├── main.js           # App logic (quiz flow, rendering, settings)
 ├── style.css         # Theming and layout styles
 ├── locales/

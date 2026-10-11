@@ -15,8 +15,10 @@ Everything a player needs. No prior knowledge assumed.
 
 ## The 60-second version
 
-1. Open the app. You'll see a welcome screen with an ASCII map and a **Play**
-   button. A 20-question, Flag → Country quiz is selected by default.
+1. Open the app. A short loading screen preloads the data, map, and fonts (you
+   can **Skip** it on a slow connection), then you'll see a welcome screen with an
+   ASCII map and a **Play** button. A 20-question, Flag → Country quiz is selected
+   by default.
 2. Pick a different [game mode](Game-Modes.md) in the top bar if you like.
 3. Hit **Play**, then click (or press `A`–`H` / `1`–`9`) to answer each question.
 4. Press **Next** (or `Enter`) to advance. At the end you'll see your score,

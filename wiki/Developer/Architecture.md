@@ -12,7 +12,9 @@ index.html ──imports──▶ main.js ──imports──▶ style.css
    │                        ├── fetches ./data.json   (country pool)
    │                        ├── fetches ./world.svg   (Map mode)
    │                        ├── fetches ./focus.json  (Map mode zoom boxes)
+   │                        ├── loads webfonts        (FontFaceSet)
    │                        └── globs ./locales/*.json (translations)
+   ├── #loader (loading screen, inline critical CSS) ── hidden by init()
    └── #app  ◀── everything is rendered here via innerHTML
 ```
 
@@ -96,9 +98,21 @@ module load, plus a parser (`runCommand`) and a tab-completion engine. See
 
 ## Data loading and failure
 
-`init()` fetches `./data.json`. On failure it renders a single error card using
-the `error.loadFailed` string. Map assets (`world.svg`, `focus.json`) are lazily
-fetched, cached in promises, and degrade gracefully — a missing map just shows an
-empty prompt rather than breaking the quiz.
+`index.html` ships the loading screen (`#loader`) as static markup with its
+styles inlined, so it paints before the CSS/JS bundles even arrive. `init()`
+first applies saved settings (so the screen picks up the stored theme), fills in
+the ASCII map and localized labels, then starts two things at once:
+
+1. it fetches `./data.json` — the core data, always awaited; and
+2. it preloads the optional assets (all fonts via `document.fonts.load`, plus
+   `world.svg` and `focus.json`) in parallel, updating the progress count.
+
+Once the core data is in, `init()` waits for the optional assets too — unless the
+user pressed **Skip**, in which case it proceeds immediately. Then it calls
+`showWelcome()` and fades the loader out.
+
+On data failure it renders a single error card using the `error.loadFailed`
+string. Map assets are cached in promises and degrade gracefully — a missing map
+just shows an empty prompt rather than breaking the quiz.
 
 Related: [Project Structure](Project-Structure.md) · [Quiz Flow](Quiz-Flow.md)

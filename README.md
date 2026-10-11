@@ -63,6 +63,7 @@ npm run preview
 ```
 .
 ├── AGENTS.md         # Instructions for AI agents working on the project
+├── PRODUCT.md        # Captured product context (users, purpose, positioning)
 ├── index.html        # App entry HTML (incl. the loading-screen markup + critical CSS)
 ├── main.js           # App logic (quiz flow, rendering, settings)
 ├── style.css         # Theming and layout styles

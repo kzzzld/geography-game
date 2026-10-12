@@ -30,7 +30,7 @@ same variables:
   --bg-card: #24283b;
   --bg-elev: #2f334d;
   --text: #c0caf5;
-  --text-muted: #565f89;
+  --text-muted: #969dbd;
   --primary: #7aa2f7;
   --accent: #bb9af7;
   --success: #9ece6a;
@@ -49,7 +49,7 @@ and the pre-JS fallback.
 | `--bg-card` | Cards / quiz surface |
 | `--bg-elev` | Elevated surfaces (modals, popovers) |
 | `--text` | Primary text |
-| `--text-muted` | Secondary text |
+| `--text-muted` | Secondary text. Each palette tunes this so secondary text keeps at least a 4.5:1 contrast ratio against the surfaces it appears on (`--bg`, `--bg-card`, and `--bg-elev`), since it carries real UI labels, not just decoration. |
 | `--primary` | Accent / active controls |
 | `--accent` | Secondary accent |
 | `--success` | Correct answers |

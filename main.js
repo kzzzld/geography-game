@@ -364,7 +364,7 @@ function syncModeButtons() {
   document.querySelectorAll('.mode-btn').forEach(btn => {
     const active = btn.dataset.mode === quizMode
     btn.classList.toggle('active', active)
-    btn.setAttribute('aria-selected', String(active))
+    btn.setAttribute('aria-pressed', String(active))
   })
 }
 
@@ -508,9 +508,9 @@ function guardNumberInputs(scope = document) {
 function renderSettingsModal() {
   return `
     <div class="modal-overlay" id="settingsModal">
-      <div class="modal">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
         <div class="modal-header">
-          <span class="modal-title">${t('settings.title')}</span>
+          <span class="modal-title" id="settingsTitle">${t('settings.title')}</span>
           <button class="modal-close" id="settingsClose" aria-label="${t('settings.close')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
@@ -1080,9 +1080,9 @@ function renderHeader() {
     <div class="header">
       <a class="logo" href="${import.meta.env.BASE_URL}">${t('app.logo')}</a>
       <div class="controls">
-        <div class="mode-switch" role="tablist" aria-label="${t('mode.aria')}">
+        <div class="mode-switch" role="group" aria-label="${t('mode.aria')}">
           ${QUIZ_MODES.map(m => `
-            <button class="mode-btn${m.id === quizMode ? ' active' : ''}" data-mode="${m.id}" role="tab" aria-selected="${m.id === quizMode}" title="${modeLabel(m)}">${modeShort(m)}</button>
+            <button class="mode-btn${m.id === quizMode ? ' active' : ''}" data-mode="${m.id}" aria-pressed="${m.id === quizMode}" title="${modeLabel(m)}">${modeShort(m)}</button>
           `).join('')}
         </div>
         <div class="timer-control">

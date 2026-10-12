@@ -1268,7 +1268,7 @@ function updateScoreBar() {
     <span class="score-text">${t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
     ${timerEnabled ? `<span class="score-timer${timeLeft <= 5 ? ' low' : ''}" id="scoreTimer" role="timer">${timeLeft}</span>` : ''}
     ${streakBadge()}
-    <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + 1}</span></span>
+    <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + (answered ? 1 : 0)}</span></span>
   `
 }
 

@@ -16,6 +16,22 @@ Two attributes are set:
 - `data-variant` — always either `dark` or `light`, used for icon/contrast
   tweaks.
 
+## The theme gallery
+
+Press `t` anywhere (or use **Browse themes** in Settings) to open the full-screen
+theme gallery. It shows every theme at once as a card that previews that theme's
+own palette — background, accents, and a miniature quiz mock-up — rendered
+independently of the theme currently in use.
+
+Moving the selection (arrow keys, or hovering) live-previews that theme on the
+page behind the gallery, but nothing is written to `localStorage` until you
+confirm with `Enter` (or by clicking a card). `Escape` closes the gallery and
+restores the theme you had. The gallery opens with your current light/dark
+preference, so if you're in light mode every card previews its light palette.
+
+See [Keyboard Shortcuts](Keyboard-Shortcuts.md#theme-gallery) for the full key
+map.
+
 ## The six themes
 
 Each theme ships a dark and a light palette. Use the moon/sun button in the top

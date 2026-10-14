@@ -21,7 +21,7 @@ More languages can be added by dropping a file into `locales/` — see
 | Setting | Range / choices | Default | Notes |
 | --- | --- | --- | --- |
 | **Font** | 7 fonts | Iosevka | See [Themes and Fonts](Themes-and-Fonts.md) |
-| **Theme** | 6 themes | Tokyo Night | See [Themes and Fonts](Themes-and-Fonts.md) |
+| **Theme** | 6 themes | Tokyo Night | Also switchable from the full-screen [theme gallery](Themes-and-Fonts.md#the-theme-gallery) via the **Browse themes** button or by pressing `t`. See [Themes and Fonts](Themes-and-Fonts.md) |
 | **Corner radius** | 0–48 px | 0 | Rounds the corners of cards and buttons |
 | **Corner padding** | 0–48 px | 32 | Inset from the viewport edges |
 

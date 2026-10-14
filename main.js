@@ -176,6 +176,7 @@ const app = document.querySelector('#app')
 // ===== Theme management =====
 const DEFAULT_THEME = 'tokyonight'
 let themeVariant = 'dark'
+let currentThemeId = DEFAULT_THEME
 
 function getTheme(themeId) {
   return THEMES.find(t => t.id === themeId) || THEMES[0]
@@ -186,15 +187,20 @@ function resolveThemeVariant(theme, variant) {
   return { variant: wantsLight ? 'light' : 'dark', cssId: wantsLight ? theme.light : theme.dark }
 }
 
-function applyTheme(themeId, variant = themeVariant) {
+function applyTheme(themeId, variant = themeVariant, persist = true) {
   const theme = getTheme(themeId)
   const resolved = resolveThemeVariant(theme, variant)
   themeVariant = resolved.variant
+  currentThemeId = theme.id
   document.documentElement.setAttribute('data-theme', resolved.cssId)
   document.documentElement.setAttribute('data-variant', resolved.variant)
-  localStorage.setItem('flag-quiz-theme', theme.id)
-  localStorage.setItem('flag-quiz-theme-variant', resolved.variant)
+  if (persist) {
+    localStorage.setItem('flag-quiz-theme', theme.id)
+    localStorage.setItem('flag-quiz-theme-variant', resolved.variant)
+  }
   syncVariantToggle()
+  const select = document.getElementById('themeSelect')
+  if (select) select.value = theme.id
   return theme
 }
 
@@ -216,7 +222,7 @@ function applyStoredTheme() {
 }
 
 function toggleThemeVariant() {
-  const theme = getTheme(loadTheme())
+  const theme = getTheme(currentThemeId)
   if (!theme.light) return
   applyTheme(theme.id, themeVariant === 'light' ? 'dark' : 'light')
 }
@@ -224,7 +230,7 @@ function toggleThemeVariant() {
 function syncVariantToggle() {
   const btn = document.querySelector('#variantToggle')
   if (!btn) return
-  const theme = getTheme(loadTheme())
+  const theme = getTheme(currentThemeId)
   btn.disabled = !theme.light
   btn.setAttribute('aria-pressed', String(themeVariant === 'light'))
   btn.title = !theme.light ? t('theme.noLight') : themeVariant === 'light' ? t('theme.toDark') : t('theme.toLight')
@@ -388,6 +394,7 @@ function applyLanguage(langId) {
   locale = found.data
   localStorage.setItem('flag-quiz-language', found.id)
   document.querySelector('#cmdlineInput')?.setAttribute('aria-label', t('cmdline.aria'))
+  localizeThemeGallery()
   return found
 }
 
@@ -534,9 +541,14 @@ function renderSettingsModal() {
           </div>
           <div class="setting-row">
             <label class="setting-label" for="themeSelect">${t('settings.theme')}</label>
-            <select class="select" id="themeSelect">
-              ${THEMES.map(th => `<option value="${th.id}" ${th.id === loadTheme() ? 'selected' : ''}>${th.label}</option>`).join('')}
-            </select>
+            <div class="setting-control">
+              <select class="select" id="themeSelect">
+                ${THEMES.map(th => `<option value="${th.id}" ${th.id === loadTheme() ? 'selected' : ''}>${th.label}</option>`).join('')}
+              </select>
+              <button class="browse-themes-btn" type="button" id="browseThemesBtn" aria-label="${t('settings.browseThemes')}" title="${t('settings.browseThemes')}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              </button>
+            </div>
           </div>
           <div class="setting-row">
             <label class="setting-label" for="radiusInput">${t('settings.radius')}</label>
@@ -583,6 +595,7 @@ function openSettings() {
   document.getElementById('settingsClose').addEventListener('click', closeSettings)
   modal.addEventListener('click', (e) => { if (e.target === modal) closeSettings() })
   document.getElementById('themeSelect').addEventListener('change', (e) => applyTheme(e.target.value))
+  document.getElementById('browseThemesBtn').addEventListener('click', () => openThemeGallery())
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
   document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
   document.getElementById('languageSelect').addEventListener('change', (e) => {
@@ -638,6 +651,176 @@ function getModalFocusable(modal) {
   return Array.from(modal.querySelectorAll('button, select, input, [tabindex]:not([tabindex="-1"])'))
     .filter(el => !el.disabled && el.offsetParent !== null)
 }
+
+// ===== Theme gallery =====
+function themeCardVariantLabel(theme) {
+  return theme.light ? t('theme.gallery.darkLight') : t('theme.gallery.darkOnly')
+}
+
+function renderThemeCard(theme, index) {
+  const resolved = resolveThemeVariant(theme, themeVariant)
+  return `
+    <button class="theme-card" type="button" role="option" id="themeCard-${theme.id}" data-theme-id="${theme.id}"
+      data-theme="${resolved.cssId}" data-variant="${resolved.variant}"
+      aria-selected="false" style="--i:${index}">
+      <span class="theme-card-preview" aria-hidden="true">
+        <span class="tp-chrome"><span></span><span></span><span></span></span>
+        <span class="tp-flag"></span>
+        <span class="tp-row tp-correct"></span>
+        <span class="tp-row"></span>
+        <span class="tp-row"></span>
+      </span>
+      <span class="theme-card-meta">
+        <span class="theme-card-name">${theme.label}</span>
+        <span class="theme-card-variant">${themeCardVariantLabel(theme)}</span>
+      </span>
+      <span class="theme-card-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+      </span>
+    </button>`
+}
+
+const themeGallery = document.createElement('div')
+themeGallery.id = 'themeGallery'
+themeGallery.className = 'theme-gallery'
+themeGallery.setAttribute('role', 'dialog')
+themeGallery.setAttribute('aria-modal', 'true')
+themeGallery.setAttribute('aria-label', t('theme.gallery.aria'))
+themeGallery.innerHTML = `
+  <div class="theme-gallery-head">
+    <h2 class="theme-gallery-title" id="themeGalleryTitle">${t('theme.gallery.title')}</h2>
+    <div class="theme-gallery-hint">
+      <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> ${t('theme.gallery.browse')}</span>
+      <span><kbd>↵</kbd> ${t('theme.gallery.apply')}</span>
+      <span><kbd>esc</kbd> ${t('theme.gallery.cancel')}</span>
+    </div>
+    <button class="theme-gallery-close" type="button" aria-label="${t('settings.close')}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="theme-gallery-grid" id="themeGalleryGrid" role="listbox" tabindex="0" aria-labelledby="themeGalleryTitle">
+    ${THEMES.map((theme, i) => renderThemeCard(theme, i)).join('')}
+  </div>
+`
+document.body.appendChild(themeGallery)
+
+const themeGrid = themeGallery.querySelector('#themeGalleryGrid')
+
+function localizeThemeGallery() {
+  themeGallery.setAttribute('aria-label', t('theme.gallery.aria'))
+  themeGallery.querySelector('.theme-gallery-title').textContent = t('theme.gallery.title')
+  themeGallery.querySelector('.theme-gallery-close').setAttribute('aria-label', t('settings.close'))
+  const hints = themeGallery.querySelectorAll('.theme-gallery-hint span')
+  hints[0].innerHTML = `<kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> ${t('theme.gallery.browse')}`
+  hints[1].innerHTML = `<kbd>↵</kbd> ${t('theme.gallery.apply')}`
+  hints[2].innerHTML = `<kbd>esc</kbd> ${t('theme.gallery.cancel')}`
+}
+
+let galleryOpen = false
+let galleryIndex = 0
+let galleryOrigin = null
+let galleryTimerPaused = false
+let galleryPreviousFocus = null
+
+function themeCards() {
+  return Array.from(themeGrid.querySelectorAll('.theme-card'))
+}
+
+function galleryColumns() {
+  const cards = themeCards()
+  if (cards.length < 2) return 1
+  const top = cards[0].offsetTop
+  let columns = 0
+  while (columns < cards.length && cards[columns].offsetTop === top) columns++
+  return Math.max(1, columns)
+}
+
+function selectGalleryTheme(index, preview = true) {
+  const cards = themeCards()
+  if (cards.length === 0) return
+  galleryIndex = (index + cards.length) % cards.length
+  cards.forEach((card, i) => {
+    const selected = i === galleryIndex
+    card.setAttribute('aria-selected', String(selected))
+    card.tabIndex = selected ? 0 : -1
+  })
+  const card = cards[galleryIndex]
+  card.scrollIntoView({ block: 'nearest' })
+  themeGrid.setAttribute('aria-activedescendant', `themeCard-${card.dataset.themeId}`)
+  if (preview) applyTheme(card.dataset.themeId, themeVariant, false)
+}
+
+function moveGallerySelection(delta) {
+  selectGalleryTheme(galleryIndex + delta)
+}
+
+function handleGalleryKey(e) {
+  const cols = galleryColumns()
+  switch (e.key) {
+    case 'Escape': e.preventDefault(); closeThemeGallery(false); return
+    case 'Enter':
+    case ' ': e.preventDefault(); closeThemeGallery(true); return
+    case 'ArrowRight': e.preventDefault(); moveGallerySelection(1); return
+    case 'ArrowLeft': e.preventDefault(); moveGallerySelection(-1); return
+    case 'ArrowDown': e.preventDefault(); moveGallerySelection(cols); return
+    case 'ArrowUp': e.preventDefault(); moveGallerySelection(-cols); return
+    case 'Home': e.preventDefault(); selectGalleryTheme(0); return
+    case 'End': e.preventDefault(); selectGalleryTheme(themeCards().length - 1); return
+    case 'Tab': {
+      e.preventDefault()
+      const close = themeGallery.querySelector('.theme-gallery-close')
+      if (document.activeElement === close) themeGrid.focus()
+      else close.focus()
+      return
+    }
+  }
+}
+
+function openThemeGallery() {
+  if (galleryOpen) return
+  galleryOpen = true
+  localizeThemeGallery()
+  galleryOrigin = { id: currentThemeId, variant: themeVariant }
+  galleryPreviousFocus = document.activeElement
+  galleryTimerPaused = timerId !== null
+  stopTimer()
+  themeGrid.innerHTML = THEMES.map((theme, i) => renderThemeCard(theme, i)).join('')
+  themeGallery.classList.add('open')
+  const start = THEMES.findIndex(theme => theme.id === currentThemeId)
+  selectGalleryTheme(start === -1 ? 0 : start, false)
+  themeGrid.focus()
+}
+
+function closeThemeGallery(commit) {
+  if (!galleryOpen) return
+  galleryOpen = false
+  if (commit) {
+    applyTheme(currentThemeId, themeVariant)
+  } else if (galleryOrigin) {
+    applyTheme(galleryOrigin.id, galleryOrigin.variant, false)
+  }
+  themeGallery.classList.remove('open')
+  if (galleryPreviousFocus && document.contains(galleryPreviousFocus) && !galleryPreviousFocus.disabled) {
+    galleryPreviousFocus.focus()
+  }
+  galleryPreviousFocus = null
+  if (galleryTimerPaused && timerEnabled && !answered && !isSettingsOpen() && document.querySelector('#nextBtn')?.style.display === 'none') {
+    startTimer(false)
+  }
+  galleryTimerPaused = false
+}
+
+function isThemeGalleryOpen() {
+  return galleryOpen
+}
+
+themeGallery.querySelector('.theme-gallery-close').addEventListener('click', () => closeThemeGallery(false))
+themeGrid.addEventListener('click', (e) => {
+  const card = e.target.closest('.theme-card')
+  if (!card) return
+  selectGalleryTheme(themeCards().indexOf(card), false)
+  closeThemeGallery(true)
+})
 
 // ===== Vim-style command line =====
 const normalizeName = (s) =>
@@ -993,6 +1176,11 @@ cmdInput.addEventListener('keydown', (e) => {
 
 // ===== Global keyboard controls =====
 document.addEventListener('keydown', (e) => {
+  if (isThemeGalleryOpen()) {
+    handleGalleryKey(e)
+    return
+  }
+
   const modal = document.getElementById('settingsModal')
 
   if (isSettingsOpen()) {
@@ -1029,6 +1217,12 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 's' || e.key === 'S') {
     e.preventDefault()
     openSettings()
+    return
+  }
+
+  if (e.key === 't' || e.key === 'T') {
+    e.preventDefault()
+    openThemeGallery()
     return
   }
 

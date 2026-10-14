@@ -60,15 +60,20 @@ and the pre-JS fallback.
 ## Applying a theme
 
 ```js
-function applyTheme(themeId, variant = themeVariant) {
+function applyTheme(themeId, variant = themeVariant, persist = true) {
   const theme = getTheme(themeId)
   const resolved = resolveThemeVariant(theme, variant)
   themeVariant = resolved.variant
+  currentThemeId = theme.id
   document.documentElement.setAttribute('data-theme', resolved.cssId)
   document.documentElement.setAttribute('data-variant', resolved.variant)
-  localStorage.setItem('flag-quiz-theme', theme.id)
-  localStorage.setItem('flag-quiz-theme-variant', resolved.variant)
+  if (persist) {
+    localStorage.setItem('flag-quiz-theme', theme.id)
+    localStorage.setItem('flag-quiz-theme-variant', resolved.variant)
+  }
   syncVariantToggle()
+  const select = document.getElementById('themeSelect')
+  if (select) select.value = theme.id
   return theme
 }
 ```
@@ -80,7 +85,33 @@ Two attributes are set:
   duplicating per palette.
 
 `resolveThemeVariant` only honours `light` if the theme actually has a light
-palette; otherwise it stays dark.
+palette; otherwise it stays dark. `currentThemeId` tracks the applied theme so
+`syncVariantToggle()` and `toggleThemeVariant()` don't have to re-read storage.
+
+The third `persist` argument is `false` for the [theme gallery](#theme-gallery),
+which live-previews a theme without committing it to `localStorage` until the
+user confirms.
+
+## Theme gallery
+
+The full-screen gallery (`#themeGallery`, built in `main.js`) is opened by the
+`t` key or the **Browse themes** button in Settings and handled by
+`openThemeGallery()` / `closeThemeGallery(commit)`.
+
+Each card is a `<button data-theme="…">`. Because the CSS palettes are keyed on
+`[data-theme="…"]`, setting that attribute on the card scopes the palette
+variables to it — so each card previews its own theme with no duplicated colour
+values in JS. The card also carries `data-variant` and uses
+`resolveThemeVariant(theme, themeVariant)`, so cards match the user's current
+dark/light preference.
+
+`selectGalleryTheme(index, preview)` moves the selection and, when `preview` is
+true, calls `applyTheme(id, themeVariant, false)`. `closeThemeGallery(true)`
+commits the highlighted theme; `closeThemeGallery(false)` (Escape, close button)
+re-applies the stored origin captured in `galleryOrigin` without persisting. The
+grid follows the listbox pattern: a roving `aria-selected` on the options, an
+`aria-activedescendant` on the grid, and `handleGalleryKey()` for arrows,
+`Home`/`End`, `Enter`/`Space`, `Tab`, and `Escape`.
 
 ## Light/dark toggle
 

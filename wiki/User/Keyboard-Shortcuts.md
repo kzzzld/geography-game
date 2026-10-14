@@ -9,7 +9,8 @@ You can play and configure the whole game without touching the mouse.
 | `:` | Open the [command line](Command-Line.md) |
 | `Ctrl` + `P` | Open the command line (alternative) |
 | `s` / `S` | Open [Settings](Settings.md) |
-| `Escape` | Close Settings or the command line |
+| `t` / `T` | Open the theme gallery (preview and switch themes) |
+| `Escape` | Close Settings, the theme gallery, or the command line |
 | `Enter` | **Next** after answering, or start the quiz from the results screen |
 
 Shortcuts are ignored while a text field, select, or textarea has focus, so you
@@ -37,6 +38,25 @@ Settings traps focus while open:
 
 - `Tab` / `Shift`+`Tab` cycle through the focusable controls.
 - `Escape` closes it.
+
+## Theme gallery
+
+Press `t` from anywhere (or the **Browse themes** button next to the theme
+dropdown in Settings) to open the full-screen theme gallery — a grid of theme
+cards, each previewing its own palette.
+
+| Key | Action |
+| --- | --- |
+| `↑` `↓` `←` `→` | Move the selection and live-preview that theme |
+| `Home` / `End` | Jump to the first / last theme |
+| `Enter` / `Space` | Apply the highlighted theme and close |
+| `Tab` | Move focus between the grid and the close button |
+| `Escape` | Close and restore the theme you started with |
+
+Selecting a card with the mouse applies it immediately. Nothing is saved until
+you confirm; abandoning the gallery restores the previous theme.
+
+Details in [Themes and Fonts](Themes-and-Fonts.md#the-theme-gallery).
 
 ## Command line
 

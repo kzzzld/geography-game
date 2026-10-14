@@ -42,19 +42,21 @@ Settings traps focus while open:
 ## Theme gallery
 
 Press `t` from anywhere (or the **Browse themes** button next to the theme
-dropdown in Settings) to open the full-screen theme gallery — a grid of theme
-cards, each previewing its own palette.
+dropdown in Settings) to open the full-screen theme gallery — a stacked deck of
+theme cards where the selected theme sits in front and previews its own palette.
 
 | Key | Action |
 | --- | --- |
-| `↑` `↓` `←` `→` | Move the selection and live-preview that theme |
+| `↑` `↓` `←` `→` | Move through the deck and live-preview that theme |
 | `Home` / `End` | Jump to the first / last theme |
 | `Enter` / `Space` | Apply the highlighted theme and close |
-| `Tab` | Move focus between the grid and the close button |
+| `Tab` | Move focus between the deck and the close button |
 | `Escape` | Close and restore the theme you started with |
 
-Selecting a card with the mouse applies it immediately. Nothing is saved until
-you confirm; abandoning the gallery restores the previous theme.
+You can also scroll the mouse wheel to move through the deck. Clicking a card
+that is behind brings it to the front; clicking the front card applies it.
+Nothing is saved until you confirm; abandoning the gallery restores the previous
+theme.
 
 Details in [Themes and Fonts](Themes-and-Fonts.md#the-theme-gallery).
 

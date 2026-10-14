@@ -657,12 +657,12 @@ function themeCardVariantLabel(theme) {
   return theme.light ? t('theme.gallery.darkLight') : t('theme.gallery.darkOnly')
 }
 
-function renderThemeCard(theme, index) {
+function renderThemeCard(theme) {
   const resolved = resolveThemeVariant(theme, themeVariant)
   return `
     <button class="theme-card" type="button" role="option" id="themeCard-${theme.id}" data-theme-id="${theme.id}"
       data-theme="${resolved.cssId}" data-variant="${resolved.variant}"
-      aria-selected="false" style="--i:${index}">
+      aria-selected="false">
       <span class="theme-card-preview" aria-hidden="true">
         <span class="tp-chrome"><span></span><span></span><span></span></span>
         <span class="tp-flag"></span>
@@ -698,13 +698,13 @@ themeGallery.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
   </div>
-  <div class="theme-gallery-grid" id="themeGalleryGrid" role="listbox" tabindex="0" aria-labelledby="themeGalleryTitle">
-    ${THEMES.map((theme, i) => renderThemeCard(theme, i)).join('')}
+  <div class="theme-stack" id="themeGalleryStack" role="listbox" tabindex="0" aria-labelledby="themeGalleryTitle">
+    ${THEMES.map(theme => renderThemeCard(theme)).join('')}
   </div>
 `
 document.body.appendChild(themeGallery)
 
-const themeGrid = themeGallery.querySelector('#themeGalleryGrid')
+const themeStack = themeGallery.querySelector('#themeGalleryStack')
 
 function localizeThemeGallery() {
   themeGallery.setAttribute('aria-label', t('theme.gallery.aria'))
@@ -723,30 +723,35 @@ let galleryTimerPaused = false
 let galleryPreviousFocus = null
 
 function themeCards() {
-  return Array.from(themeGrid.querySelectorAll('.theme-card'))
+  return Array.from(themeStack.querySelectorAll('.theme-card'))
 }
 
-function galleryColumns() {
+function layoutThemeStack() {
   const cards = themeCards()
-  if (cards.length < 2) return 1
-  const top = cards[0].offsetTop
-  let columns = 0
-  while (columns < cards.length && cards[columns].offsetTop === top) columns++
-  return Math.max(1, columns)
+  cards.forEach((card, i) => {
+    const d = i - galleryIndex
+    const ad = Math.abs(d)
+    const visible = ad <= 3
+    card.style.setProperty('--y', String(d * 62))
+    card.style.setProperty('--s', String(Math.max(0.7, 1 - ad * 0.09)))
+    card.style.setProperty('--o', String(visible ? Math.max(0, 1 - ad * 0.32) : 0))
+    card.style.setProperty('--blur', `${Math.min(7, ad * 2.4)}px`)
+    card.style.setProperty('--bright', String(Math.max(0.45, 1 - ad * 0.2)))
+    card.style.zIndex = String(100 - ad)
+    card.style.pointerEvents = visible ? 'auto' : 'none'
+    const selected = i === galleryIndex
+    card.setAttribute('aria-selected', String(selected))
+    card.tabIndex = selected ? 0 : -1
+  })
 }
 
 function selectGalleryTheme(index, preview = true) {
   const cards = themeCards()
   if (cards.length === 0) return
   galleryIndex = (index + cards.length) % cards.length
-  cards.forEach((card, i) => {
-    const selected = i === galleryIndex
-    card.setAttribute('aria-selected', String(selected))
-    card.tabIndex = selected ? 0 : -1
-  })
+  layoutThemeStack()
   const card = cards[galleryIndex]
-  card.scrollIntoView({ block: 'nearest' })
-  themeGrid.setAttribute('aria-activedescendant', `themeCard-${card.dataset.themeId}`)
+  themeStack.setAttribute('aria-activedescendant', `themeCard-${card.dataset.themeId}`)
   if (preview) applyTheme(card.dataset.themeId, themeVariant, false)
 }
 
@@ -755,26 +760,27 @@ function moveGallerySelection(delta) {
 }
 
 function handleGalleryKey(e) {
-  const cols = galleryColumns()
   switch (e.key) {
     case 'Escape': e.preventDefault(); closeThemeGallery(false); return
     case 'Enter':
     case ' ': e.preventDefault(); closeThemeGallery(true); return
+    case 'ArrowDown':
     case 'ArrowRight': e.preventDefault(); moveGallerySelection(1); return
+    case 'ArrowUp':
     case 'ArrowLeft': e.preventDefault(); moveGallerySelection(-1); return
-    case 'ArrowDown': e.preventDefault(); moveGallerySelection(cols); return
-    case 'ArrowUp': e.preventDefault(); moveGallerySelection(-cols); return
     case 'Home': e.preventDefault(); selectGalleryTheme(0); return
     case 'End': e.preventDefault(); selectGalleryTheme(themeCards().length - 1); return
     case 'Tab': {
       e.preventDefault()
       const close = themeGallery.querySelector('.theme-gallery-close')
-      if (document.activeElement === close) themeGrid.focus()
+      if (document.activeElement === close) themeStack.focus()
       else close.focus()
       return
     }
   }
 }
+
+let galleryWheelLocked = false
 
 function openThemeGallery() {
   if (galleryOpen) return
@@ -784,11 +790,11 @@ function openThemeGallery() {
   galleryPreviousFocus = document.activeElement
   galleryTimerPaused = timerId !== null
   stopTimer()
-  themeGrid.innerHTML = THEMES.map((theme, i) => renderThemeCard(theme, i)).join('')
+  themeStack.innerHTML = THEMES.map(theme => renderThemeCard(theme)).join('')
   themeGallery.classList.add('open')
   const start = THEMES.findIndex(theme => theme.id === currentThemeId)
   selectGalleryTheme(start === -1 ? 0 : start, false)
-  themeGrid.focus()
+  themeStack.focus()
 }
 
 function closeThemeGallery(commit) {
@@ -815,12 +821,23 @@ function isThemeGalleryOpen() {
 }
 
 themeGallery.querySelector('.theme-gallery-close').addEventListener('click', () => closeThemeGallery(false))
-themeGrid.addEventListener('click', (e) => {
+themeStack.addEventListener('click', (e) => {
   const card = e.target.closest('.theme-card')
   if (!card) return
-  selectGalleryTheme(themeCards().indexOf(card), false)
-  closeThemeGallery(true)
+  const index = themeCards().indexOf(card)
+  if (index === galleryIndex) {
+    closeThemeGallery(true)
+  } else {
+    selectGalleryTheme(index)
+  }
 })
+themeStack.addEventListener('wheel', (e) => {
+  e.preventDefault()
+  if (galleryWheelLocked) return
+  galleryWheelLocked = true
+  setTimeout(() => { galleryWheelLocked = false }, 140)
+  moveGallerySelection(e.deltaY > 0 ? 1 : -1)
+}, { passive: false })
 
 // ===== Vim-style command line =====
 const normalizeName = (s) =>

@@ -19,13 +19,17 @@ Two attributes are set:
 ## The theme gallery
 
 Press `t` anywhere (or use **Browse themes** in Settings) to open the full-screen
-theme gallery. It shows every theme at once as a card that previews that theme's
-own palette — background, accents, and a miniature quiz mock-up — rendered
-independently of the theme currently in use.
+theme gallery. It presents every theme as a **stacked deck of cards** (like an
+Alt-Tab switcher, but vertical): the selected theme sits centered and fully
+readable in front, and the neighbouring themes peek out above and below, scaled
+down, dimmed, and blurred for depth. Each card previews that theme's own palette
+— background, accents, and a miniature quiz mock-up — rendered independently of
+the theme currently in use.
 
-Moving the selection (arrow keys, or hovering) live-previews that theme on the
-page behind the gallery, but nothing is written to `localStorage` until you
-confirm with `Enter` (or by clicking a card). `Escape` closes the gallery and
+Moving the selection (the arrow keys, or the mouse wheel) live-previews that
+theme on the page behind the gallery, but nothing is written to `localStorage`
+until you confirm with `Enter` (or by clicking the front card). Clicking a card
+that is behind brings it to the front first. `Escape` closes the gallery and
 restores the theme you had. The gallery opens with your current light/dark
 preference, so if you're in light mode every card previews its light palette.
 

@@ -11,7 +11,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 - 🏆 Live score tracking with a results screen at the end
 - 🔥 Streak counter for consecutive correct answers, with an all-time best saved between sessions
 - 🔁 Retry missed questions from the results screen with freshly shuffled options
-- 🎨 6 themes (Tokyo Night, Nord, Dark, AMOLED, Catppuccin, Black Metal) with a dark/light variant toggle for themes that provide both, plus a full-screen theme gallery (press `t`) with live palette previews
+- 🎨 6 themes (Tokyo Night, Nord, Dark, AMOLED, Catppuccin, Black Metal) with a dark/light variant toggle for themes that provide both, plus a full-screen Alt-Tab-style theme switcher (press `t`) with stacked, live-previewing cards
 - 🔤 7 font choices (Inter, JetBrains Mono, Iosevka, Fira Code, IBM Plex Mono, Source Code Pro, Roboto Mono)
 - 💾 Theme and font preferences persisted in `localStorage`
 - ⏳ A loading screen that preloads the country data, map geometry, and fonts before the welcome screen — with a skip button for slow connections

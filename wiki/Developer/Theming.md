@@ -105,11 +105,15 @@ values in JS. The card also carries `data-variant` and uses
 `resolveThemeVariant(theme, themeVariant)`, so cards match the user's current
 dark/light preference.
 
-`layoutThemeStack()` positions the deck: each card gets inline `--y`, `--s`,
+`layoutThemeStack()` positions the deck: each card gets inline `--x`, `--s`,
 `--o`, `--blur`, `--bright`, and `z-index` custom properties derived from its
 signed distance to the selection (`i - galleryIndex`), and CSS turns those into
-a `translate`/`scale`/`opacity`/`filter` transform with a shared easing. That is
-why depth and the shuffle are declarative rather than another JS animation.
+a horizontal `translate`/`scale`/`opacity`/`filter` transform with a shared
+easing. The step is derived from the card width and viewport so the strip adapts
+from mobile to desktop. That is why depth and the shuffle are declarative rather
+than another JS animation. Card and preview corner radii read the same
+`--corner-radius` variable as the rest of the app, so the deck follows the
+Corner radius setting.
 
 `selectGalleryTheme(index, preview)` moves the selection, re-runs
 `layoutThemeStack()`, and, when `preview` is true, calls

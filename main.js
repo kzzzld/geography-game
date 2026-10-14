@@ -728,11 +728,13 @@ function themeCards() {
 
 function layoutThemeStack() {
   const cards = themeCards()
+  const width = cards[0]?.offsetWidth || 300
+  const step = Math.max(56, Math.min(width * 0.46, window.innerWidth * 0.2, 172))
   cards.forEach((card, i) => {
     const d = i - galleryIndex
     const ad = Math.abs(d)
     const visible = ad <= 3
-    card.style.setProperty('--y', String(d * 62))
+    card.style.setProperty('--x', String(Math.round(d * step)))
     card.style.setProperty('--s', String(Math.max(0.7, 1 - ad * 0.09)))
     card.style.setProperty('--o', String(visible ? Math.max(0, 1 - ad * 0.32) : 0))
     card.style.setProperty('--blur', `${Math.min(7, ad * 2.4)}px`)

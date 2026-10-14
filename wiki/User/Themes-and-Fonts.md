@@ -19,9 +19,9 @@ Two attributes are set:
 ## The theme gallery
 
 Press `t` anywhere (or use **Browse themes** in Settings) to open the full-screen
-theme gallery. It presents every theme as a **stacked deck of cards** (like an
-Alt-Tab switcher, but vertical): the selected theme sits centered and fully
-readable in front, and the neighbouring themes peek out above and below, scaled
+theme gallery. It presents every theme as a **horizontal stacked deck of cards**
+(like an Alt-Tab switcher): the selected theme sits centered and fully readable
+in front, and the neighbouring themes peek out to the left and right, scaled
 down, dimmed, and blurred for depth. Each card previews that theme's own palette
 — background, accents, and a miniature quiz mock-up — rendered independently of
 the theme currently in use.

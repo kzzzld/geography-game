@@ -24,6 +24,7 @@ values are clamped or replaced with defaults.
 | `flag-quiz-timer-enabled` | `"true"` / `"false"` | `false` | `loadTimerEnabled()` |
 | `flag-quiz-timer-seconds` | integer, 5–60 | `15` | `loadTimerSeconds()` |
 | `flag-quiz-language` | Locale id (`en`, `tr`) | browser-detected | `loadLanguage()` |
+| `flag-quiz-full-names` | `"true"` / `"false"` | `false` | `loadCountryFullNames()` |
 
 ## Validation
 

@@ -8,6 +8,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 - 🎯 5 multiple-choice options per question, shuffled each round
 - 🔀 Five game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, Map → Country, and Mixed
 - 🌐 English and Turkish translations, including country and capital names
+- 🏷️ Optional full country names — toggle official long-form names (e.g. *Democratic People's Republic of Korea*) in Settings
 - 🏆 Live score tracking with a results screen at the end
 - 🔥 Streak counter for consecutive correct answers, with an all-time best saved between sessions
 - 🔁 Retry missed questions from the results screen with freshly shuffled options

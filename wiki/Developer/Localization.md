@@ -33,6 +33,7 @@ locale path at runtime. Adding a language means adding a file and rebuilding.
   "name": "Deutsch",
   "ui": { "app.logo": "Flaggen-Quiz", "...": "..." },
   "countries": { "Japan": "Japan" },
+  "official": { "Japan": "Staat Japan" },
   "capitals": { "Tokyo": "Tokio" }
 }
 ```
@@ -42,11 +43,14 @@ locale path at runtime. Adding a language means adding a file and rebuilding.
 | `name` | yes | Label shown in the language selector (its own language, e.g. `Türkçe`) |
 | `ui` | yes | Interface strings, keyed by dotted names |
 | `countries` | no | Map from English country name → translated name |
+| `official` | no | Map from English country name → official long-form name |
 | `capitals` | no | Map from English capital name → translated name |
 
 `en.json` omits `countries`/`capitals` entirely — English values are used as
-their own translations. `tr.json` translates all 207 countries and the unique
-capital names.
+their own translations. It still ships an `official` map with the long-form names
+(e.g. `"North Korea": "Democratic People’s Republic of Korea"`). `tr.json`
+translates all 207 countries and the unique capital names, and provides its own
+Turkish `official` names.
 
 ## The `t()` function
 
@@ -71,6 +75,10 @@ Example string: `"quiz.questionOf": "Question {current} / {total}"`, called as
 
 ```js
 function countryName(name) {
+  if (countryFullNames && name) {
+    const official = locale?.official?.[name] ?? FALLBACK_LOCALE?.official?.[name]
+    if (official) return official
+  }
   return locale?.countries?.[name] ?? name
 }
 function capitalName(name) {
@@ -82,13 +90,19 @@ The keys are the **English** values exactly as they appear in `data.json`, so
 renaming a country in the data file breaks its translation until the locale is
 updated to match.
 
+When the **Full country names** setting is on (`flag-quiz-full-names`),
+`countryName()` prefers the `official` map, falling back to English's `official`
+map and finally to the short name — so a locale without an `official` entry still
+shows the English long form. The official names are data, not UI strings, so they
+live in the locale files alongside the other name maps.
+
 ## Adding a language
 
 1. Copy `locales/en.json` to `locales/<code>.json`.
 2. Set `name` to the language's endonym.
 3. Translate the `ui` values.
-4. Optionally add `countries` and `capitals` maps (skipping keys leaves them in
-   English).
+4. Optionally add `countries`, `official`, and `capitals` maps (skipping keys
+   leaves them in English, or the English `official` name for full names).
 5. Rebuild/restart — the language appears in the Settings dropdown and can be
    selected with `:lang <code>`.
 

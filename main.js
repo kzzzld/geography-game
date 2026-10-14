@@ -16,6 +16,7 @@ const DEFAULT_LANGUAGE = 'en'
 
 let language = DEFAULT_LANGUAGE
 let locale = FALLBACK_LOCALE
+let countryFullNames = false
 
 function t(key, vars) {
   const value = locale?.ui?.[key] ?? FALLBACK_LOCALE?.ui?.[key] ?? key
@@ -24,6 +25,10 @@ function t(key, vars) {
 }
 
 function countryName(name) {
+  if (countryFullNames && name) {
+    const official = locale?.official?.[name] ?? FALLBACK_LOCALE?.official?.[name]
+    if (official) return official
+  }
   return locale?.countries?.[name] ?? name
 }
 
@@ -414,6 +419,17 @@ function loadLanguage() {
   return detectLanguage()
 }
 
+// ===== Country name style =====
+function applyCountryFullNames(enabled) {
+  countryFullNames = enabled === true || enabled === 'true' || enabled === 'on'
+  localStorage.setItem('flag-quiz-full-names', String(countryFullNames))
+  return countryFullNames
+}
+
+function loadCountryFullNames() {
+  return localStorage.getItem('flag-quiz-full-names') === 'true'
+}
+
 // ===== Timer management =====
 const DEFAULT_TIMER_ENABLED = false
 const DEFAULT_TIMER_SECONDS = 15
@@ -550,6 +566,16 @@ function renderSettingsModal() {
               </button>
             </div>
           </div>
+          <div class="setting-row setting-row-toggle">
+            <div class="setting-label-group">
+              <span class="setting-label" id="fullNamesLabel">${t('settings.fullNames')}</span>
+              <span class="setting-hint">${t('settings.fullNamesHint')}</span>
+            </div>
+            <label class="switch" aria-labelledby="fullNamesLabel">
+              <input type="checkbox" id="fullNamesToggle" ${countryFullNames ? 'checked' : ''} />
+              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+            </label>
+          </div>
           <div class="setting-row">
             <label class="setting-label" for="radiusInput">${t('settings.radius')}</label>
             <input class="number-input" type="number" id="radiusInput" min="${MIN_CORNER_RADIUS}" max="${MAX_CORNER_RADIUS}" step="1" value="${loadCornerRadius()}" />
@@ -596,6 +622,15 @@ function openSettings() {
   modal.addEventListener('click', (e) => { if (e.target === modal) closeSettings() })
   document.getElementById('themeSelect').addEventListener('change', (e) => applyTheme(e.target.value))
   document.getElementById('browseThemesBtn').addEventListener('click', () => openThemeGallery())
+  document.getElementById('fullNamesToggle').addEventListener('change', (e) => {
+    applyCountryFullNames(e.target.checked)
+    const scrollTop = document.querySelector('#settingsModal .modal')?.scrollTop ?? 0
+    rerender()
+    openSettings()
+    const modal = document.querySelector('#settingsModal .modal')
+    if (modal) modal.scrollTop = scrollTop
+    document.getElementById('fullNamesToggle')?.focus()
+  })
   document.getElementById('fontSelect').addEventListener('change', (e) => applyFont(e.target.value))
   document.getElementById('cmdlineSelect').addEventListener('change', (e) => applyCmdlinePosition(e.target.value))
   document.getElementById('languageSelect').addEventListener('change', (e) => {
@@ -915,6 +950,7 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-timer-enabled')
   localStorage.removeItem('flag-quiz-timer-seconds')
   localStorage.removeItem('flag-quiz-language')
+  localStorage.removeItem('flag-quiz-full-names')
   applyStoredTheme()
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
@@ -927,6 +963,7 @@ function resetApp() {
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())
   applyLanguage(loadLanguage())
+  applyCountryFullNames(loadCountryFullNames())
   showWelcome()
 }
 
@@ -1801,6 +1838,7 @@ async function init() {
   applyTimerEnabled(loadTimerEnabled())
   applyTimerSeconds(loadTimerSeconds())
   applyLanguage(loadLanguage())
+  applyCountryFullNames(loadCountryFullNames())
 
   document.querySelector('#loader-ascii').textContent = WELCOME_ASCII
   loaderSkip.textContent = t('loading.skip')

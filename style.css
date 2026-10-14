@@ -544,6 +544,71 @@ body {
 .browse-themes-btn:active { transform: scale(0.95); }
 .browse-themes-btn svg { width: 18px; height: 18px; }
 
+/* ===== Toggle switch ===== */
+.setting-row-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.setting-row-toggle .setting-label { margin-bottom: 0; }
+.setting-hint {
+  display: block;
+  margin-top: 0.25rem;
+  max-width: 22rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.switch {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+.switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+.switch-track {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--corner-radius) * 0.5 + 12px);
+  transition: background 0.2s, border-color 0.2s;
+}
+.switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transform: translateY(-50%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s;
+}
+.switch input:checked ~ .switch-track {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.switch input:checked ~ .switch-track .switch-thumb {
+  transform: translate(22px, -50%);
+  background: var(--bg);
+}
+.switch input:focus-visible ~ .switch-track {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 .setting-label span {
   color: var(--primary);
   font-weight: 700;

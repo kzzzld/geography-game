@@ -22,6 +22,7 @@ More languages can be added by dropping a file into `locales/` — see
 | --- | --- | --- | --- |
 | **Font** | 7 fonts | Iosevka | See [Themes and Fonts](Themes-and-Fonts.md) |
 | **Theme** | 6 themes | Tokyo Night | Also switchable from the full-screen [theme gallery](Themes-and-Fonts.md#the-theme-gallery) via the **Browse themes** button or by pressing `t`. See [Themes and Fonts](Themes-and-Fonts.md) |
+| **Full country names** | On / Off | Off | When on, shows official long-form names (e.g. *Democratic People's Republic of Korea*) in prompts and answer options instead of the short names. Applies immediately |
 | **Corner radius** | 0–48 px | 0 | Rounds the corners of cards and buttons |
 | **Corner padding** | 0–48 px | 32 | Inset from the viewport edges |
 

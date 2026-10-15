@@ -51,6 +51,9 @@ the same pool to be recognized by flag, by capital, and on a world map.
 - 207 territories spanning recognized, disputed, autonomous, and unrecognized;
   the `type` field is informational and does not currently filter quizzes.
 - 6 themes with optional light variants and 7 font choices.
+- Lite mode (off by default) drops web fonts, eager preloading, and motion/effects
+  for slow devices and connections; toggled from Settings, the loading screen, or
+  `:lite`.
 - Hard constraint: vanilla ES modules + CSS bundled by Vite. No frameworks and
   no new runtime dependencies.
 - Terminology: "country"/"territory" is used loosely for all 207 pool entries.

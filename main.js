@@ -430,6 +430,22 @@ function loadCountryFullNames() {
   return localStorage.getItem('flag-quiz-full-names') === 'true'
 }
 
+// ===== Lite mode management =====
+const DEFAULT_LITE_MODE = false
+
+let liteMode = DEFAULT_LITE_MODE
+
+function applyLiteMode(enabled) {
+  liteMode = enabled === true || enabled === 'true' || enabled === 'on'
+  document.documentElement.setAttribute('data-lite', String(liteMode))
+  localStorage.setItem('flag-quiz-lite-mode', String(liteMode))
+  return liteMode
+}
+
+function loadLiteMode() {
+  return localStorage.getItem('flag-quiz-lite-mode') === 'true'
+}
+
 // ===== Timer management =====
 const DEFAULT_TIMER_ENABLED = false
 const DEFAULT_TIMER_SECONDS = 15
@@ -546,6 +562,16 @@ function renderSettingsModal() {
               ${LANGUAGES.map(l => `<option value="${l.id}" ${l.id === loadLanguage() ? 'selected' : ''}>${l.label}</option>`).join('')}
             </select>
           </div>
+          <div class="setting-row setting-row-toggle">
+            <div class="setting-label-group">
+              <span class="setting-label" id="liteModeLabel">${t('settings.liteMode')} <span class="setting-note">${t('settings.refresh')}</span></span>
+              <span class="setting-hint">${t('settings.liteModeHint')}</span>
+            </div>
+            <label class="switch" aria-labelledby="liteModeLabel">
+              <input type="checkbox" id="liteModeToggle" ${liteMode ? 'checked' : ''} />
+              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+            </label>
+          </div>
         </div>
         <div class="setting-category">${t('settings.category.appearance')}</div>
         <div class="setting-group">
@@ -637,6 +663,9 @@ function openSettings() {
     applyLanguage(e.target.value)
     closeSettings()
     rerender()
+  })
+  document.getElementById('liteModeToggle').addEventListener('change', (e) => {
+    applyLiteMode(e.target.checked)
   })
   document.getElementById('questionsInput').addEventListener('input', (e) => {
     applyQuestionsPerQuiz(e.target.value)
@@ -772,7 +801,7 @@ function layoutThemeStack() {
     card.style.setProperty('--x', String(Math.round(d * step)))
     card.style.setProperty('--s', String(Math.max(0.7, 1 - ad * 0.09)))
     card.style.setProperty('--o', String(visible ? Math.max(0, 1 - ad * 0.32) : 0))
-    card.style.setProperty('--blur', `${Math.min(7, ad * 2.4)}px`)
+    card.style.setProperty('--blur', liteMode ? '0px' : `${Math.min(7, ad * 2.4)}px`)
     card.style.setProperty('--bright', String(Math.max(0.45, 1 - ad * 0.2)))
     card.style.zIndex = String(100 - ad)
     card.style.pointerEvents = visible ? 'auto' : 'none'
@@ -951,6 +980,8 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-timer-seconds')
   localStorage.removeItem('flag-quiz-language')
   localStorage.removeItem('flag-quiz-full-names')
+  localStorage.removeItem('flag-quiz-lite-mode')
+  applyLiteMode(loadLiteMode())
   applyStoredTheme()
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
@@ -1052,6 +1083,22 @@ function runCommand(raw) {
       applyOptionsCount(count)
       return showCmdMessage(t('cmd.options', { count }))
     }
+    case 'lite': {
+      const value = arg.trim().toLowerCase()
+      if (['on', 'true', 'yes'].includes(value)) {
+        applyLiteMode(true)
+        return showCmdMessage(t('cmd.liteOn'))
+      }
+      if (['off', 'false', 'no'].includes(value)) {
+        applyLiteMode(false)
+        return showCmdMessage(t('cmd.liteOff'))
+      }
+      if (value === '' || value === 'toggle') {
+        applyLiteMode(!liteMode)
+        return showCmdMessage(t(liteMode ? 'cmd.liteOn' : 'cmd.liteOff'))
+      }
+      return showCmdMessage(t('cmd.liteUse'), true)
+    }
     case 'mode':
     case 'gamemode': {
       const mode = findByName(QUIZ_MODES, arg)
@@ -1094,7 +1141,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'gamemode', 'lang', 'language', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'gamemode', 'lang', 'language', 'lite', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
 let completion = null
 
 function getCompletionItems(text) {
@@ -1138,6 +1185,10 @@ function getCompletionItems(text) {
       .map(o => ({ value: o, label: o, insert: o }))
   } else if (name === 'variant') {
     options = ['dark', 'light', 'toggle']
+      .filter(o => o.startsWith(typed))
+      .map(o => ({ value: o, label: o, insert: o }))
+  } else if (name === 'lite') {
+    options = ['on', 'off', 'toggle']
       .filter(o => o.startsWith(typed))
       .map(o => ({ value: o, label: o, insert: o }))
   } else if (name === 'answer' || name === 'a') {
@@ -1473,7 +1524,7 @@ function streakBadge() {
 }
 
 function prefersReducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+  return liteMode || (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false)
 }
 
 function animateStreak(isRecord) {
@@ -1788,6 +1839,7 @@ const loader = document.querySelector('#loader')
 const loaderStatus = document.querySelector('#loader-status')
 const loaderNote = document.querySelector('#loader-note')
 const loaderSkip = document.querySelector('#loader-skip')
+const loaderLite = document.querySelector('#loader-lite')
 let loaderSkipped = false
 
 function setLoaderStatus(key, vars) {
@@ -1810,7 +1862,7 @@ function loadFonts() {
 }
 
 async function preloadOptional() {
-  const assets = [
+  const assets = liteMode ? [] : [
     loadFonts,
     loadWorldMap,
     loadWorldFocus,
@@ -1826,6 +1878,7 @@ async function preloadOptional() {
 
 // ===== Init =====
 async function init() {
+  applyLiteMode(loadLiteMode())
   applyStoredTheme()
   applyFont(loadFont())
   applyCornerPadding(loadCornerPadding())
@@ -1842,9 +1895,15 @@ async function init() {
 
   document.querySelector('#loader-ascii').textContent = WELCOME_ASCII
   loaderSkip.textContent = t('loading.skip')
+  loaderLite.textContent = t('loading.lite')
+  loaderLite.setAttribute('aria-pressed', String(liteMode))
   loaderNote.textContent = t('loading.skipNote')
   loader.setAttribute('aria-label', t('loading.aria'))
   loaderSkip.addEventListener('click', () => { loaderSkipped = true })
+  loaderLite.addEventListener('click', () => {
+    applyLiteMode(!liteMode)
+    loaderLite.setAttribute('aria-pressed', String(liteMode))
+  })
   setLoaderStatus('loading.title')
 
   const optional = preloadOptional()

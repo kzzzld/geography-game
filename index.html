@@ -8,11 +8,26 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="alternate icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Fira+Code:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Source+Code+Pro:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@fontsource/iosevka@5/400.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@fontsource/iosevka@5/700.css" rel="stylesheet" />
+    <script>
+      (function () {
+        var lite = localStorage.getItem('flag-quiz-lite-mode') === 'true'
+        document.documentElement.setAttribute('data-lite', String(lite))
+        if (lite) return
+        [
+          { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+          { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+          { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Fira+Code:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Source+Code+Pro:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap' },
+          { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@fontsource/iosevka@5/400.css' },
+          { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@fontsource/iosevka@5/700.css' },
+        ].forEach(function (spec) {
+          var link = document.createElement('link')
+          link.rel = spec.rel
+          link.href = spec.href
+          if (spec.crossOrigin) link.crossOrigin = spec.crossOrigin
+          document.head.appendChild(link)
+        })
+      })()
+    </script>
     <style>
       /* Critical loading-screen styles, inlined so the screen paints before the CSS bundle. */
       #loader {
@@ -75,7 +90,14 @@
         font-size: 0.9rem;
         color: var(--text, #c0caf5);
       }
-      .loader-skip {
+      .loader-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+      .loader-skip,
+      .loader-lite {
         font: inherit;
         font-size: 0.85rem;
         padding: 0.5rem 1.5rem;
@@ -85,7 +107,12 @@
         color: var(--text, #c0caf5);
         cursor: pointer;
       }
-      .loader-skip:hover { border-color: var(--primary, #7aa2f7); }
+      .loader-skip:hover,
+      .loader-lite:hover { border-color: var(--primary, #7aa2f7); }
+      .loader-lite[aria-pressed="true"] {
+        border-color: var(--primary, #7aa2f7);
+        color: var(--primary, #7aa2f7);
+      }
       .loader-note {
         margin: 0;
         max-width: 24rem;
@@ -95,6 +122,8 @@
       @media (prefers-reduced-motion: reduce) {
         .loader-ring span { animation: none; opacity: 1; }
       }
+      [data-lite="true"] #loader { transition: none; }
+      [data-lite="true"] .loader-ring span { animation: none; opacity: 1; }
     </style>
   </head>
   <body>
@@ -108,7 +137,10 @@
           <span style="--i:9"></span><span style="--i:10"></span><span style="--i:11"></span>
         </div>
         <p class="loader-status" id="loader-status">Loading&hellip;</p>
-        <button type="button" class="loader-skip" id="loader-skip">Skip</button>
+        <div class="loader-actions">
+          <button type="button" class="loader-skip" id="loader-skip">Skip</button>
+          <button type="button" class="loader-lite" id="loader-lite" aria-pressed="false">Lite mode</button>
+        </div>
         <p class="loader-note" id="loader-note">Skipping may leave fonts, maps, and images unavailable.</p>
       </div>
     </div>

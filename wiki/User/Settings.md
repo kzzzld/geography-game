@@ -12,6 +12,7 @@ to whatever you had selected before.
 | Setting | Choices | Default | Notes |
 | --- | --- | --- | --- |
 | **Language** | English, Türkçe | Detected from your browser, else English | Changing it re-renders the screen immediately and closes the dialog |
+| **Lite mode** | On / Off | Off | Turns off animations, effects, and font/map preloading for slow computers or connections. Marked **Refresh Needed** — see [Lite Mode](Lite-Mode.md). Also toggleable from the loading screen or `:lite` |
 
 More languages can be added by dropping a file into `locales/` — see
 [Localization](../Developer/Localization.md).
@@ -58,7 +59,7 @@ top bar. Click it to toggle, and use the number field in its popover to set
 
 The [command line](Command-Line.md) can change most of these too, e.g.
 `:theme nord`, `:font inter`, `:questions 10`, `:corner 24`, `:radius 8`,
-`:options 4`, `:lang tr`, `:variant toggle`, or `:time 30`.
+`:options 4`, `:lang tr`, `:variant toggle`, `:lite on`, or `:time 30`.
 
-Related: [Themes and Fonts](Themes-and-Fonts.md) · [Command Line](Command-Line.md) ·
-[Keyboard Shortcuts](Keyboard-Shortcuts.md)
+Related: [Lite Mode](Lite-Mode.md) · [Themes and Fonts](Themes-and-Fonts.md) ·
+[Command Line](Command-Line.md) · [Keyboard Shortcuts](Keyboard-Shortcuts.md)

@@ -57,6 +57,7 @@ It then switches on the lowercased `name`. Commands are grouped by alias in the
 | `mode` / `gamemode` | `findByName(QUIZ_MODES, arg)` → `applyQuizMode` |
 | `lang` / `language` | Match a locale by id or label → `applyLanguage` + `rerender` |
 | `time` | `off`/`false`/`no`/`0`, `on`/`true`/`yes`, or seconds 5–60 |
+| `lite` | `on`/`true`/`yes`, `off`/`false`/`no`, or `toggle`/empty → `applyLiteMode` |
 | `''` | Empty → do nothing |
 | default | Unknown command error |
 
@@ -87,8 +88,9 @@ This strips accents and punctuation and lowercases, so `Türkçe` matches
 
 - **No space yet** → complete the command name from `COMMAND_NAMES`.
 - **Command + partial arg** → complete from the relevant registry (fonts,
-  themes, positions, modes, languages, `time` values, `variant` values, or the
-  available `answer` letters), filtering by `normalizeName` prefix.
+  themes, positions, modes, languages, `time` values, `variant` values, `lite`
+  values, or the available `answer` letters), filtering by `normalizeName`
+  prefix.
 
 `handleTab(backwards)` keeps a `completion` object with an index, cycles it, and
 writes the selected `insert` value into the input. `renderCompletionMenu()`

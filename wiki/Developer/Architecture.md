@@ -9,11 +9,12 @@ and no runtime dependency.
 ```
 index.html ──imports──▶ main.js ──imports──▶ style.css
    │                        │
-   │                        ├── fetches ./data.json   (country pool)
-   │                        ├── fetches ./world.svg   (Map mode)
-   │                        ├── fetches ./focus.json  (Map mode zoom boxes)
-   │                        ├── loads webfonts        (FontFaceSet)
+   │                        ├── fetches ./data.json   (country pool, always)
+   │                        ├── fetches ./world.svg   (Map mode, skipped in lite mode)
+   │                        ├── fetches ./focus.json  (Map mode zoom boxes, skipped in lite mode)
+   │                        ├── loads webfonts        (FontFaceSet, skipped in lite mode)
    │                        └── globs ./locales/*.json (translations)
+   ├── boot <script> sets data-lite from localStorage; injects font <link>s unless lite
    ├── #loader (loading screen, inline critical CSS) ── hidden by init()
    └── #app  ◀── everything is rendered here via innerHTML
 ```
@@ -114,5 +115,11 @@ user pressed **Skip**, in which case it proceeds immediately. Then it calls
 On data failure it renders a single error card using the `error.loadFailed`
 string. Map assets are cached in promises and degrade gracefully — a missing map
 just shows an empty prompt rather than breaking the quiz.
+
+In [lite mode](../User/Lite-Mode.md), `preloadOptional()` returns no assets (and
+the `index.html` boot script never injects the font `<link>`s), so boot only
+waits on `data.json`; `world.svg` and `focus.json` load on demand the first time a
+Map question renders. Lite mode is mirrored as a `data-lite` attribute on
+`<html>` and is applied by `applyLiteMode()` — see [Theming](Theming.md).
 
 Related: [Project Structure](Project-Structure.md) · [Quiz Flow](Quiz-Flow.md)

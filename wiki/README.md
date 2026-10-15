@@ -29,6 +29,7 @@ command line.
 - [Playing a Quiz](User/Playing-a-Quiz.md)
 - [Scoring and Streaks](User/Scoring-and-Streaks.md)
 - [Settings](User/Settings.md)
+- [Lite Mode](User/Lite-Mode.md)
 - [Themes and Fonts](User/Themes-and-Fonts.md)
 - [Keyboard Shortcuts](User/Keyboard-Shortcuts.md)
 - [Command Line](User/Command-Line.md)
@@ -74,4 +75,5 @@ Docker.
 - **Tech:** vanilla JavaScript + Vite, no framework
 - **Content:** 207 countries/territories, 5 game modes, 2 languages (EN, TR)
 - **Look:** 6 themes with optional light variants, 7 fonts
+- **Performance:** [Lite mode](User/Lite-Mode.md) (off by default) skips fonts, preloading, and effects
 - **Hosting:** any static host, NixOS flake, Docker

@@ -150,7 +150,16 @@ document.documentElement.style.setProperty('--font-family', font.family)
 Defaults to Iosevka. The seven families are listed in `FONTS` in `main.js` and
 loaded via `<link>`s in `index.html`.
 
-## Adding a theme
+## Lite mode
+
+Lite mode is a third attribute on `<html>`, `data-lite`, set by `applyLiteMode()`.
+It changes no colour values; instead the `[data-lite="true"]` block at the end of
+`style.css` neutralizes animations, transitions, gradient text, backdrop blur,
+and shadows, and the `index.html` boot script skips the web-font `<link>`s (it
+reads the same `localStorage` flag before the bundles load, so the loading screen
+is already in the right mode). When you add a new effect or palette-dependent
+decoration, make sure it degrades in that block. See
+[Lite Mode](../User/Lite-Mode.md).
 
 1. Add a `[data-theme="mytheme"] { … }` block in `style.css` with every variable.
 2. Add an entry to `THEMES` in `main.js` with a unique `id`, a `label`, and the

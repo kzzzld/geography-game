@@ -1540,3 +1540,32 @@ body {
   .theme-card-check { transition: opacity 0.2s ease; }
   .theme-card[aria-selected="true"] .theme-card-check { transform: none; }
 }
+
+/* ===== Lite mode ===== */
+[data-lite="true"] *,
+[data-lite="true"] *::before,
+[data-lite="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-lite="true"] .logo,
+[data-lite="true"] .welcome-ascii {
+  background: none;
+  color: var(--primary);
+  filter: none;
+}
+
+[data-lite="true"] .logo:hover,
+[data-lite="true"] .welcome-ascii-link:hover .welcome-ascii { filter: none; }
+
+[data-lite="true"] .theme-gallery {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--bg);
+}
+
+[data-lite="true"] .flag-img,
+[data-lite="true"] .theme-card[aria-selected="true"],
+[data-lite="true"] .timer-popover,
+[data-lite="true"] #cmdline { box-shadow: none; }

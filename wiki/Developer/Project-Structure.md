@@ -6,7 +6,7 @@ What every file in the repository is for.
 .
 ├── AGENTS.md               # Instructions for AI agents (wiki-sync rules)
 ├── PRODUCT.md              # Captured product context (users, purpose, positioning)
-├── index.html              # App shell: #loader (loading screen + critical CSS), #app div, font <link>s, loads main.js
+├── index.html              # App shell: boot script (sets data-lite, injects font <link>s unless lite), #loader (loading screen + critical CSS), #app div, loads main.js
 ├── main.js                 # Entire app logic (see note below)
 ├── style.css               # All styles and theme palettes
 ├── vite.config.js          # Vite dev-server config (allowedHosts)
@@ -46,6 +46,7 @@ banner comments. In order:
 | Streak management | Best streak persistence and record detection |
 | Quiz mode management | Mode registry and active mode |
 | Language management | Active language + browser detection |
+| Lite mode management | `liteMode` state, `applyLiteMode()` / `loadLiteMode()`, `data-lite` attribute |
 | Timer management | Timed-mode enable/seconds |
 | Command line position management | Where `:` appears |
 | Shuffle utility | Fisher–Yates `shuffle()` |
@@ -82,8 +83,9 @@ Constants live near their section, or at the top (`THEMES`, `FONTS`,
 ## `style.css`
 
 Starts with all theme palettes (`[data-theme="…"]` blocks of CSS variables),
-then base/reset styles, layout, and component styles. See
-[Theming](Theming.md).
+then base/reset styles, layout, and component styles, and ends with the
+`[data-lite="true"]` overrides that disable motion and expensive paint in
+[lite mode](../User/Lite-Mode.md). See [Theming](Theming.md).
 
 The loading-screen styles are the one exception: they live inline in
 `index.html` so the screen can paint before this stylesheet loads. See

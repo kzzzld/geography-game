@@ -23,6 +23,7 @@ or bottom from [Settings](Settings.md) (or `:cmdline`).
 | `corner <0–48>` | | Set corner padding in pixels |
 | `radius <0–48>` | | Set corner radius in pixels |
 | `cmdline <center\|top\|bottom>` | | Move the command line |
+| `lite <on\|off\|toggle>` | | Turn [lite mode](Lite-Mode.md) on or off (or toggle it by omitting the value) |
 | `reset` | | Wipe **all** saved settings back to defaults |
 
 ## Fuzzy matching
@@ -60,6 +61,7 @@ Use `↑` / `↓` to browse previously run commands.
 :options 4
 :mode mixed
 :lang tr
+:lite on
 :reset
 ```
 

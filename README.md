@@ -16,6 +16,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 - 🔤 7 font choices (Inter, JetBrains Mono, Iosevka, Fira Code, IBM Plex Mono, Source Code Pro, Roboto Mono)
 - 💾 Theme and font preferences persisted in `localStorage`
 - ⏳ A loading screen that preloads the country data, map geometry, and fonts before the welcome screen — with a skip button for slow connections
+- 🪶 **Lite mode** (off by default) for slow devices and connections — skips web fonts and map/font preloading and disables every animation and effect. Toggle it in Settings, on the loading screen, or with `:lite`
 - ⚡ No frameworks — plain JS, HTML, and CSS, bundled with Vite
 
 ## Getting Started
@@ -65,7 +66,7 @@ npm run preview
 .
 ├── AGENTS.md         # Instructions for AI agents working on the project
 ├── PRODUCT.md        # Captured product context (users, purpose, positioning)
-├── index.html        # App entry HTML (incl. the loading-screen markup + critical CSS)
+├── index.html        # App entry HTML (boot script, loading-screen markup + critical CSS)
 ├── main.js           # App logic (quiz flow, rendering, settings)
 ├── style.css         # Theming and layout styles
 ├── locales/

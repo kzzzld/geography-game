@@ -21,6 +21,10 @@ On a slow connection you can press **Skip** to jump straight to the welcome
 screen. The core data still loads, but things you skipped may not be ready —
 fonts can fall back, and maps or images can appear late or not at all.
 
+There is also a **Lite mode** button here. It is a more thorough version of
+skipping: it turns off fonts, preloading, and every animation and effect for this
+and future visits. See [Lite Mode](Lite-Mode.md).
+
 ## The welcome screen
 
 The first thing you see after loading finishes is the welcome screen:
@@ -61,6 +65,7 @@ is already running, switching restarts it with the new mode.
 Almost everything lives behind the gear icon (or press `s`):
 
 - Language, theme, font, corner padding and radius.
+- [Lite mode](Lite-Mode.md) for slow devices and connections.
 - Questions per quiz and number of answer options.
 - Where the
   [Vim-style command line](Command-Line.md) appears.

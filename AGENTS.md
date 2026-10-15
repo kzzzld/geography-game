@@ -21,6 +21,7 @@ Use this map to find the right page(s):
 | Scoring, points, streak logic | [User/Scoring-and-Streaks.md](wiki/User/Scoring-and-Streaks.md), [Developer/Quiz-Flow.md](wiki/Developer/Quiz-Flow.md) |
 | Timer behaviour | [User/Playing-a-Quiz.md](wiki/User/Playing-a-Quiz.md), [Developer/Storage-Keys.md](wiki/Developer/Storage-Keys.md), [Developer/Quiz-Flow.md](wiki/Developer/Quiz-Flow.md) |
 | A setting or its range/default | [User/Settings.md](wiki/User/Settings.md), [Developer/Storage-Keys.md](wiki/Developer/Storage-Keys.md) |
+| Lite mode, or an animation/effect/preload it should skip | [User/Lite-Mode.md](wiki/User/Lite-Mode.md), [Developer/Theming.md](wiki/Developer/Theming.md), [Developer/Architecture.md](wiki/Developer/Architecture.md) |
 | Theme or font | [User/Themes-and-Fonts.md](wiki/User/Themes-and-Fonts.md), [Developer/Theming.md](wiki/Developer/Theming.md) |
 | Keyboard shortcut | [User/Keyboard-Shortcuts.md](wiki/User/Keyboard-Shortcuts.md) |
 | A command-line command/alias | [User/Command-Line.md](wiki/User/Command-Line.md), [Developer/Command-Line-Internals.md](wiki/Developer/Command-Line-Internals.md) |
@@ -47,7 +48,40 @@ Rules:
 - Update the root README only for the short version (features, commands, project
   structure) and link to the wiki for depth.
 
-## 2. Other "when you do X, also do Y" rules
+## 2. Lite mode
+
+**Lite mode** is a performance setting for slow devices and connections. It is
+**off by default**, persisted under `flag-quiz-lite-mode`, reflected as
+`data-lite="true"` on `<html>`, and toggled from Settings, the loading screen,
+or `:lite`. See [User/Lite-Mode.md](wiki/User/Lite-Mode.md) for the player-facing
+description.
+
+When it is on the app must:
+
+- **Skip web fonts entirely** — the `index.html` boot script only injects the
+  font `<link>`s when lite mode is off, and `preloadOptional()` preloads nothing.
+- **Skip the startup preload** of fonts, `world.svg`, and `focus.json`; those
+  still load on demand when actually needed.
+- **Disable motion and expensive paint** — CSS animations, transitions,
+  gradients, backdrop blur, and drop shadows are neutralized by the
+  `[data-lite="true"]` block at the end of `style.css`, and
+  `prefersReducedMotion()` returns `true` in lite mode so JS effects like the
+  streak burst are skipped too.
+
+Rules:
+
+- **Any new animation, transition, filter, blur, or eager fetch must respect
+  lite mode.** Either gate it behind `liteMode` / `prefersReducedMotion()`, or
+  neutralize it in the `[data-lite="true"]` CSS block, and mention it in
+  [User/Lite-Mode.md](wiki/User/Lite-Mode.md).
+- Keep the early `data-lite` attribute in `index.html` in sync with
+  `applyLiteMode()` in `main.js` — it runs before the CSS/JS bundles so the
+  loading screen paints in the right mode.
+- Treat it like any other persisted setting: an `apply*` / `load*` pair, listed
+  in [Developer/Storage-Keys.md](wiki/Developer/Storage-Keys.md), and removed by
+  `resetApp()`.
+
+## 3. Other "when you do X, also do Y" rules
 
 | When you… | Also… |
 | --- | --- |
@@ -60,8 +94,9 @@ Rules:
 | Change `package-lock.json` | Update `npmDepsHash` in `flake.nix` (the Nix build fails otherwise). |
 | Change user-facing behaviour | Note it in the README feature list if it's headline-worthy. |
 | Add a new top-level file/dir | Add it to the README project-structure block and [Developer/Project-Structure.md](wiki/Developer/Project-Structure.md). |
+| Add any animation, effect, filter, blur, or eager fetch | Make it respect lite mode (see [§2](#2-lite-mode)) and update [User/Lite-Mode.md](wiki/User/Lite-Mode.md). |
 
-## 3. Code conventions
+## 4. Code conventions
 
 - **Keep code small, understandable, and easy to maintain. No bloat.** Write the
   simplest thing that works, prefer clarity over cleverness, and avoid
@@ -78,7 +113,7 @@ Rules:
 - Match the existing commit style (Conventional Commits: `feat:`, `fix:`,
   `docs:`, `chore:`, `refactor:`).
 
-## 4. Commands
+## 5. Commands
 
 ```bash
 npm install      # install dependencies
@@ -91,7 +126,7 @@ nix build        # Nix package → result/ (if you use Nix)
 There is no test suite and no configured linter/typecheck. Verify changes by
 building and running the app.
 
-## 5. Git
+## 6. Git
 
 - **You commit every change you make.** Commit as part of doing the work — do
   not ask whether to commit, do not wait for permission, and do not leave

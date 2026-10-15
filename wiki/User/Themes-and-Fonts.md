@@ -77,7 +77,9 @@ is the default.
 | **Roboto Mono** | Monospace |
 
 Fonts are loaded from Google Fonts and jsDelivr (for Iosevka) in `index.html`, so
-the first load needs network access.
+the first load needs network access. In [lite mode](Lite-Mode.md) no web fonts are
+downloaded at all — text falls back to the system monospace font — and the
+animated gradient on the logo and welcome map is replaced with solid colour.
 
 ## Switching quickly
 

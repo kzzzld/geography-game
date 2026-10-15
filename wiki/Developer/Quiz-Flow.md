@@ -100,6 +100,13 @@ focuses the first answer, and starts the timer if enabled.
 - Calls `updateScoreBar()`, `animateStreak()` on a correct answer, and
   `revealNext()`.
 
+`animateStreak(isRecord)` bumps the score-bar flame, fires `flashStreakBurst()`
+on a new all-time best, and — when the streak is a non-zero multiple of 5 —
+calls `celebrateStreak(count)`, which appends a full-screen `.streak-celebration`
+node to `<body>` (count, flame, ring, confetti) and removes it after 1.6s. Both
+effects no-op when `prefersReducedMotion()` is true, which includes
+[lite mode](../User/Lite-Mode.md).
+
 `handleTimeout()` is the same ending when the timer hits zero, except there is no
 selected answer and the question is always counted as missed.
 

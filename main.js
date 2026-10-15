@@ -1537,6 +1537,7 @@ function animateStreak(isRecord) {
     el.classList.add('record')
     flashStreakBurst(el)
   }
+  if (currentStreak > 0 && currentStreak % 5 === 0) celebrateStreak(currentStreak)
   setTimeout(() => el.classList.remove('bump', 'record'), 900)
 }
 
@@ -1560,6 +1561,32 @@ function flashStreakBurst(el) {
   }
   document.body.appendChild(burst)
   setTimeout(() => burst.remove(), 1000)
+}
+
+function celebrateStreak(streak) {
+  const el = document.createElement('div')
+  el.className = 'streak-celebration'
+  el.setAttribute('role', 'status')
+  el.setAttribute('aria-live', 'polite')
+  const colors = ['var(--primary)', 'var(--accent)', 'var(--warning)', 'var(--success)']
+  const confetti = Array.from({ length: 24 }, (_, i) => {
+    const angle = (Math.PI * 2 * i) / 24 + Math.random() * 0.3
+    const dist = 90 + Math.random() * 90
+    return `<span class="streak-confetti" style="--tx:${Math.cos(angle) * dist}px;--ty:${Math.sin(angle) * dist}px;background:${colors[i % colors.length]};animation-delay:${Math.random() * 120}ms"></span>`
+  }).join('')
+  el.innerHTML = `
+    <div class="streak-celebration-inner">
+      <span class="streak-celebration-ring" aria-hidden="true"></span>
+      <svg class="streak-celebration-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+      </svg>
+      <span class="streak-celebration-count">${streak}</span>
+      <span class="streak-celebration-label">${t('quiz.streakMilestone', { count: streak })}</span>
+    </div>
+    ${confetti}
+  `
+  document.body.appendChild(el)
+  setTimeout(() => el.remove(), 1600)
 }
 
 function updateScoreBar() {

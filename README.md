@@ -10,7 +10,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 - 🌐 English and Turkish translations, including country and capital names
 - 🏷️ Optional full country names — toggle official long-form names (e.g. *Democratic People's Republic of Korea*) in Settings
 - 🏆 Live score tracking with a results screen at the end
-- 🔥 Streak counter for consecutive correct answers, with an all-time best saved between sessions
+- 🔥 Streak counter for consecutive correct answers, with a big screen-wide celebration every 5 in a row and an all-time best saved between sessions
 - 🔁 Retry missed questions from the results screen with freshly shuffled options
 - 🎨 6 themes (Tokyo Night, Nord, Dark, AMOLED, Catppuccin, Black Metal) with a dark/light variant toggle for themes that provide both, plus a full-screen Alt-Tab-style theme switcher (press `t`) with stacked, live-previewing cards
 - 🔤 7 font choices (Inter, JetBrains Mono, Iosevka, Fira Code, IBM Plex Mono, Source Code Pro, Roboto Mono)

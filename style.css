@@ -724,12 +724,106 @@ body {
   100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
 }
 
+/* ===== Streak milestone celebration ===== */
+.streak-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.streak-celebration-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  animation: streak-celebration-pop 1.6s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.streak-celebration-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  margin: -100px 0 0 -100px;
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  animation: streak-celebration-ring 0.9s ease-out 0.05s both;
+}
+
+.streak-celebration-flame {
+  width: clamp(2.5rem, 9vw, 3.25rem);
+  height: clamp(2.5rem, 9vw, 3.25rem);
+  color: var(--warning);
+  animation: streak-celebration-flame 0.7s ease-in-out infinite alternate;
+}
+
+.streak-celebration-count {
+  font-size: clamp(4rem, 20vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 24px color-mix(in srgb, var(--primary) 55%, transparent);
+}
+
+.streak-celebration-label {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.streak-confetti {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 2px;
+  animation: streak-confetti 1.1s cubic-bezier(0.15, 0.65, 0.35, 1) both;
+}
+
+@keyframes streak-celebration-pop {
+  0% { opacity: 0; transform: scale(0.4); }
+  20% { opacity: 1; transform: scale(1.12); }
+  32% { transform: scale(1); }
+  78% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.08); }
+}
+
+@keyframes streak-celebration-ring {
+  0% { opacity: 0.9; transform: scale(0.45); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+@keyframes streak-celebration-flame {
+  from { transform: scale(1) rotate(-4deg); }
+  to { transform: scale(1.14) rotate(4deg); }
+}
+
+@keyframes streak-confetti {
+  0% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(200deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .score-streak.hot svg,
   .score-streak.bump,
   .score-streak.bump svg,
   .score-streak.record::after,
-  .streak-particle { animation: none; }
+  .streak-particle,
+  .streak-celebration-inner,
+  .streak-celebration-ring,
+  .streak-celebration-flame,
+  .streak-confetti { animation: none; }
 }
 
 /* ===== Quiz card ===== */

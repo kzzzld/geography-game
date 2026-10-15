@@ -33,6 +33,7 @@
     "quiz.timerTitle": "Süreli mod",
     "quiz.secondsPerQuestion": "Soru başına saniye",
     "quiz.streakTitle": "Üst üste doğru cevaplar",
+    "quiz.streakMilestone": "{count} üst üste!",
     "result.complete": "Quiz Tamamlandı!",
     "result.youScored": "Skorun",
     "result.accuracy": "%{percent} doğruluk",

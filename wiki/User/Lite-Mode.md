@@ -24,7 +24,7 @@ and language.
 | --- | --- | --- |
 | Web fonts | All seven fonts are downloaded up front | No fonts are downloaded; the browser's system monospace font is used |
 | Startup preload | Fonts, the world map, and map zoom data load before the welcome screen | Nothing is preloaded; map assets load only when a Map question needs them |
-| Animations | Button shine, logo shimmer, ASCII float, loader ring, streak pop/flicker/burst | All disabled |
+| Animations | Button shine, logo shimmer, ASCII float, loader ring, streak pop/flicker/burst, and the milestone confetti on every 5th correct answer | All disabled |
 | Transitions | Hover/entrance/modal transitions | All instant |
 | Effects | Gradient text, backdrop blur, drop shadows, glows | Removed or made solid |
 | Theme gallery | Cards are scaled, dimmed, and blurred for depth | Cards sit flat, with no blur |

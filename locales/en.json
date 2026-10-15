@@ -33,6 +33,7 @@
     "quiz.timerTitle": "Timed mode",
     "quiz.secondsPerQuestion": "Seconds per question",
     "quiz.streakTitle": "Correct answers in a row",
+    "quiz.streakMilestone": "{count} in a row!",
     "result.complete": "Quiz Complete!",
     "result.youScored": "You scored",
     "result.accuracy": "{percent}% accuracy",

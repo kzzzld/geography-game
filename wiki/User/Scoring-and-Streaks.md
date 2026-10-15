@@ -41,7 +41,11 @@ The **streak** is your current run of consecutive correct answers.
   once you reach **3**.
 - Each correct answer gives the flame a little bump animation; if you pass your
   all-time best mid-quiz, you get a small particle burst instead.
-- Animations are suppressed if your system requests reduced motion.
+- Every 5th correct answer in a row (**5, 10, 15, 20, …**) triggers a big
+  screen-wide milestone celebration in the middle of the page — the count, a
+  flame, an expanding ring, and a confetti burst.
+- Animations are suppressed if your system requests reduced motion, and in
+  [lite mode](Lite-Mode.md).
 
 ### Best streak
 

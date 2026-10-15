@@ -19,6 +19,7 @@ values are clamped or replaced with defaults.
 | `flag-quiz-cmdline-position` | `center` / `top` / `bottom` | `center` | `loadCmdlinePosition()` |
 | `flag-quiz-questions-per-quiz` | integer, 5–50 | `20` | `loadQuestionsPerQuiz()` |
 | `flag-quiz-options-count` | integer, 2–10 | `5` | `loadOptionsCount()` |
+| `flag-quiz-lives` | integer, 1–10 | `3` | `loadLives()` |
 | `flag-quiz-best-streak` | integer ≥ 0 | `0` | `loadBestStreak()` |
 | `flag-quiz-mode` | `flag` / `country` / `capital` / `map` / `mixed` | `flag` | `loadQuizMode()` |
 | `flag-quiz-timer-enabled` | `"true"` / `"false"` | `false` | `loadTimerEnabled()` |

@@ -57,6 +57,7 @@ let missedQuestions = []  // questions answered wrong (for Retry Missed)
 let currentIndex = 0
 let score = 0
 let points = 0
+let livesLeft = 0        // remaining lives in Infinite mode
 let currentStreak = 0
 let bestStreak = 0
 let bestStreakAtStart = 0
@@ -66,10 +67,10 @@ let lastSelected = null
 let timerId, timeLeft, timerPaused
 ```
 
-Settings values (`quizMode`, `questionsPerQuiz`, `optionsCount`, `timerEnabled`,
-`timerSeconds`, `themeVariant`, `language`, `locale`) are tracked in their own
-nearby variables and always mirrored to `localStorage` by their `apply*`
-functions.
+Settings values (`quizMode`, `questionsPerQuiz`, `optionsCount`, `lives`,
+`timerEnabled`, `timerSeconds`, `themeVariant`, `language`, `locale`) are tracked
+in their own nearby variables and always mirrored to `localStorage` by their
+`apply*` functions.
 
 ## The `apply` / `load` convention
 

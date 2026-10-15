@@ -54,6 +54,7 @@ It then switches on the lowercased `name`. Commands are grouped by alias in the
 | `cmdline` | `findByName(CMDLINE_POSITIONS, arg)` → `applyCmdlinePosition` |
 | `variant` | `dark`, `light`, or `toggle` |
 | `questions` / `corner` / `radius` / `options` | Parse an int and enforce the range |
+| `lives` | Parse an int 1–10 → `applyLives` |
 | `mode` / `gamemode` | `findByName(QUIZ_MODES, arg)` → `applyQuizMode` |
 | `lang` / `language` | Match a locale by id or label → `applyLanguage` + `rerender` |
 | `time` | `off`/`false`/`no`/`0`, `on`/`true`/`yes`, or seconds 5–60 |

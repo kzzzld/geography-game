@@ -60,6 +60,25 @@ Enable it from the clock button in the top bar. When it's on:
 Scoring is worth more in timed mode — see
 [Scoring and Streaks](Scoring-and-Streaks.md).
 
+## Infinite mode
+
+[Infinite](Game-Modes.md#infinite) is a game mode, not a setting: pick it from the
+top bar (or `:mode infinite`) and you get an endless Flag → Country run instead
+of a fixed-length quiz.
+
+- You start with your configured number of **lives** (1–10, default 3, set in
+  [Settings](Settings.md#gameplay)).
+- A correct answer keeps the run going; a wrong answer or timeout costs one life.
+- The score bar shows a heart counter with your remaining lives — it pulses when
+  you're down to your last one. The question label drops the total and reads just
+  `Question N`.
+- Questions are drawn at random **with** replacement, so the same flag can come
+  round again.
+- The run ends the moment lives reach zero, then the results screen appears.
+
+Infinite also works with [timed mode](#timed-mode): let the clock run out and you
+lose a life.
+
 ## The results screen
 
 When the last question is done you see:

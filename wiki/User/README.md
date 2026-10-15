@@ -5,7 +5,7 @@ Everything a player needs. No prior knowledge assumed.
 ## Contents
 
 - [Getting Started](Getting-Started.md) — open the game and play your first round
-- [Game Modes](Game-Modes.md) — the five ways to be quizzed
+- [Game Modes](Game-Modes.md) — the six ways to be quizzed
 - [Playing a Quiz](Playing-a-Quiz.md) — what happens from question 1 to the results screen
 - [Scoring and Streaks](Scoring-and-Streaks.md) — how the score, accuracy, points, and streaks work
 - [Settings](Settings.md) — every option in the settings dialog

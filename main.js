@@ -126,6 +126,7 @@ const QUIZ_MODES = [
   { id: 'capital', label: 'Capital → Country', short: 'Capital' },
   { id: 'map', label: 'Map → Country', short: 'Map' },
   { id: 'mixed', label: 'Mixed', short: 'Mixed' },
+  { id: 'infinite', label: 'Infinite', short: 'Infinite' },
 ]
 
 const MIXED_PROMPT_MODES = ['flag', 'country', 'capital', 'map']
@@ -165,6 +166,7 @@ let missedQuestions = []
 let currentIndex = 0
 let score = 0
 let points = 0
+let livesLeft = 0
 let currentStreak = 0
 let bestStreak = 0
 let bestStreakAtStart = 0
@@ -446,6 +448,32 @@ function loadLiteMode() {
   return localStorage.getItem('flag-quiz-lite-mode') === 'true'
 }
 
+// ===== Lives management (Infinite mode) =====
+const DEFAULT_LIVES = 3
+const MIN_LIVES = 1
+const MAX_LIVES = 10
+
+let lives = DEFAULT_LIVES
+
+function clampLives(value) {
+  const parsed = parseInt(value, 10)
+  if (!Number.isFinite(parsed)) return DEFAULT_LIVES
+  return Math.min(MAX_LIVES, Math.max(MIN_LIVES, parsed))
+}
+
+function applyLives(value) {
+  const count = clampLives(value)
+  lives = count
+  localStorage.setItem('flag-quiz-lives', String(count))
+  return count
+}
+
+function loadLives() {
+  const stored = localStorage.getItem('flag-quiz-lives')
+  if (stored === null) return DEFAULT_LIVES
+  return clampLives(stored)
+}
+
 // ===== Timer management =====
 const DEFAULT_TIMER_ENABLED = false
 const DEFAULT_TIMER_SECONDS = 15
@@ -516,11 +544,17 @@ function buildQuestion(country, mode = quizMode) {
   const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
   const options = shuffle([country, ...wrongs])
   let resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : mode
+  if (resolvedMode === 'infinite') resolvedMode = 'flag'
   if (resolvedMode === 'map' && !countryCode(country)) resolvedMode = 'flag'
   return { country, options, mode: resolvedMode }
 }
 
+function randomQuestion() {
+  return buildQuestion(countries[Math.floor(Math.random() * countries.length)])
+}
+
 function buildQuiz() {
+  if (quizMode === 'infinite') return [randomQuestion()]
   const pool = quizMode === 'map' ? countries.filter(c => countryCode(c)) : countries
   const shuffled = shuffle(pool)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
@@ -621,6 +655,10 @@ function renderSettingsModal() {
             <label class="setting-label" for="optionsInput">${t('settings.options')} <span class="setting-note">${t('settings.refresh')}</span></label>
             <input class="number-input" type="number" id="optionsInput" min="${MIN_OPTIONS_COUNT}" max="${MAX_OPTIONS_COUNT}" step="1" value="${loadOptionsCount()}" />
           </div>
+          <div class="setting-row">
+            <label class="setting-label" for="livesInput">${t('settings.lives')} <span class="setting-note">${t('settings.refresh')}</span></label>
+            <input class="number-input" type="number" id="livesInput" min="${MIN_LIVES}" max="${MAX_LIVES}" step="1" value="${loadLives()}" />
+          </div>
         </div>
         <div class="setting-category">${t('settings.category.interface')}</div>
         <div class="setting-group">
@@ -678,6 +716,12 @@ function openSettings() {
   })
   document.getElementById('optionsInput').addEventListener('change', (e) => {
     e.target.value = loadOptionsCount()
+  })
+  document.getElementById('livesInput').addEventListener('input', (e) => {
+    applyLives(e.target.value)
+  })
+  document.getElementById('livesInput').addEventListener('change', (e) => {
+    e.target.value = loadLives()
   })
   document.getElementById('paddingInput').addEventListener('input', (e) => {
     applyCornerPadding(e.target.value)
@@ -974,6 +1018,7 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-cmdline-position')
   localStorage.removeItem('flag-quiz-questions-per-quiz')
   localStorage.removeItem('flag-quiz-options-count')
+  localStorage.removeItem('flag-quiz-lives')
   localStorage.removeItem('flag-quiz-best-streak')
   localStorage.removeItem('flag-quiz-mode')
   localStorage.removeItem('flag-quiz-timer-enabled')
@@ -989,6 +1034,7 @@ function resetApp() {
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())
+  applyLives(loadLives())
   saveBestStreak(loadBestStreak())
   applyQuizMode(loadQuizMode())
   applyTimerEnabled(loadTimerEnabled())
@@ -1083,6 +1129,15 @@ function runCommand(raw) {
       applyOptionsCount(count)
       return showCmdMessage(t('cmd.options', { count }))
     }
+    case 'lives': {
+      const count = parseInt(arg, 10)
+      if (!Number.isFinite(count)) return showCmdMessage(t('cmd.invalidNumber'), true)
+      if (count < MIN_LIVES || count > MAX_LIVES) {
+        return showCmdMessage(t('cmd.numberBetween', { min: MIN_LIVES, max: MAX_LIVES }), true)
+      }
+      applyLives(count)
+      return showCmdMessage(t('cmd.lives', { count }))
+    }
     case 'lite': {
       const value = arg.trim().toLowerCase()
       if (['on', 'true', 'yes'].includes(value)) {
@@ -1141,7 +1196,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'gamemode', 'lang', 'language', 'lite', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'gamemode', 'lang', 'language', 'lite', 'lives', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
 let completion = null
 
 function getCompletionItems(text) {
@@ -1504,6 +1559,7 @@ function handleTimeout() {
   const q = quizQuestions[currentIndex]
   missedQuestions.push(q)
   resetStreak()
+  if (quizMode === 'infinite') livesLeft = Math.max(0, livesLeft - 1)
   document.querySelectorAll('.answer-btn').forEach(b => {
     b.disabled = true
     if (b.dataset.country === q.country.country) b.classList.add('correct')
@@ -1520,6 +1576,16 @@ function streakBadge() {
       <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
     </svg>
     <span class="score-streak-value">${currentStreak}</span>
+  </span>`
+}
+
+function livesBadge() {
+  const low = livesLeft <= 1 ? ' low' : ''
+  return `<span class="score-lives${low}" title="${t('quiz.livesTitle')}" aria-label="${t('quiz.livesLabel', { count: livesLeft })}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+    <span class="score-lives-value">${livesLeft}</span>
   </span>`
 }
 
@@ -1589,15 +1655,21 @@ function celebrateStreak(streak) {
   setTimeout(() => el.remove(), 1600)
 }
 
-function updateScoreBar() {
-  const scoreBar = document.querySelector('.score-bar')
-  if (!scoreBar) return
-  scoreBar.innerHTML = `
-    <span class="score-text">${t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
+function scoreBarContent() {
+  const infinite = quizMode === 'infinite'
+  return `
+    <span class="score-text">${infinite ? t('quiz.question', { current: currentIndex + 1 }) : t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
     ${timerEnabled ? `<span class="score-timer${timeLeft <= 5 ? ' low' : ''}" id="scoreTimer" role="timer">${timeLeft}</span>` : ''}
+    ${infinite ? livesBadge() : ''}
     ${streakBadge()}
     <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + (answered ? 1 : 0)}</span></span>
   `
+}
+
+function updateScoreBar() {
+  const scoreBar = document.querySelector('.score-bar')
+  if (!scoreBar) return
+  scoreBar.innerHTML = scoreBarContent()
 }
 
 function revealNext() {
@@ -1685,10 +1757,7 @@ function renderQuestion() {
   app.innerHTML = `
     ${renderHeader()}
     <div class="score-bar">
-      <span class="score-text">${t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
-      ${timerEnabled ? `<span class="score-timer" id="scoreTimer" role="timer">${timerSeconds}</span>` : ''}
-      ${streakBadge()}
-      <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex}</span></span>
+      ${scoreBarContent()}
     </div>
     <div class="quiz-card">
       <div class="flag-wrap${promptClass}">
@@ -1730,6 +1799,7 @@ function handleAnswer(btn) {
   } else {
     missedQuestions.push(q)
     resetStreak()
+    if (quizMode === 'infinite') livesLeft = Math.max(0, livesLeft - 1)
   }
 
   document.querySelectorAll('.answer-btn').forEach(b => {
@@ -1751,6 +1821,7 @@ function handleNext() {
   stopTimer()
   currentIndex++
   lastSelected = null
+  if (quizMode === 'infinite' && livesLeft > 0) quizQuestions.push(randomQuestion())
   if (currentIndex < quizQuestions.length) {
     renderQuestion()
   } else {
@@ -1769,7 +1840,7 @@ function renderResult() {
   app.innerHTML = `
     ${renderHeader()}
     <div class="quiz-card result-card">
-      <h2>${t('result.complete')}</h2>
+      <h2>${quizMode === 'infinite' ? t('result.infiniteTitle') : t('result.complete')}</h2>
       <p class="score-text">${t('result.youScored')}</p>
       <div class="final-score">${score} / ${total}</div>
       <p class="result-meta">${t('result.accuracy', { percent: accuracy })}</p>
@@ -1842,6 +1913,7 @@ function beginQuiz(questions) {
   currentIndex = 0
   score = 0
   points = 0
+  livesLeft = quizMode === 'infinite' ? lives : 0
   resetStreak()
   bestStreakAtStart = bestStreak
   streakRecordCelebrated = false
@@ -1913,6 +1985,7 @@ async function init() {
   applyCmdlinePosition(loadCmdlinePosition())
   applyQuestionsPerQuiz(loadQuestionsPerQuiz())
   applyOptionsCount(loadOptionsCount())
+  applyLives(loadLives())
   saveBestStreak(loadBestStreak())
   applyQuizMode(loadQuizMode())
   applyTimerEnabled(loadTimerEnabled())

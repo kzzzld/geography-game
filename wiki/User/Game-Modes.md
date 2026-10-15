@@ -1,7 +1,7 @@
 # Game Modes
 
-The game has **five** modes, switchable at any time from the top bar. Each
-question in **Mixed** picks one of the other four at random, so you never know
+The game has **six** modes, switchable at any time from the top bar. Each
+question in **Mixed** picks one of the first four at random, so you never know
 what you'll be asked next.
 
 ## Flag → Country
@@ -68,11 +68,27 @@ types.
 Because Country → Flag is one of the four, some Mixed questions present the
 answers as flag images instead of text.
 
+## Infinite
+
+**Mode id:** `infinite`
+
+An endless **Flag → Country** quiz — the same questions can come round again.
+You keep answering until you run out of **lives**; every wrong answer (or
+timeout) costs one life, and the run ends at zero.
+
+- The number of lives is configurable (1–10, default 3) — see
+  [Settings](Settings.md#gameplay).
+- Lives are shown as a heart counter in the score bar, next to the streak flame.
+- The score bar shows just `Question N` (there's no total) and your score.
+- Countries are drawn at random with replacement, so the same flag can reappear.
+- The results screen is headed **Run Over!** and reports your score, accuracy,
+  and best streak for the run.
+
 ## Switching modes
 
 - Click a mode button in the top bar.
-- Or use the command line: `:mode flag`, `:mode map`, `:mode mixed`, etc. The
-  alias `:gamemode` works too.
+- Or use the command line: `:mode flag`, `:mode map`, `:mode mixed`,
+  `:mode infinite`, etc. The alias `:gamemode` works too.
 - Switching mode while a quiz is in progress restarts the quiz immediately.
 - On the welcome and results screens, the choice just becomes the mode for the
   next quiz.

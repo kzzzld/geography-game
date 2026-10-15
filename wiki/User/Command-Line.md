@@ -12,7 +12,7 @@ or bottom from [Settings](Settings.md) (or `:cmdline`).
 | Command | Aliases | What it does |
 | --- | --- | --- |
 | `answer <a–j>` | `a` | Answer the current question with the given letter |
-| `mode <mode>` | `gamemode` | Switch [game mode](Game-Modes.md) (`flag`, `country`, `capital`, `map`, `mixed`) |
+| `mode <mode>` | `gamemode` | Switch [game mode](Game-Modes.md) (`flag`, `country`, `capital`, `map`, `mixed`, `infinite`) |
 | `theme <name>` | `color`, `colorscheme` | Switch theme |
 | `variant <dark\|light\|toggle>` | | Set or toggle the light/dark palette |
 | `font <name>` | | Switch font |
@@ -20,6 +20,7 @@ or bottom from [Settings](Settings.md) (or `:cmdline`).
 | `time <off\|5–60>` | | Turn timed mode off, on, or set seconds per question |
 | `questions <5–50>` | | Set questions per quiz (takes effect next quiz) |
 | `options <2–10>` | | Set number of answer options (takes effect next quiz) |
+| `lives <1–10>` | | Set the number of lives used by [Infinite](Game-Modes.md#infinite) mode |
 | `corner <0–48>` | | Set corner padding in pixels |
 | `radius <0–48>` | | Set corner radius in pixels |
 | `cmdline <center\|top\|bottom>` | | Move the command line |

@@ -27,10 +27,11 @@ instantly, plays without friction, and is worth replaying.
 ## Positioning
 
 One country pool of 207 recognized, disputed, autonomous, and unrecognized
-territories drives five distinct game modes — Flag → Country, Country → Flag,
-Capital → Country, Map → Country, and Mixed — rather than a single flag-to-name
-game. Neighboring flag quizzes stop at UN members and one mode; this one asks
-the same pool to be recognized by flag, by capital, and on a world map.
+territories drives six distinct game modes — Flag → Country, Country → Flag,
+Capital → Country, Map → Country, Mixed, and Infinite (an endless, lives-based
+run) — rather than a single flag-to-name game. Neighboring flag quizzes stop at
+UN members and one mode; this one asks the same pool to be recognized by flag,
+by capital, and on a world map.
 
 ## Operating Context
 
@@ -46,8 +47,10 @@ the same pool to be recognized by flag, by capital, and on a world map.
 
 ## Capabilities and Constraints
 
-- 5 modes, 5 multiple-choice options per question, configurable quiz length
+- 6 modes, 5 multiple-choice options per question, configurable quiz length
   (5–50, default 20), live score, streak with all-time best, retry-missed.
+- Infinite mode is endless and lives-based (1–10 lives, default 3); each wrong
+  answer costs a life and ends the run at zero.
 - 207 territories spanning recognized, disputed, autonomous, and unrecognized;
   the `type` field is informational and does not currently filter quizzes.
 - 6 themes with optional light variants and 7 font choices.

@@ -47,6 +47,11 @@ init() ─▶ showWelcome() ─[Play]─▶ startQuiz()
 **Map → Country**, countries without a two-letter map code are dropped), shuffles
 it, takes `questionsPerQuiz`, and builds each question.
 
+In **Infinite** mode `buildQuiz()` instead returns a single `randomQuestion()`
+(a flag prompt for a random country, so repeats are possible). `handleNext()`
+appends another one after every answer while lives remain, so the list never
+runs out — see [Infinite](#infinite-mode).
+
 `beginQuiz(questions)` resets all per-quiz state:
 
 ```js
@@ -55,6 +60,7 @@ missedQuestions = []
 currentIndex = 0
 score = 0
 points = 0
+livesLeft = quizMode === 'infinite' ? lives : 0
 resetStreak()
 bestStreakAtStart = bestStreak   // snapshot for record detection
 streakRecordCelebrated = false
@@ -95,7 +101,8 @@ focuses the first answer, and starts the timer if enabled.
   `q.country.country`.
 - On correct: `score++`, updates the streak (and best streak), and if timed,
   adds `SCORE_BASE + timeLeft * SCORE_TIME_BONUS` to `points`.
-- On wrong: pushes the question to `missedQuestions`, resets the streak.
+- On wrong: pushes the question to `missedQuestions`, resets the streak, and — in
+  **Infinite** mode — decrements `livesLeft`.
 - Marks all buttons disabled, adds `.correct` / `.wrong` classes.
 - Calls `updateScoreBar()`, `animateStreak()` on a correct answer, and
   `revealNext()`.
@@ -108,13 +115,15 @@ effects no-op when `prefersReducedMotion()` is true, which includes
 [lite mode](../User/Lite-Mode.md).
 
 `handleTimeout()` is the same ending when the timer hits zero, except there is no
-selected answer and the question is always counted as missed.
+selected answer and the question is always counted as missed (and costs a life in
+Infinite mode).
 
 ## 5. Advancing
 
 `revealNext()` shows `#nextBtn` and labels it **Next** or **See Results**
-depending on position. `handleNext()` increments `currentIndex` and either
-renders the next question or `renderResult()`.
+depending on position. `handleNext()` increments `currentIndex`, appends a new
+`randomQuestion()` when in Infinite mode with lives left, then either renders the
+next question or `renderResult()`.
 
 ## 6. Results
 
@@ -124,11 +133,28 @@ renders the next question or `renderResult()`.
 - Time = `(Date.now() - quizStartTime)` formatted `m:ss`.
 - Shows best streak and (timed only) points + time, and the missed count.
 - Buttons: **Retry Missed** (only if anything was missed) and **Play Again**.
+- In Infinite mode the heading reads **Run Over!** and `total` is however many
+  questions the run lasted.
 
 ## 7. Retry
 
 `retryMissed()` maps `missedQuestions` through `buildQuestion(q.country, q.mode)`
 — same prompt modes, new wrong options — and calls `beginQuiz()` again.
+
+## Infinite mode
+
+`infinite` is a `QUIZ_MODES` entry whose prompt always resolves to `flag`
+(`buildQuestion` maps `infinite → flag`). The run is lives-based:
+
+- `beginQuiz()` sets `livesLeft = lives` (the `flag-quiz-lives` setting, 1–10).
+- `buildQuiz()` seeds the list with one `randomQuestion()`; `handleNext()` pushes
+  another after each answer while `livesLeft > 0`, drawing a country at random
+  each time (repeats allowed).
+- A wrong answer or `handleTimeout()` decrements `livesLeft`.
+- When `livesLeft` reaches `0`, `handleNext()` stops appending, `currentIndex`
+  reaches `quizQuestions.length`, and `renderResult()` runs.
+- `scoreBarContent()` swaps the `Question N / total` label for `Question N` and
+  inserts `livesBadge()`, a heart counter (pulsing when only one life is left).
 
 ## Re-rendering
 

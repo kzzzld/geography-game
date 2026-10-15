@@ -665,6 +665,22 @@ body {
 .score-streak svg { width: 1.15rem; height: 1.15rem; transform-origin: 50% 80%; }
 .score-streak.empty { color: var(--text-muted); opacity: 0.5; }
 
+.score-lives {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--error);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.score-lives svg { width: 1.15rem; height: 1.15rem; transform-origin: 50% 60%; }
+
+@keyframes lives-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+.score-lives.low svg { animation: lives-pulse 1s ease-in-out infinite; }
+
 @keyframes streak-breathe {
   0%, 100% { filter: drop-shadow(0 0 2px color-mix(in srgb, var(--accent) 60%, transparent)); }
   50% { filter: drop-shadow(0 0 8px var(--accent)); }
@@ -823,7 +839,8 @@ body {
   .streak-celebration-inner,
   .streak-celebration-ring,
   .streak-celebration-flame,
-  .streak-confetti { animation: none; }
+  .streak-confetti,
+  .score-lives.low svg { animation: none; }
 }
 
 /* ===== Quiz card ===== */

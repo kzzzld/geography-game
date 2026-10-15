@@ -38,7 +38,7 @@ included."* — is shown below it.
 
 ## Pick a game mode
 
-The top bar has five buttons, one per [game mode](Game-Modes.md):
+The top bar has six buttons, one per [game mode](Game-Modes.md):
 
 | Button | Quiz type |
 | --- | --- |
@@ -47,6 +47,7 @@ The top bar has five buttons, one per [game mode](Game-Modes.md):
 | Capital | Show a capital, guess the country |
 | Map | Show a map, guess the country |
 | Mixed | Random mix of the four above |
+| Infinite | Endless flag questions until you run out of lives |
 
 **Flag → Country** is selected by default. Click any button to switch; if a quiz
 is already running, switching restarts it with the new mode.

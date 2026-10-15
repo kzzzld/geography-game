@@ -42,7 +42,7 @@ banner comments. In order:
 | Theme management | Theme registry, apply/load/toggle variant |
 | Font management | Font registry and application |
 | Corner padding / radius | Numeric appearance settings |
-| Questions per quiz / Answer options | Quiz-size settings |
+| Questions per quiz / Answer options / Lives | Quiz-size and Infinite-lives settings |
 | Streak management | Best streak persistence and record detection |
 | Quiz mode management | Mode registry and active mode |
 | Language management | Active language + browser detection |

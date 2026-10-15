@@ -35,8 +35,9 @@ Numbers are clamped to their range as you type.
 | --- | --- | --- | --- |
 | **Questions per quiz** | 5–50 | 20 | Marked **Refresh Needed** — applies to the *next* quiz |
 | **Answer options** | 2–10 | 5 | Marked **Refresh Needed** — applies to the *next* quiz |
+| **Lives** | 1–10 | 3 | Only used by [Infinite](Game-Modes.md#infinite) mode. Marked **Refresh Needed** — applies to the *next* run |
 
-Both show a small **Refresh Needed** note because changing them doesn't rebuild
+These show a small **Refresh Needed** note because changing them doesn't rebuild
 the quiz already on screen; start a new quiz (or switch mode) to apply them.
 
 The answer-option maximum of 10 matches the ten letter labels (`A`–`J`) the game
@@ -59,7 +60,8 @@ top bar. Click it to toggle, and use the number field in its popover to set
 
 The [command line](Command-Line.md) can change most of these too, e.g.
 `:theme nord`, `:font inter`, `:questions 10`, `:corner 24`, `:radius 8`,
-`:options 4`, `:lang tr`, `:variant toggle`, `:lite on`, or `:time 30`.
+`:options 4`, `:lang tr`, `:variant toggle`, `:lite on`, `:lives 5`, or
+`:time 30`.
 
 Related: [Lite Mode](Lite-Mode.md) · [Themes and Fonts](Themes-and-Fonts.md) ·
 [Command Line](Command-Line.md) · [Keyboard Shortcuts](Keyboard-Shortcuts.md)

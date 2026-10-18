@@ -70,8 +70,8 @@ by capital, and on a world map.
   rebranding.
 - Bilingual English + Turkish is first-class, including country and capital
   names.
-- Open source under MIT; contributions are accepted by email only — pull
-  requests are not accepted.
+- Open source under MIT; contributions are accepted as pull requests on
+  GitHub.
 
 ## Evidence on Hand
 

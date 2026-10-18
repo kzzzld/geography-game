@@ -1,8 +1,9 @@
 # Contributing
 
-Thanks for wanting to help. This project accepts patches **by email only** —
-pull requests are not accepted. This page covers code style and how to send a
-patch.
+Thanks for wanting to help. Contributions go through
+[GitHub](https://github.com/kzzzld/geography-game) — open an issue or send a pull
+request. Patches by email are also welcome if you prefer that. This page covers
+code style and the workflow.
 
 ## Ground rules
 
@@ -40,17 +41,24 @@ chore: add untested Docker and Compose setup
 Use `feat`, `fix`, `docs`, `chore`, `refactor`, or `test` as appropriate, and
 write the subject in the imperative mood.
 
-## Sending a patch
+## Submitting a change
 
-Commit your changes, then send them with
+1. Fork the repository and create a branch for your change.
+2. Commit your work (see [Commit messages](#commit-messages)).
+3. Open a pull request against the default branch.
+
+Keep one logical change per pull request, and make sure `npm run build` passes.
+
+### By email instead
+
+If you'd rather not use GitHub, send a patch with
 [`git send-email`](https://git-send-email.io/):
 
 ```bash
-git send-email --to=kzzzl@kzzzl.xyz --subject-prefix="PATCH kzzzl-geography-game" HEAD^
+git send-email --to=kzzzl@kzzzl.xyz --subject-prefix="PATCH geography-game" origin/main..HEAD
 ```
 
-If you'd rather not set up `git send-email`, make a patch file with plain git and
-attach it to an email instead:
+Or make a patch file with plain git and attach it to an email:
 
 ```bash
 git format-patch -1 --stdout > 0001-my-change.patch
@@ -59,12 +67,12 @@ git format-patch -1 --stdout > 0001-my-change.patch
 Send it to **kzzzl@kzzzl.xyz**. The commit subject line becomes the email
 subject.
 
-### Multiple commits
+#### Multiple commits
 
-For a series, let `git send-email` send the range (e.g. `origin/main..HEAD`) and
-it will number the patches. Keep each one buildable and focused.
+For a series, send the range (e.g. `origin/main..HEAD`) with `git send-email`
+and it will number the patches. Keep each one buildable and focused.
 
-## Before you send
+## Before you submit
 
 - `npm run build` succeeds.
 - If you changed `public/data.json`, the JSON is valid and every new entry has

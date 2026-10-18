@@ -2,8 +2,8 @@
 
 This wiki is the long-form documentation for **kzzzl's geography game**. It is a
 set of plain Markdown files wired together with relative links — think of it as
-an [Obsidian](https://obsidian.md/) vault that renders anywhere (Forgejo,
-GitHub, a text editor, `less`). No special tooling is required.
+an [Obsidian](https://obsidian.md/) vault that renders anywhere (GitHub, a text
+editor, `less`). No special tooling is required.
 
 If you just want the short version, read the top-level
 [README](../README.md).
@@ -37,8 +37,7 @@ command line.
 ### 🛠️ [Developer wiki](Developer/README.md)
 
 For contributors. Covers the architecture, the data model, the quiz flow, the
-world-map mode, localization, theming, persistence keys, and how to send a
-patch.
+world-map mode, localization, theming, persistence keys, and how to contribute.
 
 - [Architecture](Developer/Architecture.md)
 - [Project Structure](Developer/Project-Structure.md)

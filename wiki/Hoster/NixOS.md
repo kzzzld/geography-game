@@ -35,7 +35,7 @@ Add the flake as an input and import the module:
 
 ```nix
 {
-  inputs.geography-game.url = "github:kzzzl/geography-game";
+  inputs.geography-game.url = "github:kzzzld/geography-game";
 
   outputs = { nixpkgs, geography-game, ... }: {
     nixosConfigurations.myvps = nixpkgs.lib.nixosSystem {

@@ -135,6 +135,7 @@ building and running the app.
 - Keep commits focused; write imperative, conventional commit subjects
   (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`).
 - Include the doc/wiki updates in the same commit as the code they describe.
-- Patches are accepted **by email only** — see
-  [Developer/Contributing.md](wiki/Developer/Contributing.md). Pull requests are
-  not accepted.
+- Patches and pull requests are welcome — see
+  [Developer/Contributing.md](wiki/Developer/Contributing.md). The canonical
+  repository is on **GitHub** at
+  <https://github.com/kzzzld/geography-game>.

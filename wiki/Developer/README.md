@@ -17,7 +17,7 @@ can read ES modules and a bit of CSS, you can work on this.
 - [Theming](Theming.md) — CSS variables, themes, and light/dark variants
 - [Storage Keys](Storage-Keys.md) — every `localStorage` key
 - [Command Line Internals](Command-Line-Internals.md) — the `:` command parser
-- [Contributing](Contributing.md) — code style and how to send a patch
+- [Contributing](Contributing.md) — code style and how to contribute
 
 ## Quick orientation
 
@@ -33,7 +33,7 @@ can read ES modules and a bit of CSS, you can work on this.
 - No comments in the source unless they clarify something non-obvious.
 - Every user-visible string comes from a locale file (see
   [Localization](Localization.md)).
-- Commit after every logical change. Patches are welcome by email (see
+- Commit after every logical change. Pull requests are welcome on GitHub (see
   [Contributing](Contributing.md)).
 
 Related: [User wiki](../User/README.md) · [Hoster wiki](../Hoster/README.md)

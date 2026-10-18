@@ -2,6 +2,8 @@
 
 A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess the country from its flag, track your score, and customize the look with multiple themes and fonts.
 
+> Source and issue tracker: <https://github.com/kzzzld/geography-game>
+
 ## Features
 
 - 🌍 20-question quizzes (configurable from 5–50) randomly drawn from a pool of 207 countries and territories (recognized, disputed, autonomous, and unrecognized)
@@ -30,6 +32,8 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 ### Installation
 
 ```bash
+git clone https://github.com/kzzzld/geography-game.git
+cd geography-game
 npm install
 ```
 
@@ -191,7 +195,7 @@ nginx bound to `127.0.0.1` (meant to sit behind a reverse proxy):
 
 ```nix
 {
-  inputs.geography-game.url = "github:kzzzl/geography-game";
+  inputs.geography-game.url = "github:kzzzld/geography-game";
 
   outputs = { nixpkgs, geography-game, ... }: {
     nixosConfigurations.myvps = nixpkgs.lib.nixosSystem {
@@ -237,9 +241,11 @@ Example reverse proxy for a public domain:
 
 ## Contributing
 
-Patches are welcome by email only, to **kzzzl@kzzzl.xyz**. Pull requests are not
-accepted. See the [Contributing guide](wiki/Developer/Contributing.md) for code
-style and how to send a patch with `git send-email` or `git format-patch`.
+Contributions are welcome. Open an issue or submit a pull request on
+[GitHub](https://github.com/kzzzld/geography-game). Patches by email to
+**kzzzl@kzzzl.xyz** are also accepted. See the
+[Contributing guide](wiki/Developer/Contributing.md) for code style and the
+workflow.
 
 ## Documentation
 

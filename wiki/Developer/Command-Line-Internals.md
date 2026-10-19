@@ -49,6 +49,7 @@ It then switches on the lowercased `name`. Commands are grouped by alias in the
 | --- | --- |
 | `answer` / `a` | Answers the current question by letter; errors if no question, already answered, or invalid letter |
 | `reset` | Wipes all `localStorage` settings |
+| `daily` | `openDaily()`: starts today's Daily Challenge or shows the stored result |
 | `font` | `findByName(FONTS, arg)` → `applyFont` |
 | `theme` / `color` / `colorscheme` | `findByName(THEMES, arg)` → `applyTheme` |
 | `cmdline` | `findByName(CMDLINE_POSITIONS, arg)` → `applyCmdlinePosition` |
@@ -62,9 +63,11 @@ It then switches on the lowercased `name`. Commands are grouped by alias in the
 | `''` | Empty → do nothing |
 | default | Unknown command error |
 
-After changing something, commands report back through `showCmdMessage(text)`.
-That sets the message text, toggles the `.error` class, and clears it after 3
-seconds. Messages are localized through the `cmd.*` keys.
+`daily` takes no argument: it dispatches straight to `openDaily()` and reports
+through the `cmd.daily` message. After changing something, commands report back
+through `showCmdMessage(text)`. That sets the message text, toggles the `.error`
+class, and clears it after 3 seconds. Messages are localized through the `cmd.*`
+keys.
 
 ### Name matching
 
@@ -87,7 +90,8 @@ This strips accents and punctuation and lowercases, so `Türkçe` matches
 
 `getCompletionItems(text)` returns `{ base, items }`:
 
-- **No space yet** → complete the command name from `COMMAND_NAMES`.
+- **No space yet** → complete the command name from `COMMAND_NAMES`, which
+  includes `daily`, so `:dai` completes to the command.
 - **Command + partial arg** → complete from the relevant registry (fonts,
   themes, positions, modes, languages, `time` values, `variant` values, `lite`
   values, or the available `answer` letters), filtering by `normalizeName`

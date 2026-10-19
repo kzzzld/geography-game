@@ -13,6 +13,7 @@ or bottom from [Settings](Settings.md) (or `:cmdline`).
 | --- | --- | --- |
 | `answer <a–j>` | `a` | Answer the current question with the given letter |
 | `mode <mode>` | `gamemode` | Switch [game mode](Game-Modes.md) (`flag`, `country`, `capital`, `map`, `mixed`, `infinite`) |
+| `daily` | | Start today's [Daily Challenge](Daily-Challenge.md), or show today's result if it's already been played |
 | `theme <name>` | `color`, `colorscheme` | Switch theme |
 | `variant <dark\|light\|toggle>` | | Set or toggle the light/dark palette |
 | `font <name>` | | Switch font |

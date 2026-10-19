@@ -26,6 +26,7 @@ command line.
 
 - [Getting Started](User/Getting-Started.md)
 - [Game Modes](User/Game-Modes.md)
+- [Daily Challenge](User/Daily-Challenge.md)
 - [Playing a Quiz](User/Playing-a-Quiz.md)
 - [Scoring and Streaks](User/Scoring-and-Streaks.md)
 - [Settings](User/Settings.md)

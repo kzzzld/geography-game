@@ -19,6 +19,17 @@ index.html ──imports──▶ main.js ──imports──▶ style.css
    └── #app  ◀── everything is rendered here via innerHTML
 ```
 
+## Module layout
+
+`main.js` is sectioned by `// ===== Name =====` banners. The daily challenge
+added `Quiz timing` (`elapsedSeconds()`, `formatDuration()`), `Daily challenge`
+(`buildDailyQuiz()`, the `flag-quiz-daily-*` persistence, the welcome card,
+`recordDailyRun()`/`renderDailyResult()`) and `Daily share image`
+(`buildDailyShareCanvas()`, `exportDailyImage()`), plus
+`Seeded random (daily challenge)` (`hashSeed()`, `seededRandom()`) beside the
+shuffle helper. The exhaustive, ordered section map is in
+[Project Structure](Project-Structure.md).
+
 ## Rendering model
 
 There is no virtual DOM and no reactivity. The app works by **string templates +

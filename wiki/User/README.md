@@ -6,6 +6,7 @@ Everything a player needs. No prior knowledge assumed.
 
 - [Getting Started](Getting-Started.md) — open the game and play your first round
 - [Game Modes](Game-Modes.md) — the six ways to be quizzed
+- [Daily Challenge](Daily-Challenge.md) — the once-a-day quiz that's the same for everyone
 - [Playing a Quiz](Playing-a-Quiz.md) — what happens from question 1 to the results screen
 - [Scoring and Streaks](Scoring-and-Streaks.md) — how the score, accuracy, points, and streaks work
 - [Settings](Settings.md) — every option in the settings dialog

@@ -33,7 +33,7 @@ What every file in the repository is for.
 
 ## `main.js`
 
-One file, ~1600 lines, organised into sections separated by `// ===== Name =====`
+One file, ~2300 lines, organised into sections separated by `// ===== Name =====`
 banner comments. In order:
 
 | Section | Responsibility |
@@ -49,8 +49,12 @@ banner comments. In order:
 | Lite mode management | `liteMode` state, `applyLiteMode()` / `loadLiteMode()`, `data-lite` attribute |
 | Timer management | Timed-mode enable/seconds |
 | Command line position management | Where `:` appears |
-| Shuffle utility | Fisher–Yates `shuffle()` |
+| Shuffle utility | Fisher–Yates `shuffleWith(arr, rng)` and `shuffle()` |
+| Seeded random (daily challenge) | `hashSeed()` (FNV-1a) and `seededRandom()` (mulberry32) |
 | Build quiz questions | `buildQuestion()`, `buildQuiz()` |
+| Quiz timing | `elapsedSeconds()`, `formatDuration()` |
+| Daily challenge | `buildDailyQuiz()`, `flag-quiz-daily-*` persistence, the welcome card, `renderDailyResult()` |
+| Daily share image | Canvas share card: `buildDailyShareCanvas()`, `exportDailyImage()` |
 | Number input max guard | Clamp `.number-input` values on input |
 | Settings modal | `renderSettingsModal()`, open/close, focus trap |
 | Vim-style command line | `runCommand()` and friends |
@@ -63,7 +67,7 @@ banner comments. In order:
 | Handle next | Advance or finish |
 | Render result | Results screen |
 | Rerender current view | Re-render after language change |
-| Welcome screen | ASCII map + Play |
+| Welcome screen | ASCII map + Daily Challenge card + Play |
 | Start quiz | `beginQuiz()`, `startQuiz()`, `retryMissed()` |
 | Loading screen | Progress, font/map preload, skip |
 | Init | Apply saved settings, fetch data, preload, show welcome |

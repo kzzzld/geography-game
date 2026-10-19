@@ -29,6 +29,9 @@ init() ─▶ showWelcome() ─[Play]─▶ startQuiz()
                               └─ Retry Missed ─▶ retryMissed()
 ```
 
+The welcome card's daily button and `:daily` take a different entry point,
+`openDaily()`; see [Daily challenge](#daily-challenge).
+
 ## 1. Boot
 
 `init()` (last line of `main.js`):
@@ -141,6 +144,81 @@ next question or `renderResult()`.
 `retryMissed()` maps `missedQuestions` through `buildQuestion(q.country, q.mode)`
 — same prompt modes, new wrong options — and calls `beginQuiz()` again.
 
+## Daily challenge
+
+The daily is a fixed variant of the same flow: 20 **Flag → Country** questions,
+5 options, never timed. It is not a `QUIZ_MODES` entry; `openDaily()` decides
+between starting a run and showing today's stored result. The welcome card's
+`#dailyBtn` and the `:daily` command both call it.
+
+### Seeded puzzle
+
+The puzzle comes from the UTC date rather than `Math.random()`:
+
+```
+dailyDateKey()  →  "YYYY-MM-DD" (UTC)
+      │
+      ▼
+hashSeed(dateKey)  →  32-bit FNV-1a
+      │
+      ▼
+seededRandom(seed)  →  mulberry32
+      │
+      ▼
+buildDailyQuiz(dateKey)
+      ├─ shuffleWith(countries, rng)
+      ├─ slice the first DAILY_QUESTIONS (20)
+      └─ buildQuestion(country, 'flag', rng, DAILY_OPTIONS) (5 options)
+```
+
+`dailyDateKey()` is `new Date().toISOString().slice(0, 10)`, so the day rolls
+over at UTC midnight. `buildDailyQuiz()` passes the same `rng` through the
+country shuffle, the wrong-option shuffle, and the option shuffle, so both the
+question order and every option order are deterministic. The fixed
+`DAILY_QUESTIONS` / `DAILY_OPTIONS` constants make the run ignore the
+`questionsPerQuiz` and `optionsCount` settings.
+
+### Deviations from the normal flow
+
+- `openDaily()` calls `startDaily()` only when `dailyResultToday()` has no run
+  for today. Otherwise it clears `dailyDate` and calls `renderDailyResult()`
+  directly on the stored run.
+- `startDaily()` sets `dailyDate = dailyDateKey()`, clears `dailyNewBest`, and
+  calls `beginQuiz(buildDailyQuiz(dailyDate))`.
+- `renderQuestion()` starts the timer only when `timerEnabled && !dailyDate`, so
+  the daily is untimed even with the timer setting on.
+- `handleAnswer()` and `handleTimeout()` push a boolean into `answerLog`. The
+  untimed daily builds its log from `handleAnswer()` alone.
+- `handleNext()` calls `renderDailyResult()` instead of `renderResult()` when
+  `dailyDate` is set and the last question has been answered.
+- `startQuiz()` clears `dailyDate`, so **Play Again** on the daily result starts
+  an ordinary quiz.
+
+`renderDailyResult()` records the run through `recordDailyRun()` when
+`dailyDate` is set. `recordDailyRun()` returns the stored run if one already
+exists for that date; otherwise it builds `{ date, score, total, time, log }`,
+compares it with `flag-quiz-daily-best` using `isBetterDailyRun()` (higher
+score, then faster time), writes the result, and writes the best too when the
+run set a record. That comparison also sets `dailyNewBest`, which selects the
+**New personal best!** line.
+
+### Re-rendering
+
+`rerender()` checks for `#dailyShareBtn` before the normal result and question
+checks, so a language change re-renders the daily result screen in place.
+
+### Share image
+
+`exportDailyImage(run)` builds a 1080×1080 canvas with
+`buildDailyShareCanvas(run)` and downloads it as
+`geography-daily-<date>.png`. The canvas reads the active theme's CSS variables
+(`--bg`, `--bg-card`, `--border`, `--accent`, `--primary`, `--text`,
+`--text-muted`, `--success`, `--error`, and `--font-family`) through
+`getComputedStyle()`, so the card follows the current theme and font. It draws
+the app name, date, score, accuracy, a 10-column grid from `run.log`, the
+personal best, and `location.host`. The status line under the result buttons
+reports the saved or failed state.
+
 ## Infinite mode
 
 `infinite` is a `QUIZ_MODES` entry whose prompt always resolves to `flag`
@@ -160,7 +238,8 @@ next question or `renderResult()`.
 
 `rerender()` keeps the current screen in sync after a language change:
 
-- On welcome / results, it just re-renders them.
+- On welcome, the daily result, or the normal result, it just re-renders them.
+  The daily screen is detected by `#dailyShareBtn`.
 - Mid-question, it re-renders the question and, if you'd already answered,
   restores the correct/wrong highlighting and the Next button.
 
@@ -172,4 +251,4 @@ resumes if the question is still unanswered. The display turns red at ≤ 5
 seconds.
 
 Related: [Map Mode](Map-Mode.md) · [Data Model](Data-Model.md) ·
-[Storage Keys](Storage-Keys.md)
+[Storage Keys](Storage-Keys.md) · [Daily Challenge](../User/Daily-Challenge.md)

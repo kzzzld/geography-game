@@ -3,9 +3,10 @@
 All persistence uses `localStorage` under the `flag-quiz-` prefix. There is no
 server and no cookies, so clearing your browser storage resets the game.
 
-Every key is written by an `apply*` function right after a setting changes, and
-read back by a matching `load*` function at startup. Invalid or out-of-range
-values are clamped or replaced with defaults.
+Setting keys are written by an `apply*` function right after a setting changes,
+and read back by a matching `load*` function at startup. The two daily keys are
+written by `saveDailyRun()` when a daily run finishes. Invalid or out-of-range
+values are clamped, discarded, or replaced with defaults.
 
 ## Keys
 
@@ -27,6 +28,8 @@ values are clamped or replaced with defaults.
 | `flag-quiz-language` | Locale id (`en`, `tr`) | browser-detected | `loadLanguage()` |
 | `flag-quiz-full-names` | `"true"` / `"false"` | `false` | `loadCountryFullNames()` |
 | `flag-quiz-lite-mode` | `"true"` / `"false"` | `false` | `loadLiteMode()` |
+| `flag-quiz-daily-result` | JSON `{ date, score, total, time, log }`; today's finished daily run (`log` is 20 booleans) | unset | `loadDailyRun(DAILY_RESULT_KEY)`, `dailyResultToday()` |
+| `flag-quiz-daily-best` | Same JSON shape; personal best across daily runs | unset | `loadDailyRun(DAILY_BEST_KEY)` |
 
 ## Validation
 
@@ -39,6 +42,10 @@ values are clamped or replaced with defaults.
   `latte` and maps them back to their theme id — see [Theming](Theming.md).
 - **`flag-quiz-best-streak`** must be a finite number greater than zero,
   otherwise `0`.
+- **`flag-quiz-daily-result` / `flag-quiz-daily-best`** are JSON-parsed by
+  `loadDailyRun()`. A run is valid only when `date` matches `YYYY-MM-DD` and
+  `score`, `total`, and `time` are finite numbers; malformed JSON or any other
+  shape returns `null`. Both keys are removed by `resetApp()`.
 
 ## `:reset`
 
@@ -49,6 +56,8 @@ defaults from scratch via `resetApp()`:
 function resetApp() {
   localStorage.removeItem('flag-quiz-theme')
   localStorage.removeItem('flag-quiz-theme-variant')
+  localStorage.removeItem('flag-quiz-daily-result')
+  localStorage.removeItem('flag-quiz-daily-best')
   // … all keys …
   applyStoredTheme()
   applyFont(loadFont())
@@ -58,6 +67,7 @@ function resetApp() {
 ```
 
 Note that after removal the `load*` functions return defaults, so the game is
-fully reset — including the saved best streak.
+fully reset — including the saved best streak and the daily result and best.
 
-Related: [Theming](Theming.md) · [Settings](../User/Settings.md)
+Related: [Theming](Theming.md) · [Settings](../User/Settings.md) ·
+[Daily Challenge](../User/Daily-Challenge.md)

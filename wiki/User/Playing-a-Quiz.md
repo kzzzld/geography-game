@@ -96,6 +96,10 @@ Two buttons are offered:
   anything.
 - **Play Again** — starts a brand-new quiz in the current mode.
 
+The [Daily Challenge](Daily-Challenge.md) is the exception: it ends on its own
+result screen, which includes a grid of the 20 questions and a **Save as image**
+button for exporting a shareable PNG.
+
 ## While you play
 
 - Press `s` (or click the gear) to open [Settings](Settings.md) at any time;

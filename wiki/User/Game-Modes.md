@@ -4,6 +4,10 @@ The game has **six** modes, switchable at any time from the top bar. Each
 question in **Mixed** picks one of the first four at random, so you never know
 what you'll be asked next.
 
+> The [Daily Challenge](Daily-Challenge.md) is separate from these modes: it's a
+> fixed once-a-day quiz, not a mode you can switch to. It always runs as Flag →
+> Country regardless of the mode selected here.
+
 ## Flag → Country
 
 **Mode id:** `flag`

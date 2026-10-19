@@ -177,6 +177,9 @@ let quizStartTime = 0
 let timerId = null
 let timeLeft = 0
 let timerPaused = false
+let answerLog = []
+let dailyDate = null
+let dailyNewBest = false
 
 const app = document.querySelector('#app')
 
@@ -530,20 +533,44 @@ function loadCmdlinePosition() {
 }
 
 // ===== Shuffle utility =====
-function shuffle(arr) {
+function shuffleWith(arr, rng = Math.random) {
   const copy = [...arr]
   for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
+    const j = Math.floor(rng() * (i + 1))
     ;[copy[i], copy[j]] = [copy[j], copy[i]]
   }
   return copy
 }
 
+function shuffle(arr) {
+  return shuffleWith(arr)
+}
+
+// ===== Seeded random (daily challenge) =====
+function hashSeed(str) {
+  let hash = 2166136261
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
+  }
+  return hash >>> 0
+}
+
+function seededRandom(seed) {
+  let state = seed
+  return () => {
+    state = (state + 0x6d2b79f5) | 0
+    let t = Math.imul(state ^ (state >>> 15), 1 | state)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
 // ===== Build quiz questions =====
-function buildQuestion(country, mode = quizMode) {
-  const wrongs = shuffle(countries.filter(c => c.country !== country.country)).slice(0, optionsCount - 1)
-  const options = shuffle([country, ...wrongs])
-  let resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(Math.random() * MIXED_PROMPT_MODES.length)] : mode
+function buildQuestion(country, mode = quizMode, rng = Math.random, optionCount = optionsCount) {
+  const wrongs = shuffleWith(countries.filter(c => c.country !== country.country), rng).slice(0, optionCount - 1)
+  const options = shuffleWith([country, ...wrongs], rng)
+  let resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(rng() * MIXED_PROMPT_MODES.length)] : mode
   if (resolvedMode === 'infinite') resolvedMode = 'flag'
   if (resolvedMode === 'map' && !countryCode(country)) resolvedMode = 'flag'
   return { country, options, mode: resolvedMode }
@@ -559,6 +586,261 @@ function buildQuiz() {
   const shuffled = shuffle(pool)
   const selected = shuffled.slice(0, Math.min(questionsPerQuiz, shuffled.length))
   return selected.map(country => buildQuestion(country))
+}
+
+// ===== Quiz timing =====
+function elapsedSeconds() {
+  return Math.max(0, Math.round((Date.now() - quizStartTime) / 1000))
+}
+
+function formatDuration(seconds) {
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+}
+
+// ===== Daily challenge =====
+const DAILY_QUESTIONS = 20
+const DAILY_OPTIONS = 5
+const DAILY_RESULT_KEY = 'flag-quiz-daily-result'
+const DAILY_BEST_KEY = 'flag-quiz-daily-best'
+
+function dailyDateKey(date = new Date()) {
+  return date.toISOString().slice(0, 10)
+}
+
+function formatDailyDate(dateKey) {
+  const [year, month, day] = dateKey.split('-').map(Number)
+  return new Intl.DateTimeFormat(language, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+    .format(new Date(Date.UTC(year, month - 1, day)))
+}
+
+function buildDailyQuiz(dateKey) {
+  const rng = seededRandom(hashSeed(dateKey))
+  return shuffleWith(countries, rng)
+    .slice(0, Math.min(DAILY_QUESTIONS, countries.length))
+    .map(country => buildQuestion(country, 'flag', rng, DAILY_OPTIONS))
+}
+
+function loadDailyRun(key) {
+  try {
+    const run = JSON.parse(localStorage.getItem(key) || 'null')
+    const valid = run && /^\d{4}-\d{2}-\d{2}$/.test(run.date) &&
+      Number.isFinite(run.score) && Number.isFinite(run.total) && Number.isFinite(run.time)
+    return valid ? run : null
+  } catch {
+    return null
+  }
+}
+
+function saveDailyRun(key, run) {
+  localStorage.setItem(key, JSON.stringify(run))
+}
+
+function dailyResultToday() {
+  const run = loadDailyRun(DAILY_RESULT_KEY)
+  return run && run.date === dailyDateKey() ? run : null
+}
+
+function isBetterDailyRun(run, best) {
+  if (!best) return true
+  if (run.score !== best.score) return run.score > best.score
+  return run.time < best.time
+}
+
+function startDaily() {
+  dailyDate = dailyDateKey()
+  dailyNewBest = false
+  beginQuiz(buildDailyQuiz(dailyDate))
+}
+
+function openDaily() {
+  if (dailyResultToday()) {
+    dailyDate = null
+    renderDailyResult()
+    return
+  }
+  startDaily()
+}
+
+function recordDailyRun() {
+  const stored = loadDailyRun(DAILY_RESULT_KEY)
+  if (stored && stored.date === dailyDate) return stored
+  const run = { date: dailyDate, score, total: quizQuestions.length, time: elapsedSeconds(), log: [...answerLog] }
+  dailyNewBest = isBetterDailyRun(run, loadDailyRun(DAILY_BEST_KEY))
+  saveDailyRun(DAILY_RESULT_KEY, run)
+  if (dailyNewBest) saveDailyRun(DAILY_BEST_KEY, run)
+  return run
+}
+
+function dailyPercent(run) {
+  return run.total ? Math.round((run.score / run.total) * 100) : 0
+}
+
+function dailyBestLine(run) {
+  return t('daily.bestDate', {
+    score: run.score,
+    total: run.total,
+    time: formatDuration(run.time),
+    date: formatDailyDate(run.date),
+  })
+}
+
+function dailyGrid(log) {
+  return log.map((ok, i) => `<span class="daily-cell ${ok ? 'correct' : 'wrong'}" title="${t('daily.cellLabel', { n: i + 1, result: t(ok ? 'daily.correct' : 'daily.wrong') })}"></span>`).join('')
+}
+
+function renderDailyCard() {
+  const run = dailyResultToday()
+  const best = loadDailyRun(DAILY_BEST_KEY)
+  return `
+    <div class="daily-card" id="dailyCard">
+      <div class="daily-head">
+        <span class="daily-title">${t('daily.title')}</span>
+        <span class="daily-date">${formatDailyDate(dailyDateKey())}</span>
+      </div>
+      <p class="daily-status">${run
+        ? t('daily.finished', { score: run.score, total: run.total, percent: dailyPercent(run) })
+        : t('daily.pending')}</p>
+      ${best ? `<p class="daily-best">${dailyBestLine(best)}</p>` : ''}
+      <button class="daily-btn" id="dailyBtn">${t(run ? 'daily.view' : 'daily.play')}</button>
+    </div>
+  `
+}
+
+function renderDailyResult() {
+  const run = dailyDate ? recordDailyRun() : loadDailyRun(DAILY_RESULT_KEY)
+  if (!run) return showWelcome()
+  const best = loadDailyRun(DAILY_BEST_KEY)
+
+  app.innerHTML = `
+    ${renderHeader()}
+    <div class="quiz-card result-card daily-result-card">
+      <span class="daily-badge">${t('daily.title')}</span>
+      <h2>${t('daily.complete')}</h2>
+      <p class="daily-date">${formatDailyDate(run.date)}</p>
+      <p class="score-text">${t('result.youScored')}</p>
+      <div class="final-score">${run.score} / ${run.total}</div>
+      <p class="result-meta result-accuracy">${t('result.accuracy', { percent: dailyPercent(run) })}</p>
+      <div class="daily-grid" role="img" aria-label="${t('daily.gridAria', { correct: run.score, total: run.total })}">${dailyGrid(run.log || [])}</div>
+      <p class="result-meta">${t('daily.time', { time: formatDuration(run.time) })}</p>
+      ${dailyNewBest
+        ? `<p class="result-meta daily-new-best">${t('daily.newBest')}</p>`
+        : best ? `<p class="result-meta result-streak">${dailyBestLine(best)}</p>` : ''}
+      <div class="result-actions">
+        <button class="restart-btn" id="dailyShareBtn">${t('daily.save')}</button>
+        <button class="restart-btn retry-btn" id="restartBtn">${t('result.playAgain')}</button>
+      </div>
+      <p class="daily-share-status" id="dailyShareStatus" role="status" aria-live="polite"></p>
+    </div>
+  `
+  document.querySelector('#dailyShareBtn').addEventListener('click', () => exportDailyImage(run))
+  document.querySelector('#restartBtn').addEventListener('click', startQuiz)
+  bindHeaderControls()
+}
+
+// ===== Daily share image =====
+const SHARE_SIZE = 1080
+const SHARE_LOG_COLUMNS = 10
+
+function themeColor(name, fallback) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+}
+
+function shareRoundedRect(ctx, x, y, w, h, r, fill) {
+  ctx.beginPath()
+  if (ctx.roundRect) ctx.roundRect(x, y, w, h, r)
+  else ctx.rect(x, y, w, h)
+  ctx.fillStyle = fill
+  ctx.fill()
+}
+
+function shareText(ctx, text, x, y, { size, weight = 400, color, family, maxWidth }) {
+  let px = size
+  ctx.font = `${weight} ${px}px ${family}`
+  while (px > 16 && ctx.measureText(text).width > maxWidth) {
+    px -= 4
+    ctx.font = `${weight} ${px}px ${family}`
+  }
+  ctx.fillStyle = color
+  ctx.textAlign = 'center'
+  ctx.fillText(text, x, y)
+}
+
+function drawShareGrid(ctx, log, x, y, colors) {
+  const cell = 72
+  const gap = 10
+  log.forEach((ok, i) => {
+    const row = Math.floor(i / SHARE_LOG_COLUMNS)
+    const column = i % SHARE_LOG_COLUMNS
+    const rowLength = Math.min(SHARE_LOG_COLUMNS, log.length - row * SHARE_LOG_COLUMNS)
+    const offset = x - (rowLength * cell + (rowLength - 1) * gap) / 2 + column * (cell + gap)
+    shareRoundedRect(ctx, offset, y + row * (cell + gap), cell, cell, 12, ok ? colors.success : colors.error)
+  })
+}
+
+function buildDailyShareCanvas(run) {
+  const canvas = document.createElement('canvas')
+  canvas.width = SHARE_SIZE
+  canvas.height = SHARE_SIZE
+  const ctx = canvas.getContext('2d')
+  const family = themeColor('--font-family', 'monospace')
+  const colors = {
+    border: themeColor('--border', '#3b4261'),
+    success: themeColor('--success', '#9ece6a'),
+    error: themeColor('--error', '#f7768e'),
+  }
+  const mid = SHARE_SIZE / 2
+  const wide = SHARE_SIZE - 240
+
+  ctx.fillStyle = themeColor('--bg', '#1a1b26')
+  ctx.fillRect(0, 0, SHARE_SIZE, SHARE_SIZE)
+  shareRoundedRect(ctx, 48, 48, SHARE_SIZE - 96, SHARE_SIZE - 96, 48, themeColor('--bg-card', '#24283b'))
+  ctx.beginPath()
+  if (ctx.roundRect) ctx.roundRect(48, 48, SHARE_SIZE - 96, SHARE_SIZE - 96, 48)
+  else ctx.rect(48, 48, SHARE_SIZE - 96, SHARE_SIZE - 96)
+  ctx.strokeStyle = colors.border
+  ctx.lineWidth = 3
+  ctx.stroke()
+
+  shareText(ctx, t('app.logo'), mid, 170, { size: 30, color: themeColor('--text-muted', '#969dbd'), family, maxWidth: wide })
+  shareText(ctx, t('daily.title'), mid, 252, { size: 56, weight: 700, color: themeColor('--accent', '#bb9af7'), family, maxWidth: wide })
+  shareText(ctx, formatDailyDate(run.date), mid, 314, { size: 30, color: themeColor('--text-muted', '#969dbd'), family, maxWidth: wide })
+  shareText(ctx, `${run.score} / ${run.total}`, mid, 500, { size: 150, weight: 700, color: themeColor('--primary', '#7aa2f7'), family, maxWidth: wide })
+  shareText(ctx, t('result.accuracy', { percent: dailyPercent(run) }), mid, 574, { size: 44, weight: 600, color: themeColor('--text', '#c0caf5'), family, maxWidth: wide })
+
+  drawShareGrid(ctx, run.log || [], mid, 660, colors)
+
+  const best = loadDailyRun(DAILY_BEST_KEY)
+  if (best) shareText(ctx, dailyBestLine(best), mid, 900, { size: 32, color: themeColor('--text-muted', '#969dbd'), family, maxWidth: wide })
+  shareText(ctx, location.host, mid, 972, { size: 26, color: themeColor('--text-muted', '#969dbd'), family, maxWidth: wide })
+  return canvas
+}
+
+function showDailyShareStatus(text, isError = false) {
+  const el = document.querySelector('#dailyShareStatus')
+  if (!el) return
+  el.textContent = text
+  el.classList.toggle('error', isError)
+}
+
+function exportDailyImage(run) {
+  let canvas
+  try {
+    canvas = buildDailyShareCanvas(run)
+  } catch {
+    return showDailyShareStatus(t('daily.saveFailed'), true)
+  }
+  canvas.toBlob(blob => {
+    if (!blob) return showDailyShareStatus(t('daily.saveFailed'), true)
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `geography-daily-${run.date}.png`
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    setTimeout(() => URL.revokeObjectURL(url), 10000)
+    showDailyShareStatus(t('daily.saved'))
+  }, 'image/png')
 }
 
 // ===== Number input max guard =====
@@ -1026,6 +1308,9 @@ function resetApp() {
   localStorage.removeItem('flag-quiz-language')
   localStorage.removeItem('flag-quiz-full-names')
   localStorage.removeItem('flag-quiz-lite-mode')
+  localStorage.removeItem('flag-quiz-daily-result')
+  localStorage.removeItem('flag-quiz-daily-best')
+  dailyDate = null
   applyLiteMode(loadLiteMode())
   applyStoredTheme()
   applyFont(loadFont())
@@ -1064,6 +1349,9 @@ function runCommand(raw) {
     case 'reset':
       resetApp()
       return showCmdMessage(t('cmd.appReset'))
+    case 'daily':
+      openDaily()
+      return showCmdMessage(t('cmd.daily'))
     case 'font': {
       const font = findByName(FONTS, arg)
       if (!font) return showCmdMessage(t('cmd.invalidFont'), true)
@@ -1196,7 +1484,7 @@ function runCommand(raw) {
 }
 
 // ===== Tab completion =====
-const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'font', 'gamemode', 'lang', 'language', 'lite', 'lives', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
+const COMMAND_NAMES = ['answer', 'cmdline', 'color', 'colorscheme', 'corner', 'daily', 'font', 'gamemode', 'lang', 'language', 'lite', 'lives', 'mode', 'options', 'questions', 'radius', 'reset', 'theme', 'time', 'variant']
 let completion = null
 
 function getCompletionItems(text) {
@@ -1509,7 +1797,7 @@ function setTimerEnabled(enabled) {
   syncTimerToggle()
   if (enabled) {
     updateScoreBar()
-    if (!answered && !isSettingsOpen() && document.querySelector('.answer-btn')) startTimer()
+    if (!answered && !isSettingsOpen() && !dailyDate && document.querySelector('.answer-btn')) startTimer()
   } else {
     stopTimer()
     updateScoreBar()
@@ -1558,6 +1846,7 @@ function handleTimeout() {
   lastSelected = null
   const q = quizQuestions[currentIndex]
   missedQuestions.push(q)
+  answerLog.push(false)
   resetStreak()
   if (quizMode === 'infinite') livesLeft = Math.max(0, livesLeft - 1)
   document.querySelectorAll('.answer-btn').forEach(b => {
@@ -1657,9 +1946,10 @@ function celebrateStreak(streak) {
 
 function scoreBarContent() {
   const infinite = quizMode === 'infinite'
+  const timed = timerEnabled && !dailyDate
   return `
     <span class="score-text">${infinite ? t('quiz.question', { current: currentIndex + 1 }) : t('quiz.questionOf', { current: currentIndex + 1, total: quizQuestions.length })}</span>
-    ${timerEnabled ? `<span class="score-timer${timeLeft <= 5 ? ' low' : ''}" id="scoreTimer" role="timer">${timeLeft}</span>` : ''}
+    ${timed ? `<span class="score-timer${timeLeft <= 5 ? ' low' : ''}" id="scoreTimer" role="timer">${timeLeft}</span>` : ''}
     ${infinite ? livesBadge() : ''}
     ${streakBadge()}
     <span><span class="score-value">${score}</span><span class="score-divider"> / </span><span class="score-text">${currentIndex + (answered ? 1 : 0)}</span></span>
@@ -1777,7 +2067,7 @@ function renderQuestion() {
   bindHeaderControls()
   hydrateWorldMap()
   document.querySelector('.answer-btn')?.focus()
-  if (timerEnabled) startTimer()
+  if (timerEnabled && !dailyDate) startTimer()
 }
 
 // ===== Handle answer selection =====
@@ -1790,6 +2080,7 @@ function handleAnswer(btn) {
   const selectedCountry = btn.dataset.country
   const isCorrect = selectedCountry === q.country.country
   lastSelected = selectedCountry
+  answerLog.push(isCorrect)
 
   let streakRecord = false
   if (isCorrect) {
@@ -1824,6 +2115,8 @@ function handleNext() {
   if (quizMode === 'infinite' && livesLeft > 0) quizQuestions.push(randomQuestion())
   if (currentIndex < quizQuestions.length) {
     renderQuestion()
+  } else if (dailyDate) {
+    renderDailyResult()
   } else {
     renderResult()
   }
@@ -1834,8 +2127,7 @@ function renderResult() {
   stopTimer()
   const total = quizQuestions.length
   const accuracy = total ? Math.round((score / total) * 100) : 0
-  const elapsed = Math.max(0, Math.round((Date.now() - quizStartTime) / 1000))
-  const timeStr = `${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`
+  const timeStr = formatDuration(elapsedSeconds())
 
   app.innerHTML = `
     ${renderHeader()}
@@ -1861,6 +2153,7 @@ function renderResult() {
 // ===== Rerender current view (e.g. after language change) =====
 function rerender() {
   if (document.querySelector('#playBtn')) return showWelcome()
+  if (document.querySelector('#dailyShareBtn')) return renderDailyResult()
   if (document.querySelector('#restartBtn')) return renderResult()
   if (!document.querySelector('.answer-btn')) return showWelcome()
 
@@ -1892,6 +2185,7 @@ function renderWelcome() {
       <p class="welcome-credit">Map (C) 1998 Matthew Thomas. Freely usable if this line is included.</p>
       <p class="welcome-text">${t('welcome.tagline')}</p>
       <p class="welcome-text welcome-hint">${t('welcome.hint')}</p>
+      ${renderDailyCard()}
       <button class="play-btn" id="playBtn">${t('welcome.play')}</button>
     </div>
   `
@@ -1902,6 +2196,7 @@ function showWelcome() {
   app.innerHTML = renderWelcome()
   bindHeaderControls()
   document.querySelector('#playBtn').addEventListener('click', startQuiz)
+  document.querySelector('#dailyBtn').addEventListener('click', openDaily)
   document.querySelector('#playBtn').focus()
 }
 
@@ -1910,6 +2205,7 @@ function beginQuiz(questions) {
   stopTimer()
   quizQuestions = questions
   missedQuestions = []
+  answerLog = []
   currentIndex = 0
   score = 0
   points = 0
@@ -1924,6 +2220,7 @@ function beginQuiz(questions) {
 }
 
 function startQuiz() {
+  dailyDate = null
   beginQuiz(buildQuiz())
 }
 

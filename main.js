@@ -1843,7 +1843,7 @@ function renderResult() {
       <h2>${quizMode === 'infinite' ? t('result.infiniteTitle') : t('result.complete')}</h2>
       <p class="score-text">${t('result.youScored')}</p>
       <div class="final-score">${score} / ${total}</div>
-      <p class="result-meta">${t('result.accuracy', { percent: accuracy })}</p>
+      <p class="result-meta result-accuracy">${t('result.accuracy', { percent: accuracy })}</p>
       ${bestStreak > 0 ? `<p class="result-meta result-streak">${t('result.bestStreak', { count: bestStreak })}</p>` : ''}
       ${timerEnabled ? `<p class="result-meta">${t('result.points', { points, time: timeStr })}</p>` : ''}
       ${missedQuestions.length ? `<p class="result-meta result-missed">${t('result.missed', { count: missedQuestions.length })}</p>` : ''}

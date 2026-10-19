@@ -1005,6 +1005,11 @@ body {
   font-size: 0.95rem;
   margin-bottom: 0.25rem;
 }
+.result-card .result-accuracy {
+  color: var(--text);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
 .result-card .restart-btn {
   margin-top: 1.5rem;
   background: var(--primary);
@@ -1274,6 +1279,7 @@ body {
   .result-card { padding: 2rem 1.25rem; }
   .result-card h2 { font-size: 1.6rem; }
   .result-card .final-score { font-size: 2.25rem; }
+  .result-card .result-accuracy { font-size: 1.25rem; }
 
   .welcome-card { padding: 2rem 1.25rem; }
   .welcome-ascii { font-size: clamp(0.3rem, 1.4vw, 0.7rem); }

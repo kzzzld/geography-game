@@ -8,7 +8,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 
 - 🌍 20-question quizzes (configurable from 5–50) randomly drawn from a pool of 207 countries and territories (recognized, disputed, autonomous, and unrecognized)
 - 🎯 5 multiple-choice options per question, shuffled each round
-- 🔀 Six game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, Map → Country, Mixed, and Infinite (endless flag questions that re-ask countries until you run out of lives)
+- 🔀 Seven game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, Name in Law → Country (the country's official long-form name in its own language), Map → Country, Mixed, and Infinite (endless flag questions that re-ask countries until you run out of lives)
 - 📅 **Daily Challenge** — once a day, a fixed 20-question Flag → Country quiz that's the same for everyone (seeded from the UTC date), with a personal-best record and a **Save as image** button that exports your result as a shareable PNG
 - ❤️ Configurable lives (1–10, default 3) for Infinite mode, shown as a heart counter next to the streak flame
 - 🌐 English and Turkish translations, including country and capital names
@@ -118,13 +118,14 @@ simply stay in English.
 Edit `public/data.json`. Each entry follows this shape:
 
 ```json
-{ "country": "Japan", "flag": "https://flagcdn.com/w320/jp.png", "type": "recognized", "capital": "Tokyo" }
+{ "country": "Japan", "flag": "https://flagcdn.com/w320/jp.png", "type": "recognized", "capital": "Tokyo", "native": "日本国" }
 ```
 
 - `country` — display name shown as an answer option
 - `flag` — URL to the flag image
 - `type` — classification (`recognized`, `disputed`, `autonomous`, `unrecognized`) — informational, not currently used to filter quizzes
 - `capital` — capital city name, used as the prompt in Capital → Country mode
+- `native` — the country's official long-form name in its own language, used as the prompt in Name in Law → Country mode
 
 > **Map mode:** The country is identified by the two-letter code in its flag URL
 > (`flagcdn.com/w320/<code>.png`) and located on a world map

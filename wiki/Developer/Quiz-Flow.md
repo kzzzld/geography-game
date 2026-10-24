@@ -85,6 +85,7 @@ when you beat it *during this quiz* and celebrate once.
 | --- | --- |
 | `flag` | `<img>` of the flag |
 | `capital` | "Capital of" + translated capital name |
+| `law` | "Name in law" + the entry's `native` name, with `dir="auto"` so RTL scripts render right-to-left |
 | `map` | An empty `.world-map` div, hydrated asynchronously |
 | anything else (`country`) | The country name |
 

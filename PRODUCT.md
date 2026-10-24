@@ -20,18 +20,20 @@ mode, and self-hosters/tinkerers who run the static build themselves.
 ## Product Purpose
 
 A fast, minimal flag-guessing quiz: guess the country from its flag (and from
-capitals and the map), track score and streak, and finish on a results screen
-with the option to retry missed questions. Success means a quiz that starts
+capitals, the map, and the name in its own law), track score and streak, and
+finish on a results screen with the option to retry missed questions. Success
+means a quiz that starts
 instantly, plays without friction, and is worth replaying.
 
 ## Positioning
 
 One country pool of 207 recognized, disputed, autonomous, and unrecognized
-territories drives six distinct game modes — Flag → Country, Country → Flag,
-Capital → Country, Map → Country, Mixed, and Infinite (an endless, lives-based
-run) — rather than a single flag-to-name game. Neighboring flag quizzes stop at
-UN members and one mode; this one asks the same pool to be recognized by flag,
-by capital, and on a world map.
+territories drives seven distinct game modes — Flag → Country, Country → Flag,
+Capital → Country, Name in Law → Country, Map → Country, Mixed, and Infinite (an
+endless, lives-based run) — rather than a single flag-to-name game. Neighboring
+flag quizzes stop at UN members and one mode; this one asks the same pool to be
+recognized by flag, by capital, by the name written in its own law, and on a
+world map.
 
 ## Operating Context
 
@@ -47,7 +49,7 @@ by capital, and on a world map.
 
 ## Capabilities and Constraints
 
-- 6 modes, 5 multiple-choice options per question, configurable quiz length
+- 7 modes, 5 multiple-choice options per question, configurable quiz length
   (5–50, default 20), live score, streak with all-time best, retry-missed.
 - Infinite mode is endless and lives-based (1–10 lives, default 3); each wrong
   answer costs a life and ends the run at zero.

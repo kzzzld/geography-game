@@ -96,6 +96,10 @@ map and finally to the short name — so a locale without an `official` entry st
 shows the English long form. The official names are data, not UI strings, so they
 live in the locale files alongside the other name maps.
 
+The `native` name used by **Name in Law → Country** is the one name that is
+*not* localizable: it's the country's own-language legal name, identical in
+every UI language, so it lives in `data.json` and no locale map is involved.
+
 ## Adding a language
 
 1. Copy `locales/en.json` to `locales/<code>.json`.

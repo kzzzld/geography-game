@@ -10,7 +10,8 @@ database, no schema file, and no build step that transforms it.
   "country": "Japan",
   "flag": "https://flagcdn.com/w320/jp.png",
   "type": "recognized",
-  "capital": "Tokyo"
+  "capital": "Tokyo",
+  "native": "日本国"
 }
 ```
 
@@ -20,9 +21,17 @@ database, no schema file, and no build step that transforms it.
 | `flag` | string | Flag image URL. The two-letter code in `flagcdn.com/w320/<code>.png` is what [Map mode](Map-Mode.md) uses to find the country on the map. |
 | `type` | string | Classification: `recognized`, `disputed`, `autonomous`, or `unrecognized`. Informational only — not used to filter or score. |
 | `capital` | string | Capital city; the prompt in Capital → Country mode. |
+| `native` | string | The country's official long-form name in its own language; the prompt in Name in Law → Country mode. Not localized — the same string is used for every UI language. |
+
+`native` values come from Wikidata's *official name* statements (P1448) and the
+native-name field of each country's Wikipedia infobox; where a country names
+itself in several official languages, the entry holds the name in its primary
+one. Arabic-script names are stored without vowel diacritics.
 
 Currently `data.json` holds **207 entries** with **201 unique flag codes**, so a
-few codes repeat (e.g. shared or duplicate flags). Every entry has a `capital`.
+few codes repeat (e.g. shared or duplicate flags). Every entry has a `capital`
+and a `native` name, so no entry is skipped in Capital → Country or Name in Law
+→ Country mode.
 
 ### `type` distribution
 
@@ -63,9 +72,10 @@ Questions are **not** stored in `data.json` — they're built in memory by
   ```
 
 - `mode` is resolved at build time. For a normal mode it's just that mode; for
-  **Mixed** it's randomly chosen from `['flag', 'country', 'capital', 'map']`.
-  If that choice is `map` but the country has no map code, it falls back to
-  `flag`.
+  **Mixed** it's randomly chosen from
+  `['flag', 'country', 'capital', 'law', 'map']`. If that choice is `map` but
+  the country has no map code — or `law` but the entry has no `native` name — it
+  falls back to `flag`.
 
 ## Building a quiz
 
@@ -93,9 +103,10 @@ prompt mode but generates **fresh** wrong options and reshuffles them.
 
 Edit `public/data.json` directly. Keep the fields exact — `country` is used as
 the answer key and as the lookup into locale `countries`/`capitals` maps, so
-renaming a country means updating every locale that translates it. See
-[Localization](Localization.md) and the root README's "Adding or Editing
-Countries".
+renaming a country means updating every locale that translates it. `native` is
+the exception: it's the country's own-language name, so it lives here and never
+in a locale file. See [Localization](Localization.md) and the root README's
+"Adding or Editing Countries".
 
 Related: [Quiz Flow](Quiz-Flow.md) · [Map Mode](Map-Mode.md) ·
 [Localization](Localization.md)

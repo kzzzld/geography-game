@@ -1,7 +1,7 @@
 # Game Modes
 
-The game has **six** modes, switchable at any time from the top bar. Each
-question in **Mixed** picks one of the first four at random, so you never know
+The game has **seven** modes, switchable at any time from the top bar. Each
+question in **Mixed** picks one of the first five at random, so you never know
 what you'll be asked next.
 
 > The [Daily Challenge](Daily-Challenge.md) is separate from these modes: it's a
@@ -37,6 +37,30 @@ translated equivalent). Pick the country whose capital it is.
 - Capital names are translated when a locale provides a `capitals` map.
 - If a language doesn't translate a given capital, the English name is used.
 
+## Name in Law → Country
+
+**Mode id:** `law`
+
+The prompt is a country's **official long-form name written in its own
+language**, shown under the label **"Name in law"** (or its translated
+equivalent). Pick the country it belongs to.
+
+- Examples: *日本国* (Japan), *Schweizerische Eidgenossenschaft* (Switzerland),
+  *Republik Indonesia* (Indonesia), *المملكة المغربية* (Morocco).
+- The names live in the `native` field of [`public/data.json`](../Developer/Data-Model.md),
+  one per entry, and are never translated — the answers stay in the selected
+  language, only the prompt is in the country's own.
+- The name shown is the one the country's own law uses, in its primary official
+  language. Where a country has more than one official language, the
+  most widely used one is picked (Dutch for Belgium, German for Switzerland,
+  Sinhala for Sri Lanka); territories whose legal language is a former colonial
+  one are shown in that language.
+- Prompts may be in non-Latin scripts and right-to-left languages; the prompt
+  element sets `dir="auto"` so Arabic, Hebrew, and Persian names render in the
+  right direction.
+- Country names are long and multilingual, so glyphs outside Latin may render
+  with the system fallback font rather than the selected app font.
+
 ## Map → Country
 
 **Mode id:** `map`
@@ -66,10 +90,10 @@ See [Map Mode](../Developer/Map-Mode.md) in the Developer wiki for internals.
 **Mode id:** `mixed`
 
 Each question independently resolves to one of **Flag**, **Country**,
-**Capital**, or **Map**. A single quiz can therefore contain all four prompt
-types.
+**Capital**, **Name in Law**, or **Map**. A single quiz can therefore contain
+all five prompt types.
 
-Because Country → Flag is one of the four, some Mixed questions present the
+Because Country → Flag is one of the five, some Mixed questions present the
 answers as flag images instead of text.
 
 ## Infinite

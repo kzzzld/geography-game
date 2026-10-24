@@ -124,12 +124,13 @@ const QUIZ_MODES = [
   { id: 'flag', label: 'Flag → Country', short: 'Flag' },
   { id: 'country', label: 'Country → Flag', short: 'Country' },
   { id: 'capital', label: 'Capital → Country', short: 'Capital' },
+  { id: 'law', label: 'Name in Law → Country', short: 'In Law' },
   { id: 'map', label: 'Map → Country', short: 'Map' },
   { id: 'mixed', label: 'Mixed', short: 'Mixed' },
   { id: 'infinite', label: 'Infinite', short: 'Infinite' },
 ]
 
-const MIXED_PROMPT_MODES = ['flag', 'country', 'capital', 'map']
+const MIXED_PROMPT_MODES = ['flag', 'country', 'capital', 'law', 'map']
 
 const WELCOME_ASCII = [
   "-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----",
@@ -573,6 +574,7 @@ function buildQuestion(country, mode = quizMode, rng = Math.random, optionCount 
   let resolvedMode = mode === 'mixed' ? MIXED_PROMPT_MODES[Math.floor(rng() * MIXED_PROMPT_MODES.length)] : mode
   if (resolvedMode === 'infinite') resolvedMode = 'flag'
   if (resolvedMode === 'map' && !countryCode(country)) resolvedMode = 'flag'
+  if (resolvedMode === 'law' && !country.native) resolvedMode = 'flag'
   return { country, options, mode: resolvedMode }
 }
 
@@ -2024,6 +2026,9 @@ function renderQuestion() {
     prompt = `<img class="flag-img" src="${q.country.flag}" alt="${t('quiz.flagAlt')}" />`
   } else if (q.mode === 'capital') {
     prompt = `<div class="prompt-hint">${t('quiz.capitalOf')}</div><div class="prompt-country">${capitalName(q.country.capital)}</div>`
+    promptClass = ' country-prompt'
+  } else if (q.mode === 'law') {
+    prompt = `<div class="prompt-hint">${t('quiz.nameInLaw')}</div><div class="prompt-country" dir="auto">${q.country.native}</div>`
     promptClass = ' country-prompt'
   } else if (q.mode === 'map') {
     prompt = `<div class="world-map" role="img" aria-label="${t('quiz.mapAlt')}" data-code="${countryCode(q.country)}"></div>`

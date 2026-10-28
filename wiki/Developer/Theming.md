@@ -189,3 +189,8 @@ attributes and 44-pixel touch targets. The taller photo stage contains a
 responsive map thumbnail; its expand/shrink control resizes the same Leaflet
 instance and calls `invalidateSize()`. Sizing changes have no transitions,
 including in lite mode.
+
+Photo credits use a native `details` disclosure with a themed information icon.
+It starts collapsed and closes on photo changes to avoid location spoilers
+from contributor names. Attribution remains accessible on demand; map attribution
+stays visible. The disclosure adds no animation or extra network requests.

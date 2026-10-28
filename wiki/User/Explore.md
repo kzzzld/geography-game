@@ -56,8 +56,10 @@ subsequently disappear or become unavailable. Five starts are sampled randomly
 for each run; locations can still repeat between separate runs.
 
 Photos and metadata come anonymously from [Panoramax](https://panoramax.fr/).
-Photographer, original source, and licence links remain below each photo; follow
-those links for reuse terms. Location names, capture details, and coordinates
+The information icon below the photo opens its photographer, original source,
+and licence credits. These details can reveal the location (for example a
+municipal photographer named “City of …”), so they start collapsed and close
+when the photo changes. Follow the credit links for reuse terms. Location names, capture details, and coordinates
 are hidden during play, but the browser receives them. This is a casual game,
 without cheat prevention. The map uses [OpenStreetMap](https://www.openstreetmap.org/copyright)
 raster tiles with visible attribution. These services receive normal browser

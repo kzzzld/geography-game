@@ -28,6 +28,7 @@ const ICONS = {
   spawn: '<path d="M3 11 12 3l9 8M5 10v11h14V10M9 21v-7h6v7"/>',
   map: '<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
   collapse: '<path d="M3 8h5V3m8 0v5h5M8 21v-5H3m18 0h-5v5"/>',
+  credits: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/>',
   street: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
   flat: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1"/><path d="m3 17 5-5 4 4 4-6 5 7"/>',
   exit: '<path d="M9 4H4v16h5m5-13 5 5-5 5M8 12h12"/>',
@@ -59,7 +60,10 @@ export function mountExplore(root, { t, isLite, exit }) {
         ${iconButton('map', 'class="explore-map-toggle" aria-expanded="false"')}
       </div>
     </div>
-    <div class="explore-credit"></div>
+    <details class="explore-attribution">
+      <summary title="${t('explore.credits')}" aria-label="${t('explore.credits')}">${icon('credits')}</summary>
+      <div class="explore-credit"></div>
+    </details>
     <p class="explore-status" role="status" aria-live="polite"></p>
     <div class="explore-toolbar">${iconButton('guess', 'disabled')}${iconButton('continue', 'hidden')}${iconButton('retry', 'hidden')}</div>
     <ol data-results></ol></section>`
@@ -124,6 +128,7 @@ export function mountExplore(root, { t, isLite, exit }) {
     controls()
   }
   function attribution() {
+    el('.explore-attribution').open = false
     const host = el('.explore-credit')
     host.replaceChildren(document.createTextNode(`${(photo.providers || []).map(p => p.name).join(', ')} · `))
     for (const [label, href] of [['Panoramax', photo.links?.find(l => l.rel === 'via')?.href || 'https://panoramax.fr'], [photo.properties.license || t('explore.license'), photo.links?.find(l => l.rel === 'license')?.href]]) {
@@ -276,6 +281,8 @@ export function mountExplore(root, { t, isLite, exit }) {
         button(key).title = label
         button(key).setAttribute('aria-label', label)
       }
+      el('.explore-attribution summary').title = t('explore.credits')
+      el('.explore-attribution summary').setAttribute('aria-label', t('explore.credits'))
       el('h2').textContent = t('mode.explore')
       el('[data-instructions]').textContent = t('explore.instructions')
       renderer()

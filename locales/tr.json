@@ -163,7 +163,8 @@
     "explore.license": "Lisans",
     "explore.zoomIn": "Yakınlaştır",
     "explore.zoomOut": "Uzaklaştır",
-    "explore.street": "Sokak görünümüne dön"
+    "explore.street": "Sokak görünümüne dön",
+    "explore.credits": "Fotoğraf bilgileri (konumu açığa çıkarabilir)"
   },
   "countries": {
     "Afghanistan": "Afganistan",

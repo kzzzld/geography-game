@@ -163,7 +163,8 @@
     "explore.license": "Licence",
     "explore.zoomIn": "Zoom in",
     "explore.zoomOut": "Zoom out",
-    "explore.street": "Return to street view"
+    "explore.street": "Return to street view",
+    "explore.credits": "Photo credits (may reveal location)"
   },
   "official": {
     "Afghanistan": "Islamic Emirate of Afghanistan",

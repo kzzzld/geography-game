@@ -66,6 +66,24 @@
 .explore-map-toggle svg { background: var(--bg-elev); border-radius: 4px; padding: 3px; box-sizing: content-box; }
 .explore-map-panel.expanded .explore-map-toggle { inset: 6px 6px auto auto; width: 44px; height: 44px; }
 
+.explore-attribution summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--corner-radius) * .6);
+  list-style: none;
+}
+.explore-attribution summary::-webkit-details-marker { display: none; }
+.explore-attribution summary svg { width: 22px; height: 22px; }
+.explore-attribution summary:hover { border-color: var(--primary); color: var(--text); }
+.explore-attribution summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.explore-attribution[open] .explore-credit { margin-top: .5rem; }
 .explore-credit { font-size: .8rem; overflow-wrap: anywhere; }
 .explore-credit a { color: inherit; }
 .explore-status { min-height: 1.5em; }

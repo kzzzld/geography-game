@@ -96,3 +96,6 @@ lists the options.
 
 Related: [Settings](Settings.md) · [Command Line](Command-Line.md) ·
 [Theming](../Developer/Theming.md)
+
+Explore movement, guessing, retry and map zoom controls also follow the selected
+theme and its light/dark variant.

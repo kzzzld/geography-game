@@ -178,3 +178,8 @@ Explore styles are lazy-loaded from `explore.css`. Its lite selectors disable
 Leaflet and Explore animations, transitions, and shadows; map zoom and panorama
 movement transitions are disabled in code. Lite uses flat photos, skipping
 `explore-panorama.js` and Three.js. See [Explore](../User/Explore.md).
+
+Explore buttons and map zoom controls use the active palette for backgrounds,
+text, borders, hover and focus states. Guess, Continue and Retry use the primary
+color; button rounding follows the corner-radius setting. No transitions are
+added, so the same styles work in lite mode.

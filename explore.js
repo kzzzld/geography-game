@@ -28,6 +28,7 @@ const ICONS = {
   spawn: '<path d="M3 11 12 3l9 8M5 10v11h14V10M9 21v-7h6v7"/>',
   map: '<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
   collapse: '<path d="M3 8h5V3m8 0v5h5M8 21v-5H3m18 0h-5v5"/>',
+  street: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
   flat: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1"/><path d="m3 17 5-5 4 4 4-6 5 7"/>',
   exit: '<path d="M9 4H4v16h5m5-13 5 5-5 5M8 12h12"/>',
   guess: '<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/>',
@@ -49,7 +50,7 @@ export function mountExplore(root, { t, isLite, exit }) {
   root.innerHTML = `<section class="explore">
     <h2>${t('mode.explore')}</h2><p data-instructions>${t('explore.instructions')}</p>
     <div class="explore-toolbar"><strong data-round></strong>
-      ${['prev', 'next', 'nearby', 'spawn', 'flat', 'exit'].map(key => iconButton(key)).join('')}
+      ${['prev', 'next', 'nearby', 'spawn', 'flat', 'street', 'exit'].map(key => iconButton(key)).join('')}
     </div>
     <div class="explore-photo">
       <div class="explore-renderer"></div>
@@ -71,6 +72,8 @@ export function mountExplore(root, { t, isLite, exit }) {
     button('spawn').disabled = busy || revealed || !photo || photo.id === spawn?.id
     button('guess').disabled = busy || revealed || !guess || !photo || !mapReady
     button('flat').hidden = isLite() || flatOnly
+    button('street').hidden = isLite() || !flatOnly
+    for (const key of ['flat', 'street']) button(key).disabled = busy || !photo
     el('[data-round]').textContent = t('explore.round', { round: Math.min(5, rounds.length + 1) })
   }
   function links(direction) {
@@ -245,7 +248,11 @@ export function mountExplore(root, { t, isLite, exit }) {
     const action = event.target.closest('[data-action]')?.dataset.action
     if (action === 'exit') return exit()
     if (action === 'map') return openMap()
-    if (action === 'flat') { flatOnly = true; return renderer() }
+    if (action === 'flat' || action === 'street') {
+      if (busy || !photo || isLite()) return
+      flatOnly = action === 'flat'
+      return renderer()
+    }
     if (action === 'guess') return submit()
     if (action === 'continue') return rounds.length === 5 ? finish() : startRound()
     if (action === 'retry') { if (!busy) replay(); return }
@@ -264,7 +271,7 @@ export function mountExplore(root, { t, isLite, exit }) {
   replay()
   return {
     refresh() {
-      for (const key of ['prev', 'next', 'nearby', 'spawn', 'map', 'flat', 'exit', 'guess', 'continue', 'retry']) {
+      for (const key of ['prev', 'next', 'nearby', 'spawn', 'map', 'flat', 'street', 'exit', 'guess', 'continue', 'retry']) {
         const label = t(`explore.${key === 'retry' && rounds.length === 5 ? 'again' : key}`)
         button(key).title = label
         button(key).setAttribute('aria-label', label)

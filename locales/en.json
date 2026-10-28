@@ -162,7 +162,8 @@
     "explore.total": "Finished! {points} / 25,000 points",
     "explore.license": "Licence",
     "explore.zoomIn": "Zoom in",
-    "explore.zoomOut": "Zoom out"
+    "explore.zoomOut": "Zoom out",
+    "explore.street": "Return to street view"
   },
   "official": {
     "Afghanistan": "Islamic Emirate of Afghanistan",

@@ -10,7 +10,9 @@ Challenge, Mixed, and correct-answer streaks do not affect Explore.
 The street view fills a taller viewing area. Controls use icons with translated
 tooltips and accessible labels: arrows move between photos, the nearby marker
 finds a neighbouring photo, the house returns to start, the picture switches to
-flat viewing, and the exit arrow leaves Explore.
+flat viewing, the globe returns from photo mode to street view, and the exit
+arrow leaves Explore. Switching views preserves the current photo, round, and
+guess.
 
 Drag the panorama to look around. Previous, Next photo, and Nearby follow
 Panoramax links; each move must lead to another panorama within 100 metres of
@@ -73,7 +75,8 @@ provider and comply with its policy.
 a cropped, horizontally scrollable image. It does not import the panorama or
 Three.js code. Toggling lite mode preserves the round, current photo, and guess
 while replacing the renderer. View as photo also offers this fallback when
-WebGL is unavailable. No automatic motion or panorama transitions are used.
+WebGL is unavailable. Outside lite mode, the globe button returns to street
+view; disable lite mode first if you want panoramic viewing. No automatic motion or panorama transitions are used.
 
 Metadata and SD image requests time out after 15 seconds and are aborted when
 you exit or switch modes. A failed start tries at most three catalogue entries,

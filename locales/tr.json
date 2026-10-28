@@ -162,7 +162,8 @@
     "explore.total": "Tamamlandı! {points} / 25.000 puan",
     "explore.license": "Lisans",
     "explore.zoomIn": "Yakınlaştır",
-    "explore.zoomOut": "Uzaklaştır"
+    "explore.zoomOut": "Uzaklaştır",
+    "explore.street": "Sokak görünümüne dön"
   },
   "countries": {
     "Afghanistan": "Afganistan",

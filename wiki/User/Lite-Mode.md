@@ -57,3 +57,7 @@ panoramas. See [Explore](Explore.md).
 Explore keeps the taller street-view area, icon controls and expandable map
 thumbnail in lite mode; the photo remains horizontally scrollable and map
 resizing happens without animation.
+
+The return-to-street-view globe button is available after choosing photo mode
+when lite mode is off. Lite mode keeps the flat renderer and hides the WebGL
+view controls.

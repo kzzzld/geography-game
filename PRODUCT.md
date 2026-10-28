@@ -37,7 +37,8 @@ world map.
 
 Explore adds a separate five-round street-photography game: move between nearby
 Panoramax photos and guess the original location on an OpenStreetMap raster map.
-Coverage follows a curated catalogue (France, the Netherlands, and Réunion),
+Coverage follows 42 curated starts across Europe, North and South America,
+Australia, and French overseas territories,
 with flat photo viewing in lite mode and no accounts or backend.
 
 ## Operating Context

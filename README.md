@@ -98,8 +98,8 @@ npm run preview
 > **Note:** Quiz data lives in `public/data.json` so it's copied as-is into the build output and available at runtime via `fetch('./data.json')`. Keep any static assets fetched at runtime inside `public/`.
 
 Explore is a five-round, untimed photo-location game using public Panoramax imagery
-and OpenStreetMap tiles. Its catalogue covers parts of France, the Netherlands,
-and Réunion; see the [Explore guide](wiki/User/Explore.md) for coverage, lite
+and OpenStreetMap tiles. Its 42-location catalogue spans parts of Europe, North and South America,
+Australia, and French overseas territories; see the [Explore guide](wiki/User/Explore.md) for coverage, lite
 mode, external services, and hosting configuration.
 
 ## Translations

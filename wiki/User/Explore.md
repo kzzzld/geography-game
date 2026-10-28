@@ -32,11 +32,26 @@ use the shortest great-circle route, including across the antimeridian.
 
 ## Coverage and external services
 
-The bundled catalogue contains ten panoramic starts: two each around Paris,
-Lyon, Brest, Amsterdam, and Saint-Denis on Réunion. Metadata and a nearby
-panoramic neighbour for every entry were verified on 2026-10-28. This is a
-small curated coverage sample, not worldwide or country-balanced coverage.
-Live imagery may subsequently disappear or become unavailable.
+The bundled catalogue contains **42 distinct panoramic starts**, with one per
+listed area. The original near-duplicate pairs have been reduced to one start
+each, and every start is at least one kilometre from every other start.
+
+| Region | Starting areas |
+| --- | --- |
+| France | Ajaccio, Bordeaux, Brest, Caen, Clermont-Ferrand, Dijon, Grenoble, Lille, Lyon, Marseille, Nantes, Nice, Paris, Rouen, Saint-Malo, Strasbourg, Toulouse |
+| Northern and western Europe | Amsterdam, Brussels, Copenhagen, Dublin, Edinburgh, London, Oslo, Stockholm |
+| Central and southern Europe | Berlin, Cologne, Geneva, Istanbul, Lisbon, Madrid, Prague, Vienna, Zurich |
+| North America | New York, San Francisco |
+| South America | Buenos Aires |
+| Pacific | Sydney, Nouméa (New Caledonia) |
+| Caribbean | Fort-de-France (Martinique), Pointe-à-Pitre (Guadeloupe) |
+| Indian Ocean | Saint-Denis (Réunion) |
+
+Metadata, SD image access, CORS, and a panoramic neighbour within 100 metres for
+every entry were verified on 2026-10-29. Coverage is curated and still weighted
+toward Europe, rather than worldwide or country-balanced. Live imagery may
+subsequently disappear or become unavailable. Five starts are sampled randomly
+for each run; locations can still repeat between separate runs.
 
 Photos and metadata come anonymously from [Panoramax](https://panoramax.fr/).
 Photographer, original source, and licence links remain below each photo; follow

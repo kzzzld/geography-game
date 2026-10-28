@@ -1,39 +1,12 @@
 [
   {
-    "id": "ba7c08c3-6415-4044-9894-a8c1d0e59986",
-    "sequence": "b7547f2c-54e3-4471-a543-2056fea38fd4",
+    "id": "8d855aa4-ef37-452d-94ad-97950c5517eb",
+    "sequence": "676b2a67-72a7-44b0-b27f-3b46b99c88c1",
     "coordinates": [
-      2.350131718,
-      48.860372804
+      8.7395546,
+      41.9199617
     ],
-    "area": "Paris"
-  },
-  {
-    "id": "57742717-23c4-4709-b8ce-dd2880ef696d",
-    "sequence": "b7547f2c-54e3-4471-a543-2056fea38fd4",
-    "coordinates": [
-      2.350036841,
-      48.860394849
-    ],
-    "area": "Paris"
-  },
-  {
-    "id": "aa876415-18ef-45aa-bfb7-0b7a2850be5e",
-    "sequence": "d1580b44-757b-4f28-ae34-f153775db8e2",
-    "coordinates": [
-      4.84016,
-      45.75489
-    ],
-    "area": "Lyon"
-  },
-  {
-    "id": "7aac35a2-f10d-46ae-af4a-1c11b559cd6d",
-    "sequence": "60f2332f-b4f2-49e7-b454-d17e892e615c",
-    "coordinates": [
-      4.84018,
-      45.75492
-    ],
-    "area": "Lyon"
+    "area": "Ajaccio"
   },
   {
     "id": "32d80233-9ead-40d9-b61b-d070570733f7",
@@ -45,31 +18,22 @@
     "area": "Amsterdam"
   },
   {
-    "id": "57932dd7-b768-4061-b793-546df10cb125",
-    "sequence": "c5b319cd-cf5a-404d-936d-2d84c0b55c5b",
+    "id": "ac33b6b1-f8d1-49c3-b378-f2b2e43dbcba",
+    "sequence": "c666399b-49a0-466b-a97a-ea83485963e0",
     "coordinates": [
-      4.899932,
-      52.365365
+      13.323298892,
+      52.512557944
     ],
-    "area": "Amsterdam"
+    "area": "Berlin"
   },
   {
-    "id": "210203e7-0b9d-4a71-b9a0-c492cb33908e",
-    "sequence": "ee6c394c-0181-42fa-9479-613f45d30e4e",
+    "id": "326590b8-e958-41f5-838c-5020aaa213f1",
+    "sequence": "9f440dc1-54cd-4571-8808-bcfdd7fa9b7a",
     "coordinates": [
-      55.4503251,
-      -20.8798233
+      -0.579930556,
+      44.840022222
     ],
-    "area": "Reunion"
-  },
-  {
-    "id": "50f27ae1-0521-41ad-bb8c-490fe9c1f015",
-    "sequence": "ee6c394c-0181-42fa-9479-613f45d30e4e",
-    "coordinates": [
-      55.4503587,
-      -20.8799033
-    ],
-    "area": "Reunion"
+    "area": "Bordeaux"
   },
   {
     "id": "04e34a00-1f82-42b0-afa4-f67277716363",
@@ -81,12 +45,336 @@
     "area": "Brest"
   },
   {
-    "id": "75d6208c-5d61-4523-abdf-6fbb43a4656b",
-    "sequence": "3d0b0074-1b58-4513-bcc0-4fb2a15b8b40",
+    "id": "388547c3-4d91-4594-b0a8-dcfef9d08f23",
+    "sequence": "e92d236f-6b95-4fd0-8c82-09bb79a2b8a8",
     "coordinates": [
-      -4.479877612,
-      48.389887852
+      4.3501122,
+      50.8498243
     ],
-    "area": "Brest"
+    "area": "Brussels"
+  },
+  {
+    "id": "31762b4e-d4f4-4e15-b552-8475250030e4",
+    "sequence": "393f4088-081b-490f-96cc-7c5c1f10a286",
+    "coordinates": [
+      -58.3789255,
+      -34.6229447
+    ],
+    "area": "Buenos Aires"
+  },
+  {
+    "id": "52ed3ab4-0905-4210-a789-b1c03c019a53",
+    "sequence": "c49f3189-38fd-4bc5-b19a-d8a0c52967c1",
+    "coordinates": [
+      -0.370016999,
+      49.179898966
+    ],
+    "area": "Caen"
+  },
+  {
+    "id": "31682260-09bd-410b-aede-a0257b767710",
+    "sequence": "119edd08-a69f-4c30-9caf-51f0f89feaeb",
+    "coordinates": [
+      3.0800415,
+      45.780902
+    ],
+    "area": "Clermont-Ferrand"
+  },
+  {
+    "id": "9e15ff08-f698-4085-9da7-07a1f6e10aa7",
+    "sequence": "24b1553e-850a-4bfd-8242-93df8a7ab76a",
+    "coordinates": [
+      6.9930542,
+      50.9016189
+    ],
+    "area": "Cologne"
+  },
+  {
+    "id": "99562ce3-c8de-4f17-8c7a-559dbd9a691f",
+    "sequence": "58a91fbb-abe2-42d6-9290-0fc3d4da7f22",
+    "coordinates": [
+      12.483123,
+      55.6849603
+    ],
+    "area": "Copenhagen"
+  },
+  {
+    "id": "db88d363-469a-4dcf-85f6-7090a1ac9215",
+    "sequence": "3b1c8eb3-bc89-41c2-a83a-a0f21adb7641",
+    "coordinates": [
+      5.0400045,
+      47.3199593
+    ],
+    "area": "Dijon"
+  },
+  {
+    "id": "d231cd01-5746-437f-b35a-d059800f9123",
+    "sequence": "a73000dd-b319-4b85-9c09-f94671f79b2d",
+    "coordinates": [
+      -6.260239662,
+      53.349972307
+    ],
+    "area": "Dublin"
+  },
+  {
+    "id": "80ec0878-87c2-4443-a0cc-7e94db722adf",
+    "sequence": "142730b4-8725-49a8-ac95-b7ad91172577",
+    "coordinates": [
+      -3.134190833,
+      55.902583333
+    ],
+    "area": "Edinburgh"
+  },
+  {
+    "id": "78e7a307-2bb3-435a-8ce1-14cad50d25d1",
+    "sequence": "ea55c29c-1f8f-4c1f-be38-0bf7bdd1601f",
+    "coordinates": [
+      -61.070653306,
+      14.615602497
+    ],
+    "area": "Fort-de-France"
+  },
+  {
+    "id": "e5fe0b1a-d4bc-4d15-8c9d-c609a770dacd",
+    "sequence": "6911d67c-9407-4d98-aec5-bbed509269d6",
+    "coordinates": [
+      6.1129037,
+      46.2323926
+    ],
+    "area": "Geneva"
+  },
+  {
+    "id": "8e275ff6-ddba-48da-baa1-a2d063241094",
+    "sequence": "2825945e-f098-411f-bf46-8c8f5b7daf84",
+    "coordinates": [
+      5.729965608,
+      45.190134137
+    ],
+    "area": "Grenoble"
+  },
+  {
+    "id": "1c3baca0-a827-49e1-b29b-9222470cd665",
+    "sequence": "0ab51545-e479-4785-a5ff-c67c0421aa94",
+    "coordinates": [
+      28.9750627,
+      41.011518
+    ],
+    "area": "Istanbul"
+  },
+  {
+    "id": "06de698b-c259-4856-b77f-788cf4a7139d",
+    "sequence": "fffcdf20-16d7-44c7-af8d-14bb4b6de70e",
+    "coordinates": [
+      3.06062568,
+      50.631049377
+    ],
+    "area": "Lille"
+  },
+  {
+    "id": "7b817f17-3702-4513-9415-5219f7503ab8",
+    "sequence": "5f5e71fb-3829-46cb-bfd4-fd44ccdb51d2",
+    "coordinates": [
+      -9.205765,
+      38.6958389
+    ],
+    "area": "Lisbon"
+  },
+  {
+    "id": "20be5cb9-2eb7-4077-a6fd-0127765b529b",
+    "sequence": "37d8f660-65ed-4913-98ba-f349b10917e2",
+    "coordinates": [
+      -0.0978707,
+      51.5569751
+    ],
+    "area": "London"
+  },
+  {
+    "id": "aa876415-18ef-45aa-bfb7-0b7a2850be5e",
+    "sequence": "d1580b44-757b-4f28-ae34-f153775db8e2",
+    "coordinates": [
+      4.84016,
+      45.75489
+    ],
+    "area": "Lyon"
+  },
+  {
+    "id": "ba92d7da-7419-4583-9afb-c628df005b15",
+    "sequence": "e3e45224-8f40-4e57-950c-cd1a4264b237",
+    "coordinates": [
+      -3.7112536,
+      40.4195453
+    ],
+    "area": "Madrid"
+  },
+  {
+    "id": "3ba3ba8c-90a4-48f8-aa6e-19cb84b0b208",
+    "sequence": "8bc53662-3224-48d4-8cfc-0485bf1e87a0",
+    "coordinates": [
+      5.370611804,
+      43.300522918
+    ],
+    "area": "Marseille"
+  },
+  {
+    "id": "d675afaa-74fc-4fa7-928e-a1bf858f3487",
+    "sequence": "33e797a9-8f04-4ce1-b7da-5011657b0eba",
+    "coordinates": [
+      -1.550000075,
+      47.219955475
+    ],
+    "area": "Nantes"
+  },
+  {
+    "id": "f4bb0da5-cab8-4386-97b7-24260baec873",
+    "sequence": "e32df51f-71e6-4118-af01-70cde90e09d8",
+    "coordinates": [
+      -74.018088889,
+      40.690080556
+    ],
+    "area": "New York"
+  },
+  {
+    "id": "a6c7107b-a68f-40f9-ab8d-046ccd5f0dca",
+    "sequence": "5e98c53e-3d2f-47ef-96ff-ad1c568ecb00",
+    "coordinates": [
+      7.2593271,
+      43.7000716
+    ],
+    "area": "Nice"
+  },
+  {
+    "id": "9e552d71-d638-4147-b1e2-71ad1148ecbe",
+    "sequence": "6f68fb79-f7d3-4a38-916b-1ab9281eaf7f",
+    "coordinates": [
+      166.4480599,
+      -22.2735212
+    ],
+    "area": "Noumea"
+  },
+  {
+    "id": "b53ed9e6-28ee-450f-bddf-445ea8571403",
+    "sequence": "656fa07f-0dc8-4040-b0cc-d1f0f59abf99",
+    "coordinates": [
+      10.7503425,
+      59.9084564
+    ],
+    "area": "Oslo"
+  },
+  {
+    "id": "ba7c08c3-6415-4044-9894-a8c1d0e59986",
+    "sequence": "b7547f2c-54e3-4471-a543-2056fea38fd4",
+    "coordinates": [
+      2.350131718,
+      48.860372804
+    ],
+    "area": "Paris"
+  },
+  {
+    "id": "be52cf0f-c1ee-4935-9d46-0fd795d3624c",
+    "sequence": "b656fd8c-a193-47a3-8a24-a981916723e8",
+    "coordinates": [
+      -61.531063904,
+      16.23939835
+    ],
+    "area": "Pointe-a-Pitre"
+  },
+  {
+    "id": "6d539f30-7d90-4970-8f2e-8fbb8f317710",
+    "sequence": "f872d2b4-bcc5-40b4-8707-9999a447b9ab",
+    "coordinates": [
+      14.4930615,
+      50.1382368
+    ],
+    "area": "Prague"
+  },
+  {
+    "id": "210203e7-0b9d-4a71-b9a0-c492cb33908e",
+    "sequence": "ee6c394c-0181-42fa-9479-613f45d30e4e",
+    "coordinates": [
+      55.4503251,
+      -20.8798233
+    ],
+    "area": "Reunion"
+  },
+  {
+    "id": "b105ff15-99e7-40f2-95ef-54dec9013031",
+    "sequence": "ab6422b0-4915-4e34-a665-0b091a941338",
+    "coordinates": [
+      1.0999708,
+      49.4400168
+    ],
+    "area": "Rouen"
+  },
+  {
+    "id": "6342d5d5-8f01-4f82-8820-8193c7f4701c",
+    "sequence": "18455f8f-6910-4a61-87bb-bef911710217",
+    "coordinates": [
+      -2.020093,
+      48.6495723
+    ],
+    "area": "Saint-Malo"
+  },
+  {
+    "id": "0bbf0a47-27e7-41d8-aa04-e3d9e4ca3298",
+    "sequence": "fe92f0ed-6a4b-44ca-9c1d-8b84de34813d",
+    "coordinates": [
+      -122.4220477,
+      37.7798727
+    ],
+    "area": "San Francisco"
+  },
+  {
+    "id": "efe17c80-be63-49e9-b04b-155d6f1c4ed4",
+    "sequence": "9fee1517-a341-4cf0-beb8-3d209b74a2e7",
+    "coordinates": [
+      18.0705007,
+      59.3338427
+    ],
+    "area": "Stockholm"
+  },
+  {
+    "id": "6b116551-7e2c-4b58-9557-2735fbec12a2",
+    "sequence": "3fd5690b-4ae3-467a-81eb-df3f18dcc477",
+    "coordinates": [
+      7.750044,
+      48.580059
+    ],
+    "area": "Strasbourg"
+  },
+  {
+    "id": "a9843f72-21ea-4ebf-9aff-bb1a61f62093",
+    "sequence": "87a95ea4-e1a8-4c88-ab91-326799bdc5df",
+    "coordinates": [
+      151.164543806,
+      -33.900092194
+    ],
+    "area": "Sydney"
+  },
+  {
+    "id": "37e5ab2d-ba53-4484-a42b-50a564b98fe4",
+    "sequence": "42971917-0fa2-4515-941b-dbb2472606a3",
+    "coordinates": [
+      1.4400313,
+      43.6000101
+    ],
+    "area": "Toulouse"
+  },
+  {
+    "id": "bd2441ba-ee32-466a-8966-f6b13209e28c",
+    "sequence": "49194279-b916-42be-8f3a-3ed3976a5279",
+    "coordinates": [
+      16.3730186,
+      48.1952912
+    ],
+    "area": "Vienna"
+  },
+  {
+    "id": "0b53c65a-7a38-4eca-bf83-09a5cbf8f054",
+    "sequence": "7804bb97-94ac-4973-bc86-7caf3b10035e",
+    "coordinates": [
+      8.533599,
+      47.372921
+    ],
+    "area": "Zurich"
   }
 ]

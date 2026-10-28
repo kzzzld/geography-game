@@ -110,3 +110,24 @@ in a locale file. See [Localization](Localization.md) and the root README's
 
 Related: [Quiz Flow](Quiz-Flow.md) · [Map Mode](Map-Mode.md) ·
 [Localization](Localization.md)
+
+## Explore spawn catalogue
+
+Explore uses `explore-spawns.json`, bundled into its lazy module, independently
+of the 207-country quiz pool. Each entry has `id` (Panoramax photo UUID),
+`sequence` (collection UUID), `coordinates` (`[longitude, latitude]`), and `area`
+(a maintainer-facing coverage label, hidden during play). The current pool has
+42 starts; see [Explore coverage](../User/Explore.md#coverage-and-external-services).
+
+Keep IDs unique and starts at least one kilometre apart so nearby frames do not
+fill the pool with near-duplicates. Before accepting an entry, fetch its
+metadata through the configured API and confirm a 360-degree field of view, a
+loadable SD image, browser CORS, and at least one panoramic previous/next/related
+photo within 100 metres using the actual neighbour metadata coordinates.
+Panoramax search supports `filter=field_of_view%3D360` alongside `bbox` to find
+panoramic candidates. Resolve relative links against their metadata URL.
+
+Run `node --test explore-math.test.js` to check catalogue IDs, coordinate ranges,
+and geographic separation alongside distance and scoring. These offline checks
+do not replace live image, CORS, and neighbour verification. Update the coverage
+guide when changing the catalogue.

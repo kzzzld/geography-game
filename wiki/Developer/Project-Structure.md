@@ -112,4 +112,5 @@ WebGL renderer), `explore-spawns.json` (verified IDs and coordinates), and
 See [Explore](../User/Explore.md).
 
 `explore-math.test.js` runs with `node --test explore-math.test.js` and checks
-distance edge cases, scoring, and panorama validation without dependencies.
+distance edge cases, scoring, panorama validation, and catalogue uniqueness,
+coordinate ranges, and geographic separation without dependencies.

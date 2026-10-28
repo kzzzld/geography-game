@@ -126,8 +126,8 @@ const QUIZ_MODES = [
   { id: 'capital', label: 'Capital → Country', short: 'Capital' },
   { id: 'law', label: 'Name in Law → Country', short: 'In Law' },
   { id: 'map', label: 'Map → Country', short: 'Map' },
-  { id: 'mixed', label: 'Mixed', short: 'Mixed' },
   { id: 'explore', label: 'Explore', short: 'Explore' },
+  { id: 'mixed', label: 'Mixed', short: 'Mixed' },
   { id: 'infinite', label: 'Infinite', short: 'Infinite' },
 ]
 

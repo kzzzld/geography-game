@@ -121,7 +121,7 @@ See [Explore](Explore.md) for coverage, scoring, lite mode, and services.
 
 ## Switching modes
 
-- Click a mode button in the top bar.
+- Click a mode button in the top bar. Mixed appears immediately after Explore.
 - Or use the command line: `:mode flag`, `:mode map`, `:mode mixed`,
   `:mode infinite`, etc. The alias `:gamemode` works too.
 - Switching mode while a quiz is in progress restarts the quiz immediately.

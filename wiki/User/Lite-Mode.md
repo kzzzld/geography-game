@@ -53,3 +53,7 @@ Explore uses a cropped, horizontally scrollable SD panorama in lite mode and
 never imports its WebGL viewer or Three.js. Switching lite mode preserves play.
 Explore never prefetches photos, animates movement, or transitions between
 panoramas. See [Explore](Explore.md).
+
+Explore keeps the taller street-view area, icon controls and expandable map
+thumbnail in lite mode; the photo remains horizontally scrollable and map
+resizing happens without animation.

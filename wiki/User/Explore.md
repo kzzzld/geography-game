@@ -7,14 +7,22 @@ Challenge, Mixed, and correct-answer streaks do not affect Explore.
 
 ## Playing
 
+The street view fills a taller viewing area. Controls use icons with translated
+tooltips and accessible labels: arrows move between photos, the nearby marker
+finds a neighbouring photo, the house returns to start, the picture switches to
+flat viewing, and the exit arrow leaves Explore.
+
 Drag the panorama to look around. Previous, Next photo, and Nearby follow
 Panoramax links; each move must lead to another panorama within 100 metres of
 your current position. Return to start takes you back to the original photo.
 The original start remains the scoring target, however far you travel.
 
-Open / close map starts with a neutral world view. Click or tap to place the
-blue guess pin; click again to move it. Guess submits once the photo and map
-have loaded. Red marks the original start after submission. Continue advances
+A live map thumbnail sits in the lower-right corner of the street view, starting
+with a neutral world view. Click or tap its expand icon to enlarge it for
+guessing; the shrink icon returns it to thumbnail size. In the expanded map,
+click or tap to place the blue guess pin; click again to move it. The pin button
+submits once the photo and map have loaded. The map expands for the result; red
+marks the original start. The forward arrow advances
 to the next round, then to the total and all five distances. Play again starts
 a new run. Locations do not repeat within a run.
 
@@ -38,7 +46,8 @@ without cheat prevention. The map uses [OpenStreetMap](https://www.openstreetmap
 raster tiles with visible attribution. These services receive normal browser
 network requests; no account or application backend is required.
 
-Only the current photo's SD image is downloaded. There are no speculative photo
+Only the current photo's SD image is downloaded. The visible map thumbnail
+loads tiles after a starting photo succeeds. There are no speculative photo
 or tile downloads. Tiles use ordinary browser caching. Public services offer
 best-effort availability; heavy deployments should select a suitable tile
 provider and comply with its policy.
@@ -54,7 +63,7 @@ WebGL is unavailable. No automatic motion or panorama transitions are used.
 Metadata and SD image requests time out after 15 seconds and are aborted when
 you exit or switch modes. A failed start tries at most three catalogue entries,
 then offers Retry and Exit. Failed movement keeps the current photo. Failed
-imagery or map loading never awards points or consumes a round. Reopen or move
+imagery or map loading never awards points or consumes a round. Expand or move
 the map to retry tiles. A run whose catalogue is exhausted can be exited and
 started again.
 

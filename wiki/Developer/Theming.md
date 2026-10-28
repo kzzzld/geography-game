@@ -183,3 +183,9 @@ Explore buttons and map zoom controls use the active palette for backgrounds,
 text, borders, hover and focus states. Guess, Continue and Retry use the primary
 color; button rounding follows the corner-radius setting. No transitions are
 added, so the same styles work in lite mode.
+
+Explore actions use inline SVG icons with translated `title` and `aria-label`
+attributes and 44-pixel touch targets. The taller photo stage contains a
+responsive map thumbnail; its expand/shrink control resizes the same Leaflet
+instance and calls `invalidateSize()`. Sizing changes have no transitions,
+including in lite mode.

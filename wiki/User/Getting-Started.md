@@ -38,7 +38,7 @@ included."* — is shown below it.
 
 ## Pick a game mode
 
-The top bar has six buttons, one per [game mode](Game-Modes.md):
+The top bar has eight buttons, one per [game mode](Game-Modes.md):
 
 | Button | Quiz type |
 | --- | --- |
@@ -79,3 +79,6 @@ next time using your browser's `localStorage`.
 - [Game Modes](Game-Modes.md) — how each mode quizzes you
 - [Playing a Quiz](Playing-a-Quiz.md) — the full run-through
 - [Scoring and Streaks](Scoring-and-Streaks.md) — what the numbers mean
+
+Explore is a separate five-round photo-location game. See [Explore](Explore.md)
+for movement, map guessing, coverage, and service details.

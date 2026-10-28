@@ -8,7 +8,7 @@ A fast, minimal flag-guessing quiz built with vanilla JavaScript and Vite. Guess
 
 - 🌍 20-question quizzes (configurable from 5–50) randomly drawn from a pool of 207 countries and territories (recognized, disputed, autonomous, and unrecognized)
 - 🎯 5 multiple-choice options per question, shuffled each round
-- 🔀 Seven game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, Name in Law → Country (the country's official long-form name in its own language), Map → Country, Mixed, and Infinite (endless flag questions that re-ask countries until you run out of lives)
+- 🔀 Eight game modes switchable from the top bar: Flag → Country, Country → Flag, Capital → Country, Name in Law → Country (the country's official long-form name in its own language), Map → Country, Mixed, Explore, and Infinite (endless flag questions that re-ask countries until you run out of lives)
 - 📅 **Daily Challenge** — once a day, a fixed 20-question Flag → Country quiz that's the same for everyone (seeded from the UTC date), with a personal-best record and a **Save as image** button that exports your result as a shareable PNG
 - ❤️ Configurable lives (1–10, default 3) for Infinite mode, shown as a heart counter next to the streak flame
 - 🌐 English and Turkish translations, including country and capital names
@@ -74,6 +74,12 @@ npm run preview
 ├── PRODUCT.md        # Captured product context (users, purpose, positioning)
 ├── index.html        # App entry HTML (boot script, loading-screen markup + critical CSS)
 ├── main.js           # App logic (quiz flow, rendering, settings)
+├── explore.js        # Lazy Explore gameplay, Panoramax photos and Leaflet map
+├── explore-math.test.js # Node checks for distance, scoring and photo validation
+├── explore-math.js   # Distance, panorama validation and scoring
+├── explore-panorama.js # Lazy Photo Sphere Viewer / Three.js renderer
+├── explore-spawns.json # Verified panoramic starting locations
+├── explore.css       # Explore layout (loaded with the mode)
 ├── style.css         # Theming and layout styles
 ├── locales/
 │   ├── en.json       # English strings + country/capital names
@@ -90,6 +96,11 @@ npm run preview
 ```
 
 > **Note:** Quiz data lives in `public/data.json` so it's copied as-is into the build output and available at runtime via `fetch('./data.json')`. Keep any static assets fetched at runtime inside `public/`.
+
+Explore is a five-round, untimed photo-location game using public Panoramax imagery
+and OpenStreetMap tiles. Its catalogue covers parts of France, the Netherlands,
+and Réunion; see the [Explore guide](wiki/User/Explore.md) for coverage, lite
+mode, external services, and hosting configuration.
 
 ## Translations
 

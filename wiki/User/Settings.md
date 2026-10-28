@@ -65,3 +65,8 @@ The [command line](Command-Line.md) can change most of these too, e.g.
 
 Related: [Lite Mode](Lite-Mode.md) · [Themes and Fonts](Themes-and-Fonts.md) ·
 [Command Line](Command-Line.md) · [Keyboard Shortcuts](Keyboard-Shortcuts.md)
+
+## Explore
+
+Explore ignores quiz length, timer, lives, and answer options. Lite mode can be
+switched during Explore without losing the round, position, or guess. See [Explore](Explore.md).

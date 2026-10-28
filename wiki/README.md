@@ -77,3 +77,5 @@ Docker.
 - **Look:** 6 themes with optional light variants, 7 fonts
 - **Performance:** [Lite mode](User/Lite-Mode.md) (off by default) skips fonts, preloading, and effects
 - **Hosting:** any static host, NixOS flake, Docker
+
+- [Explore](User/Explore.md) — five-round photo-location game and hosting details

@@ -109,3 +109,8 @@ button for exporting a shareable PNG.
 
 Related: [Scoring and Streaks](Scoring-and-Streaks.md) ·
 [Settings](Settings.md) · [Keyboard Shortcuts](Keyboard-Shortcuts.md)
+
+## Explore
+
+Explore always plays five untimed rounds, independently of the quiz timer and
+question count. See [Explore](Explore.md).

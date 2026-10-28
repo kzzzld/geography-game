@@ -76,3 +76,9 @@ server {
 ```
 
 Related: [Building](Building.md) · [NixOS](NixOS.md) · [Troubleshooting](Troubleshooting.md)
+
+## Explore
+
+Explore requires browser access to Panoramax metadata/photo origins and raster
+tiles. API, tile URL, attribution, cache policy and CSP details are documented
+in [Explore hosting](../User/Explore.md#hosting). No backend is required.

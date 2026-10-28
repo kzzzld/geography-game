@@ -253,3 +253,21 @@ seconds.
 
 Related: [Map Mode](Map-Mode.md) · [Data Model](Data-Model.md) ·
 [Storage Keys](Storage-Keys.md) · [Daily Challenge](../User/Daily-Challenge.md)
+
+## Explore
+
+Explore bypasses `beginQuiz()` entirely: `startExplore()` dynamically imports
+`explore.js`, mounts five untimed rounds, and retains its cleanup handle.
+`stopExplore()` invalidates pending imports and destroys the session on quiz,
+daily, welcome, or mode changes. Scoring uses `explore-math.js`; quiz lives,
+length, streaks and Daily persistence are untouched. See [Explore](../User/Explore.md).
+
+Explore verification (2026-10-28): production build and distance/scoring Node
+checks pass. A temporary jsdom harness with actual Leaflet covered five rounds,
+pin placement, reveal, replay, return to start, movement limits, failed movement,
+renderer refresh and cancellation. All ten catalogue starts passed anonymous
+metadata, SD JPEG, nearby panorama, and CORS checks with localhost and HTTPS
+Origin headers. Browser UI access was unavailable: desktop/mobile visual and
+WebGL checks, and a real deployed-origin playthrough remain manual checks. Nix
+is unavailable locally; the dependency-cache/NAR hash calculation reproduced the
+previous lockfile hash before calculating the replacement.

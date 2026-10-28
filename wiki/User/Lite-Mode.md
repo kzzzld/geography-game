@@ -46,3 +46,10 @@ effects are skipped.
 
 Related: [Settings](Settings.md) · [Getting Started](Getting-Started.md) ·
 [Command Line](Command-Line.md)
+
+## Explore
+
+Explore uses a cropped, horizontally scrollable SD panorama in lite mode and
+never imports its WebGL viewer or Three.js. Switching lite mode preserves play.
+Explore never prefetches photos, animates movement, or transitions between
+panoramas. See [Explore](Explore.md).

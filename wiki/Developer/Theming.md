@@ -171,3 +171,10 @@ entry is needed.
 
 Related: [Storage Keys](Storage-Keys.md) ·
 [Themes and Fonts](../User/Themes-and-Fonts.md)
+
+## Explore
+
+Explore styles are lazy-loaded from `explore.css`. Its lite selectors disable
+Leaflet and Explore animations, transitions, and shadows; map zoom and panorama
+movement transitions are disabled in code. Lite uses flat photos, skipping
+`explore-panorama.js` and Three.js. See [Explore](../User/Explore.md).

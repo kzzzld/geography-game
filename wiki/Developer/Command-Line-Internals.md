@@ -115,3 +115,9 @@ The input's `keydown` handler calls `e.stopPropagation()` so global shortcuts
 `e.isComposing || e.keyCode === 229` so IME composition isn't interrupted.
 
 Related: [Command Line](../User/Command-Line.md) · [Architecture](Architecture.md)
+
+## Explore
+
+The mode registry includes `explore`, so `:mode explore` and `:gamemode explore`
+complete normally. Mode commands now use `switchMode()` so active sessions
+restart and cancel Explore work consistently with selector buttons.

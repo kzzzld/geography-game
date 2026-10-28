@@ -22,7 +22,8 @@ can read ES modules and a bit of CSS, you can work on this.
 ## Quick orientation
 
 - Entry point: `index.html` → `main.js`
-- Logic: `main.js` (single module, sectioned with `// =====` comments)
+- Logic: `main.js` (quiz/settings, sectioned with `// =====` comments), plus lazy
+  `explore.js` and `explore-panorama.js` for [Explore](../User/Explore.md)
 - Styles: `style.css`
 - Data: `public/data.json`, `public/world.svg`, `public/focus.json`
 - Strings: `locales/*.json`

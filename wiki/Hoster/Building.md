@@ -61,3 +61,9 @@ If you use Nix, `nix build` produces the same output as a store path — see
 The `Dockerfile` runs the build inside the image — see [Docker](Docker.md).
 
 Related: [Static Hosting](Static-Hosting.md) · [NixOS](NixOS.md) · [Docker](Docker.md)
+
+## Explore
+
+Explore dependencies are bundled locally; its panorama and map chunks load
+on demand. Build-time `VITE_EXPLORE_*` variables configure public services; see
+[Explore hosting](../User/Explore.md#hosting).

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ba7c08c3-6415-4044-9894-a8c1d0e59986",
+    "sequence": "b7547f2c-54e3-4471-a543-2056fea38fd4",
+    "coordinates": [
+      2.350131718,
+      48.860372804
+    ],
+    "area": "Paris"
+  },
+  {
+    "id": "57742717-23c4-4709-b8ce-dd2880ef696d",
+    "sequence": "b7547f2c-54e3-4471-a543-2056fea38fd4",
+    "coordinates": [
+      2.350036841,
+      48.860394849
+    ],
+    "area": "Paris"
+  },
+  {
+    "id": "aa876415-18ef-45aa-bfb7-0b7a2850be5e",
+    "sequence": "d1580b44-757b-4f28-ae34-f153775db8e2",
+    "coordinates": [
+      4.84016,
+      45.75489
+    ],
+    "area": "Lyon"
+  },
+  {
+    "id": "7aac35a2-f10d-46ae-af4a-1c11b559cd6d",
+    "sequence": "60f2332f-b4f2-49e7-b454-d17e892e615c",
+    "coordinates": [
+      4.84018,
+      45.75492
+    ],
+    "area": "Lyon"
+  },
+  {
+    "id": "32d80233-9ead-40d9-b61b-d070570733f7",
+    "sequence": "14ea4529-d628-4496-b8eb-d98440757de3",
+    "coordinates": [
+      4.899942,
+      52.365363
+    ],
+    "area": "Amsterdam"
+  },
+  {
+    "id": "57932dd7-b768-4061-b793-546df10cb125",
+    "sequence": "c5b319cd-cf5a-404d-936d-2d84c0b55c5b",
+    "coordinates": [
+      4.899932,
+      52.365365
+    ],
+    "area": "Amsterdam"
+  },
+  {
+    "id": "210203e7-0b9d-4a71-b9a0-c492cb33908e",
+    "sequence": "ee6c394c-0181-42fa-9479-613f45d30e4e",
+    "coordinates": [
+      55.4503251,
+      -20.8798233
+    ],
+    "area": "Reunion"
+  },
+  {
+    "id": "50f27ae1-0521-41ad-bb8c-490fe9c1f015",
+    "sequence": "ee6c394c-0181-42fa-9479-613f45d30e4e",
+    "coordinates": [
+      55.4503587,
+      -20.8799033
+    ],
+    "area": "Reunion"
+  },
+  {
+    "id": "04e34a00-1f82-42b0-afa4-f67277716363",
+    "sequence": "3d0b0074-1b58-4513-bcc0-4fb2a15b8b40",
+    "coordinates": [
+      -4.479839151,
+      48.389975232
+    ],
+    "area": "Brest"
+  },
+  {
+    "id": "75d6208c-5d61-4523-abdf-6fbb43a4656b",
+    "sequence": "3d0b0074-1b58-4513-bcc0-4fb2a15b8b40",
+    "coordinates": [
+      -4.479877612,
+      48.389887852
+    ],
+    "area": "Brest"
+  }
+]

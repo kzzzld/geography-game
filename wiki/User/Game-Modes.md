@@ -1,6 +1,6 @@
 # Game Modes
 
-The game has **seven** modes, switchable at any time from the top bar. Each
+The game has **eight** modes, switchable at any time from the top bar. Each
 question in **Mixed** picks one of the first five at random, so you never know
 what you'll be asked next.
 
@@ -111,6 +111,13 @@ timeout) costs one life, and the run ends at zero.
 - Countries are drawn at random with replacement, so the same flag can reappear.
 - The results screen is headed **Run Over!** and reports your score, accuracy,
   and best streak for the run.
+
+## Explore
+
+Five untimed photo-location rounds, with nearby movement and a world-map guess.
+The original spawn is the scoring target, worth up to 5,000 points per round.
+Separate from Mixed, Daily Challenge, lives, quiz length, and answer streaks.
+See [Explore](Explore.md) for coverage, scoring, lite mode, and services.
 
 ## Switching modes
 

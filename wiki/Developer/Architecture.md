@@ -1,8 +1,9 @@
 # Architecture
 
-The whole app is a single ES module (`main.js`) plus one stylesheet
-(`style.css`), bundled by [Vite](https://vitejs.dev/). There is **no framework**
-and no runtime dependency.
+The quiz and settings use `main.js` and `style.css`; Explore adds lazy modules
+and styles, bundled by [Vite](https://vitejs.dev/). There is **no framework**
+and only the explicit Explore runtime dependencies (Leaflet, Photo Sphere Viewer,
+and Three.js).
 
 ## Big picture
 
@@ -135,3 +136,10 @@ Map question renders. Lite mode is mirrored as a `data-lite` attribute on
 `<html>` and is applied by `applyLiteMode()` — see [Theming](Theming.md).
 
 Related: [Project Structure](Project-Structure.md) · [Quiz Flow](Quiz-Flow.md)
+
+## Explore module lifecycle
+
+`startExplore()` loads `explore.js` and its CSS on demand. It owns a Leaflet map,
+request controllers, object URLs, and event listeners; `destroy()` releases them.
+The panorama renderer is a second dynamic import, skipped in lite mode. Renderer
+refresh preserves session state. See [Explore](../User/Explore.md).

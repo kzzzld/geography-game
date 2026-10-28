@@ -7,10 +7,16 @@ What every file in the repository is for.
 ├── AGENTS.md               # Instructions for AI agents (wiki-sync rules)
 ├── PRODUCT.md              # Captured product context (users, purpose, positioning)
 ├── index.html              # App shell: boot script (sets data-lite, injects font <link>s unless lite), #loader (loading screen + critical CSS), #app div, loads main.js
-├── main.js                 # Entire app logic (see note below)
-├── style.css               # All styles and theme palettes
+├── main.js                 # Quiz and settings logic (see note below)
+├── explore.js              # Lazy Explore session, Leaflet map and Panoramax requests
+├── explore-panorama.js     # Lazy Photo Sphere Viewer / Three.js
+├── explore-math.js         # Great-circle distance, scoring and validation
+├── explore-math.test.js    # Dependency-free Node verification
+├── explore-spawns.json     # Verified panoramic catalogue
+├── explore.css             # Lazy Explore layout and lite overrides
+├── style.css               # Core styles and theme palettes
 ├── vite.config.js          # Vite dev-server config (allowedHosts)
-├── package.json            # Scripts and the single dev dependency (Vite)
+├── package.json            # Scripts, Vite dev dependency, Explore runtime dependencies
 ├── locales/
 │   ├── en.json             # English UI strings + country/capital names
 │   └── tr.json             # Turkish strings + country/capital names
@@ -96,3 +102,14 @@ The loading-screen styles are the one exception: they live inline in
 [Architecture](Architecture.md).
 
 Related: [Architecture](Architecture.md) · [Data Model](Data-Model.md)
+
+## Explore
+
+Explore adds root modules `explore.js` (session, networking, Leaflet),
+`explore-math.js` (distance/scoring/validation), `explore-panorama.js` (lazy
+WebGL renderer), `explore-spawns.json` (verified IDs and coordinates), and
+`explore.css` (lazy styles). `main.js` adds the Explore section before Start quiz.
+See [Explore](../User/Explore.md).
+
+`explore-math.test.js` runs with `node --test explore-math.test.js` and checks
+distance edge cases, scoring, and panorama validation without dependencies.

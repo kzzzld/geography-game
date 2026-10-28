@@ -1,0 +1,15 @@
+.explore { padding: 1rem; display: grid; gap: .8rem; }
+.explore-toolbar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.explore button { padding: .65rem 1rem; cursor: pointer; font: inherit; }
+.explore button:disabled { opacity: .45; cursor: default; }
+.explore-photo { height: clamp(240px, 52vh, 550px); position: relative; overflow: hidden; background: #15191d; }
+.explore-renderer { height: 100%; width: 100%; }
+.explore-flat { height: 100%; overflow-x: auto; overflow-y: hidden; touch-action: pan-x; }
+.explore-flat img { height: 160%; width: auto; max-width: none; display: block; transform: translateY(-18.75%); }
+.explore-map { height: clamp(260px, 40vh, 430px); width: 100%; color: #111; }
+.explore-map[hidden] { display: none; }
+.explore-credit { font-size: .8rem; overflow-wrap: anywhere; }
+.explore-credit a { color: inherit; }
+.explore-status { min-height: 1.5em; }
+[data-lite="true"] .explore *, [data-lite="true"] .leaflet-container * { animation: none !important; transition: none !important; box-shadow: none !important; }
+@media (max-width: 600px) { .explore { padding: .5rem; } .explore-toolbar button { flex: 1 1 auto; } }

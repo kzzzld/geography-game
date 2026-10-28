@@ -28,12 +28,17 @@ instantly, plays without friction, and is worth replaying.
 ## Positioning
 
 One country pool of 207 recognized, disputed, autonomous, and unrecognized
-territories drives seven distinct game modes — Flag → Country, Country → Flag,
+territories drives seven country quiz modes — Flag → Country, Country → Flag,
 Capital → Country, Name in Law → Country, Map → Country, Mixed, and Infinite (an
 endless, lives-based run) — rather than a single flag-to-name game. Neighboring
 flag quizzes stop at UN members and one mode; this one asks the same pool to be
 recognized by flag, by capital, by the name written in its own law, and on a
 world map.
+
+Explore adds a separate five-round street-photography game: move between nearby
+Panoramax photos and guess the original location on an OpenStreetMap raster map.
+Coverage follows a curated catalogue (France, the Netherlands, and Réunion),
+with flat photo viewing in lite mode and no accounts or backend.
 
 ## Operating Context
 
@@ -60,7 +65,7 @@ world map.
   for slow devices and connections; toggled from Settings, the loading screen, or
   `:lite`.
 - Hard constraint: vanilla ES modules + CSS bundled by Vite. No frameworks and
-  no new runtime dependencies.
+  only Leaflet, Photo Sphere Viewer, and Three.js as explicit Explore exceptions.
 - Terminology: "country"/"territory" is used loosely for all 207 pool entries.
 - Map mode is identifier-driven: the two-letter ISO code parsed from the
   `flagcdn.com` flag URL. Territories whose flags are not hosted there have no

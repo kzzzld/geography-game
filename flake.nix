@@ -33,7 +33,7 @@
           pname = "kzzzl-geography-game";
           version = "0.0.0";
           src = ./.;
-          npmDepsHash = "sha256-BkjU+Rwo1SkE22V4W3y3raJrrrkfUA/IfEM6jIl6/8Q=";
+          npmDepsHash = "sha256-RuRh4t34Jufjv60VILWzwkYjyQYC2MEbYxugl/4v4xI=";
           npmBuildScript = "build";
           installPhase = ''
             runHook preInstall

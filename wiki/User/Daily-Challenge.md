@@ -11,7 +11,7 @@ exact same 20 flags in the exact same order with the exact same options.
   settings; it is fixed at 20 / 5 / untimed regardless of how you have the
   [normal modes](Game-Modes.md) configured.
 
-The Daily Challenge is **not** one of the seven game modes — see
+The Daily Challenge is **not** one of the eight game modes — see
 [Game Modes](Game-Modes.md) for those.
 
 ## Playing it

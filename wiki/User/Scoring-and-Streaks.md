@@ -64,3 +64,8 @@ sessions in `localStorage` (key `flag-quiz-best-streak`).
   mode, questions, options, timer, best streak, and more.
 
 Related: [Playing a Quiz](Playing-a-Quiz.md) · [Command Line](Command-Line.md)
+
+## Explore
+
+Explore has separate distance-based scoring: up to 5,000 per round and 25,000
+per five-round run, with no change to answer streaks. See [Explore](Explore.md).

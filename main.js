@@ -127,6 +127,7 @@ const QUIZ_MODES = [
   { id: 'law', label: 'Name in Law → Country', short: 'In Law' },
   { id: 'map', label: 'Map → Country', short: 'Map' },
   { id: 'mixed', label: 'Mixed', short: 'Mixed' },
+  { id: 'explore', label: 'Explore', short: 'Explore' },
   { id: 'infinite', label: 'Infinite', short: 'Infinite' },
 ]
 
@@ -445,6 +446,7 @@ function applyLiteMode(enabled) {
   liteMode = enabled === true || enabled === 'true' || enabled === 'on'
   document.documentElement.setAttribute('data-lite', String(liteMode))
   localStorage.setItem('flag-quiz-lite-mode', String(liteMode))
+  exploreSession?.refresh()
   return liteMode
 }
 
@@ -655,6 +657,7 @@ function startDaily() {
 }
 
 function openDaily() {
+  stopExplore()
   if (dailyResultToday()) {
     dailyDate = null
     renderDailyResult()
@@ -1448,7 +1451,7 @@ function runCommand(raw) {
     case 'gamemode': {
       const mode = findByName(QUIZ_MODES, arg)
       if (!mode) return showCmdMessage(t('cmd.invalidMode', { modes: QUIZ_MODES.map(m => m.id).join(', ') }), true)
-      applyQuizMode(mode.id)
+      switchMode(mode.id)
       return showCmdMessage(t('cmd.mode', { name: modeLabel(mode) }))
     }
     case 'lang':
@@ -2157,6 +2160,13 @@ function renderResult() {
 
 // ===== Rerender current view (e.g. after language change) =====
 function rerender() {
+  if (exploreSession) {
+    document.querySelector('.header').remove()
+    document.querySelector('#settingsModal').remove()
+    app.insertAdjacentHTML('afterbegin', renderHeader())
+    bindHeaderControls()
+    return exploreSession.refresh()
+  }
   if (document.querySelector('#playBtn')) return showWelcome()
   if (document.querySelector('#dailyShareBtn')) return renderDailyResult()
   if (document.querySelector('#restartBtn')) return renderResult()
@@ -2197,6 +2207,7 @@ function renderWelcome() {
 }
 
 function showWelcome() {
+  stopExplore()
   stopTimer()
   app.innerHTML = renderWelcome()
   bindHeaderControls()
@@ -2205,8 +2216,35 @@ function showWelcome() {
   document.querySelector('#playBtn').focus()
 }
 
+// ===== Explore =====
+let exploreSession = null
+let exploreVersion = 0
+
+function stopExplore() {
+  exploreVersion++
+  exploreSession?.destroy()
+  exploreSession = null
+}
+
+async function startExplore() {
+  stopTimer()
+  stopExplore()
+  const version = exploreVersion
+  app.innerHTML = `${renderHeader()}<div id="exploreRoot"><p role="status">${t('explore.loading')}</p><button id="exploreExit">${t('explore.exit')}</button></div>`
+  bindHeaderControls()
+  document.querySelector('#exploreExit').addEventListener('click', showWelcome)
+  try {
+    const { mountExplore } = await import('./explore.js')
+    if (version !== exploreVersion) return
+    exploreSession = mountExplore(document.querySelector('#exploreRoot'), { t, isLite: () => liteMode, exit: showWelcome })
+  } catch {
+    if (version === exploreVersion) document.querySelector('#exploreRoot p').textContent = t('explore.loadError')
+  }
+}
+
 // ===== Start quiz =====
 function beginQuiz(questions) {
+  stopExplore()
   stopTimer()
   quizQuestions = questions
   missedQuestions = []
@@ -2226,6 +2264,7 @@ function beginQuiz(questions) {
 
 function startQuiz() {
   dailyDate = null
+  if (quizMode === 'explore') return startExplore()
   beginQuiz(buildQuiz())
 }
 

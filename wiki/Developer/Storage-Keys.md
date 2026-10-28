@@ -22,7 +22,7 @@ values are clamped, discarded, or replaced with defaults.
 | `flag-quiz-options-count` | integer, 2–10 | `5` | `loadOptionsCount()` |
 | `flag-quiz-lives` | integer, 1–10 | `3` | `loadLives()` |
 | `flag-quiz-best-streak` | integer ≥ 0 | `0` | `loadBestStreak()` |
-| `flag-quiz-mode` | `flag` / `country` / `capital` / `map` / `mixed` | `flag` | `loadQuizMode()` |
+| `flag-quiz-mode` | `flag` / `country` / `capital` / `law` / `map` / `mixed` / `infinite` / `explore` | `flag` | `loadQuizMode()` |
 | `flag-quiz-timer-enabled` | `"true"` / `"false"` | `false` | `loadTimerEnabled()` |
 | `flag-quiz-timer-seconds` | integer, 5–60 | `15` | `loadTimerSeconds()` |
 | `flag-quiz-language` | Locale id (`en`, `tr`) | browser-detected | `loadLanguage()` |
@@ -71,3 +71,6 @@ fully reset — including the saved best streak and the daily result and best.
 
 Related: [Theming](Theming.md) · [Settings](../User/Settings.md) ·
 [Daily Challenge](../User/Daily-Challenge.md)
+
+Explore uses the existing mode and lite keys; round state and results remain in
+memory. Its timer is always off. See [Explore](../User/Explore.md).
